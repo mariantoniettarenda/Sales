@@ -1,4 +1,256 @@
-<h2 id="highlightsdellasettimana">🔍 Highlights della Settimana</h2>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Competitive Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #f1f5f9;
+            --accent-green: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 24px;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 !important;
+            border: none !important;
+            padding: 0 !important;
+            background: none !important;
+            text-transform: none !important;
+            letter-spacing: normal !important;
+        }
+
+        .date-badge {
+            background-color: #e2e8f0;
+            color: #334155;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .content-wrapper {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f1f5f9;
+        }
+
+        /* Box Highlights della Settimana */
+        .content-wrapper > h2.highlights-title {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: #ffffff;
+            padding: 20px 24px;
+            border-radius: 12px 12px 0 0;
+            margin: -40px -40px 0 -40px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-wrapper > h2.highlights-title + ul {
+            background: #f8fafc;
+            padding: 24px 32px;
+            border-left: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            border-radius: 0 0 12px 12px;
+            margin: 0 -40px 40px -40px;
+        }
+
+        .content-wrapper > h2.highlights-title + ul li {
+            font-size: 14.5px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            color: #334155;
+            padding-left: 20px;
+        }
+
+        .content-wrapper > h2.highlights-title + ul li::before {
+            color: var(--primary-light);
+            left: 2px;
+        }
+
+        /* Sezioni dei Tier */
+        .content-wrapper h1 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        .section-tier1 { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+        .section-tier2 { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+        .section-tier3 { background: #fefce8; color: #a16207; border: 1px solid #fef9c3; }
+        .section-network { background: #f0fdf4; color: #166534; border: 1px solid #dcfce7; width: calc(100% + 80px); margin-left: -40px; margin-right: -40px; border-radius: 0 !important; padding: 12px 40px !important; display: flex !important; }
+        .section-mms { background: #f0f9ff; color: #075985; border: 1px solid #e0f2fe; width: calc(100% + 80px); margin-left: -40px; margin-right: -40px; border-radius: 0 !important; padding: 12px 40px !important; display: flex !important; }
+
+        /* Nomi Competitor */
+        .competitor-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .competitor-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background-color: var(--primary-light);
+            border-radius: 2px;
+        }
+
+        /* Sotto-categorie del Report (Protocolli, Distributori, ecc.) */
+        .content-wrapper h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .content-wrapper h3 + ul {
+            margin-bottom: 20px;
+            background-color: #fafbfc;
+            padding: 16px 20px 16px 30px;
+            border-radius: 8px;
+            border: 1px solid #f1f5f9;
+        }
+
+        /* Liste Generiche */
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        li::before {
+            content: "•";
+            color: #cbd5e1;
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+
+        .content-wrapper h3 + ul li::before {
+            color: var(--primary-light);
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #334155;
+            font-size: 14.5px;
+        }
+
+        strong {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        /* Adattabilità Mobile (Responsive) */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            .content-wrapper {
+                padding: 24px;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .content-wrapper > h2.highlights-title,
+            .content-wrapper > h2.highlights-title + ul {
+                margin-left: -24px;
+                margin-right: -24px;
+            }
+            .content-wrapper > h2.highlights-title {
+                margin-top: -24px;
+            }
+            .section-network, .section-mms {
+                width: calc(100% + 48px);
+                margin-left: -24px;
+                margin-right: -24px;
+                padding: 12px 24px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Dashboard Intelligence Competitiva</h1>
+            <div class="date-badge">lunedì 15 giugno 2026</div>
+        </header>
+        <div class="content-wrapper">
+            <h2 id="highlightsdellasettimana">🔍 Highlights della Settimana</h2>
 <ul>
 <li>AutoTuner introduce il supporto per le ECU Bosch MG1CS039 su Ferrari, inclusi modelli come 12 Cilindri e Purosangue, tramite metodo Bench (dopo sblocco via Mail-in).</li>
 <li>Alientech espande la copertura per moto Honda Gold Wing (Keihin 38770-MKC) e Aprilia/Moto Guzzi (Marelli 11MP), offrendo sia protocolli OBD che Bench.</li>
@@ -96,3 +348,7 @@
 <li><strong>Contenuti Video Promozionali</strong>: Pubblicati video su Facebook e Instagram con temi legati alle sfide e alle richieste dei clienti in officina, e un video su un progetto di elaborazione di una Noble M400 in collaborazione con TC Engineering e Bulldozer Racing, focalizzato sull'esperienza di guida piuttosto che sui numeri di potenza.</li>
 <li><strong>Progetto Alfa Romeo Mito</strong>: Condiviso post su Instagram con dettagli di un setup Stage 2 su Alfa Romeo Mito (turbina 1446, iniettori 330cc, skat, aspirazione maggiorata, scarico completo) con risultati sul banco prova Dynomag Hub (193hp, 303nm).</li>
 </ul>
+        </div>
+    </div>
+</body>
+</html>
