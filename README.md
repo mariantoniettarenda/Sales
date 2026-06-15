@@ -1,6 +1,5 @@
 # Sales
 Visualizzazioni Sales
-<!DOCTYPE html>
 <html class="staticrypt-html">
     <head>
         <meta charset="utf-8" />
