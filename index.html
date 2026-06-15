@@ -138,21 +138,23 @@
     </table>
   </td></tr>
 
-  <!-- SEZIONE 02: TREND MENSILE -->
+  <!-- SEZIONE 02: TREND MENSILE (INTERATTIVO) -->
   <tr><td style="padding:32px 40px 0">
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px">
       <tr>
         <td style="padding-bottom:8px;border-bottom:2px solid #111827">
           <span style="font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#111827">Trend Mensile</span>
-          <span style="font-size:11px;color:#6b7280;margin-left:6px">— Rapporto di efficacia</span>
+          <span style="font-size:11px;color:#6b7280;margin-left:6px">— Rapporto di efficacia (Passa il mouse per i dettagli)</span>
         </td>
         <td style="padding-bottom:8px;border-bottom:2px solid #111827;text-align:right;width:50px">
           <span style="font-family:'Courier New',monospace;font-size:11px;font-weight:700;color:#9ca3af">02/06</span>
         </td>
       </tr>
     </table>
-    <div style="background:#fcfdfd;border:1px solid #f3f4f6;border-radius:4px;padding:12px;text-align:center">
-      <img src="https://quickchart.io/chart?width=560&height=180&c=%7B%22type%22%3A%22line%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Gen%22%2C%22Feb%22%2C%22Mar%22%2C%22Apr%22%2C%22Mag%22%2C%22Giu%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Abbandonati%22%2C%22data%22%3A%5B319%2C296%2C279%2C375%2C211%2C82%5D%2C%22borderColor%22%3A%22%23e02424%22%2C%22backgroundColor%22%3A%22rgba(224%2C36%2C36%2C0.03)%22%2C%22fill%22%3Atrue%2C%22borderWidth%22%3A2%2C%22pointRadius%22%3A3%2C%22pointBackgroundColor%22%3A%22%23e02424%22%2C%22tension%22%3A0.35%7D%2C%7B%22label%22%3A%22Recuperati%22%2C%22data%22%3A%5B67%2C66%2C34%2C34%2C13%2C1%5D%2C%22borderColor%22%3A%22%23027a48%22%2C%22backgroundColor%22%3A%22rgba(2%2C122%2C72%2C0.03)%22%2C%22fill%22%3Atrue%2C%22borderWidth%22%3A2%2C%22pointRadius%22%3A3%2C%22pointBackgroundColor%22%3A%22%23027a48%22%2C%22tension%22%3A0.35%7D%5D%7D%2C%22options%22%3A%7B%22layout%22%3A%7B%22padding%22%3A%7B%22top%22%3A10%2C%22bottom%22%3A5%7D%7D%2C%22legend%22%3A%7B%22display%22%3Atrue%2C%22position%22%3A%22bottom%22%2C%22labels%22%3A%7B%22fontFamily%22%3A%22Arial%2Csans-serif%22%2C%22fontSize%22%3A10%2C%22boxWidth%22%3A10%2C%22fontColor%22%3A%22%234b5563%22%7D%7D%2C%22scales%22%3A%7B%22xAxes%22%3A%5B%7B%22gridLines%22%3A%7B%22display%22%3Afalse%7D%2C%22ticks%22%3A%7B%22fontFamily%22%3A%22Arial%2Csans-serif%22%2C%22fontSize%22%3A10%2C%22fontColor%22%3A%22%236b7280%22%7D%7D%5D%2C%22yAxes%22%3A%5B%7B%22gridLines%22%3A%7B%22color%22%3A%22rgba(0%2C0%2C0%2C0.04)%22%2C%22drawBorder%22%3Afalse%7D%2C%22ticks%22%3A%7B%22fontFamily%22%3A%22Arial%2Csans-serif%22%2C%22fontSize%22%3A10%2C%22fontColor%22%3A%22%236b7280%22%7D%7D%5D%7D%7D%7D" width="536" style="display:inline-block;max-width:100%;height:auto" alt="Trend mensile"/>
+    
+    <!-- Box contenitore del grafico interattivo -->
+    <div style="background:#fcfdfd;border:1px solid #f3f4f6;border-radius:4px;padding:16px;height:220px;position:relative">
+      <canvas id="trendChart"></canvas>
     </div>
     
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;border-top:1px solid #f3f4f6;padding-top:8px">
@@ -474,7 +476,7 @@
         <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Scelta Prodotto</span>
       </td>
       <td style="padding:12px 0;font-size:12px;color:#4b5563;line-height:1.4;vertical-align:top">
-        <span style="font-weight:700;color:#027a48">→</span> Contattare il cliente per illustrare le differenze tra le versioni e guidarlo nella scelta della soluzione più adatta
+        <span style="font-weight:700;color:#027a48">→</span> Contattare il cliente per offrire consulenza tecnica e commerciale per guidarlo nella scelta della licenza più adatta
       </td>
     </tr><tr style="border-bottom:1px solid #f3f4f6">
       <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:12px 8px 12px 0;width:20px;vertical-align:top">03</td>
@@ -482,10 +484,10 @@
         <strong>I need it with boot cables</strong>
       </td>
       <td style="padding:12px 12px;vertical-align:top;width:120px">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Accessori</span>
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Accessori mancanti</span>
       </td>
       <td style="padding:12px 0;font-size:12px;color:#4b5563;line-height:1.4;vertical-align:top">
-        <span style="font-weight:700;color:#027a48">→</span> Contattare il cliente per proporre l'aggiunta dei cavi richiesti o verificare la disponibilità del bundle
+        <span style="font-weight:700;color:#027a48">→</span> Contattare il cliente per proporre l'aggiunta dei cavi di avviamento o un bundle personalizzato
       </td>
     </tr><tr style="border-bottom:1px solid #f3f4f6">
       <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:12px 8px 12px 0;width:20px;vertical-align:top">04</td>
@@ -493,10 +495,10 @@
         <strong>qual è il prezzo del pacchetto Master OBD + Bench?</strong>
       </td>
       <td style="padding:12px 12px;vertical-align:top;width:120px">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Informazioni Prodotto</span>
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Richiesta Informazioni</span>
       </td>
       <td style="padding:12px 0;font-size:12px;color:#4b5563;line-height:1.4;vertical-align:top">
-        <span style="font-weight:700;color:#027a48">→</span> Fornire i dettagli sul costo del pacchetto ed eventualmente proporre un'offerta personalizzata o un codice sconto per agevolare l'acquisto
+        <span style="font-weight:700;color:#027a48">→</span> Inviare la quotazione per il pacchetto Master OBD + Bench ed eventualmente proporre uno sconto di benvenuto
       </td>
     </tr><tr style="border-bottom:1px solid #f3f4f6">
       <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:12px 8px 12px 0;width:20px;vertical-align:top">05</td>
@@ -532,5 +534,109 @@
 
 </td></tr>
 </table>
+
+<!-- LIBRERIA CHART.JS E INIZIALIZZAZIONE GRAFICO INTERATTIVO -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  (function() {
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["Gen","Feb","Mar","Apr","Mag","Giu"],
+        datasets: [
+          {
+            label: 'Abbandonati',
+            data: [319,296,279,375,211,82],
+            borderColor: '#e02424',
+            backgroundColor: 'rgba(224,36,36,0.03)',
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#e02424',
+            tension: 0.35
+          },
+          {
+            label: 'Recuperati',
+            data: [67,66,34,34,13,1],
+            borderColor: '#027a48',
+            backgroundColor: 'rgba(2,122,72,0.03)',
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#027a48',
+            tension: 0.35
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              boxWidth: 10,
+              font: {
+                size: 10,
+                family: 'Arial, sans-serif'
+              },
+              color: '#4b5563'
+            }
+          },
+          tooltip: {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+            backgroundColor: '#111827',
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff',
+            borderColor: '#e5e7eb',
+            borderWidth: 1,
+            padding: 8,
+            titleFont: {
+              size: 11,
+              weight: 'bold',
+              family: 'Arial, sans-serif'
+            },
+            bodyFont: {
+              size: 11,
+              family: 'Arial, sans-serif'
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: '#6b7280',
+              font: {
+                size: 10,
+                family: 'Arial, sans-serif'
+              }
+            }
+          },
+          y: {
+            grid: {
+              color: 'rgba(0,0,0,0.04)'
+            },
+            ticks: {
+              color: '#6b7280',
+              font: {
+                size: 10,
+                family: 'Arial, sans-serif'
+              }
+            }
+          }
+        }
+      }
+    });
+  })();
+</script>
 </body>
 </html>
