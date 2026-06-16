@@ -682,39 +682,56 @@ exports.init = init;
                     document.write(plainHTML);
                     document.close();
 
-                    // Crea e posiziona un box flottante contenente i tre report protetti
+                    // Imposta il background per mantenere la coerenza visiva
+                    document.body.style.background = "#76B852";
+                    document.body.style.margin = "0";
+                    document.body.style.fontFamily = "Arial, sans-serif";
+
+                    // Crea una scheda (card) centrale per i report aggiuntivi, coerente con lo stile dei carrelli
+                    const wrapper = document.createElement("div");
+                    wrapper.style.width = "360px";
+                    wrapper.style.margin = "40px auto 100px";
+                    wrapper.style.boxSizing = "border-box";
+
                     const container = document.createElement("div");
-                    container.style.position = "fixed";
-                    container.style.bottom = "20px";
-                    container.style.right = "20px";
                     container.style.backgroundColor = "#ffffff";
-                    container.style.padding = "15px";
-                    container.style.border = "1px solid #eaeaea";
-                    container.style.borderRadius = "8px";
-                    container.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
-                    container.style.zIndex = "99999";
-                    container.style.fontFamily = "Arial, sans-serif";
+                    container.style.padding = "45px";
+                    container.style.textAlign = "center";
+                    container.style.boxShadow = "0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)";
+                    container.style.borderRadius = "2px";
 
                     container.innerHTML = `
-                        <div style="font-weight: bold; margin-bottom: 8px; font-size: 13px; color: #333; text-transform: uppercase;">Report Aggiuntivi</div>
-                        <div style="margin-bottom: 6px;">
-                            <a href="report-prodotti.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 13px;">Report Prodotti</a>
+                        <div style="font-size: 1.5em; font-weight: bold; margin-bottom: 5px; color: #333;">Sales</div>
+                        <div style="color: #666666; font-size: 0.9em; margin-bottom: 20px;">Report Protetti Aggiuntivi</div>
+                        
+                        <hr class="staticrypt-hr" style="margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #eee;" />
+                        
+                        <div style="margin-top: 12px; margin-bottom: 15px;">
+                            <a href="report-prodotti.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 0.9em;">
+                                Report Prodotti
+                            </a>
                         </div>
-                        <div style="margin-bottom: 6px;">
-                            <a href="report-abbonamenti.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 13px;">Report Abbonamenti</a>
+                        <div style="margin-top: 12px; margin-bottom: 15px;">
+                            <a href="report-abbonamenti.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 0.9em;">
+                                Report Abbonamenti
+                            </a>
                         </div>
-                        <div>
-                            <a href="report-carrelli.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 13px;">Report Carrelli</a>
+                        <div style="margin-top: 12px; margin-bottom: 15px;">
+                            <a href="report-carrelli.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 0.9em;">
+                                Report Carrelli
+                            </a>
                         </div>
                     `;
-                    document.body.appendChild(container);
+                    
+                    wrapper.appendChild(container);
+                    document.body.appendChild(wrapper);
                 },
                 clearLocalStorageCallback: null,
             };
 
             const staticrypt = staticryptInitiator.init(staticryptConfig, templateConfig);
 
-            window.onload = async function () {
+            async function initDecryption() {
                 const { isSuccessful } = await staticrypt.handleDecryptOnLoad();
 
                 if (!isSuccessful) {
@@ -726,13 +743,20 @@ exports.init = init;
                         document.getElementById("staticrypt-remember-label").classList.remove("hidden");
                     }
                 }
-            };
+            }
+
+            // Inizializzazione sicura al caricamento del DOM
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", initDecryption);
+            } else {
+                initDecryption();
+            }
 
             const toggleIcon = document.querySelector(".staticrypt-toggle-password-visibility");
             const imgSrcEyeClosed =
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTM4LjggNS4xQzI4LjQtMy4xIDEzLjMtMS4yIDUuMSA5LjJTLTEuMiAzNC43IDkuMiA0Mi45bDU5MiA0NjRjMTAuNCA4LjIgMjUuNSA2LjMgMzMuNy00LjFzNi4zLTI1LjUtNC4xLTMzLjdMNTI1LjYgMzg2LjdjMzkuNi00MC42IDY2LjQtODYuMSA3OS45LTExOC40YzMuMy03LjkgMy4zLTE2LjcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4xQzQ2NS41IDY4LjggNDAwLjggMzIgMzIwIDMyYy02OC4yIDAtMTI1IDI2LjMtMTY5LjMgNjAuOEwzOC44IDUuMXpNMjIzLjEgMTQ5LjVDMjQ4LjYgMTI2LjIgMjgyLjcgMTEyIDMyMCAxMTJjNzkuNSAwIDE0NCA2NC41IDE0NCAxNDRjMCAyNC45LTYuMyA0OC4zLTE3LjQgNjguN0w0MDggMjk0LjVjOC40LTE5LjMgMTAuNi00MS40IDQuOC02My4zYy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM3oiLz48L3N2Zz4=";
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTM4LjggNS4xQzI4LjQtMy4xIDEzLjMtMS4yIDUuMSA5LjJTLTEuMiAzNC43IDkuMiA0Mi45bDU5MiA0NjRjMTAuNCA4LjIgMjUuNSA2LjMgMzMuNy00LjFzNi4zLTI1LjUtNC4xLTMzLjdMNTI1LjYgMzg2LjdjMzkuNi00MC42IDY2LjQtODYuMSA3OS45LTExOC40YzMuMy03LjkgMy4zLTE2LjcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4xQzQ2NS41IDY4LjggNDAwLjggMzIgMzIwIDMyYy02OC4yIDAtMTI1IDI2LjMtMTY5LjMgNjAuOEwzOC44IDUuMXpNMjIzLjEgMTQ5LjVDMjQ4LjYgMTI2LjIgMjgyLjcgMTEyIDMyMCAxMTJjNzkuNSAwIDE0NCA2NC41IDE0NCAxNDRjMCAyNC45LTYuMyA0OC4zLTE3LjQgNjguN0w0MDggMjk0LjVjOC40LTE5LjMgMTAuNi00MS40IDQuOC02My4zYy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMi 6MS03LjQgMTEuN2MyLjEgNi40IDMuMyAxMy4yIDMuMyAyMC4zeiIvPjwvc3ZnPg==";
             const imgSrcEyeOpened =
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTI4OCAzMmMtODAuOCAwLTE0NS41IDM2LjgtMTkyLjYgODAuNkM0OC42IDE1NiAxNy4zIDIwOCAyLjUgMjQzLjdjLTMuMyA3LjktMy4zIDE2LjcgMCAyNC42QzE3LjMgMzA0IDQ4LjYgMzU2IDk1LjQgMzk5LjRDMTQyLjUgNDQzLjIgMjA3LjIgNDgwIDI4OCA0ODBzMTQ1LjUtMzYuOCAxOTIuNi04MC42YzQ6Ni44LTQzLjUgNzguMS05NS40IDkzLTEzMS4xYzMuMy03LjkgMy4zLTE2LjcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4FDNDMzLjUgNjguOCAzNjguOCAzMiAyODggMzJ6TTE0NCAyNTZhMTQ0IDE0NCAwIDEgMSAyODggMCAxNDQgMTQ0IDAgMSAxIC0yODggMHptMTQ0LTY0YzAgMzUuMy0yOC43IDY0LTY0IDY0Yy03LjEgMC0xMy45LTEuMi0yMC4zLTMuM2MtNS41LTEuOC0xMS45IDEuNi0xMS43IDguNGMuMyA2LjkgMS4zIDEzLjggMy4yIDIwLjdjMTMuTy 5MS4yIDY2LjQgODEuNiAxMTcuNiA2Ny45czgxLjYtNjYuNCA2Ny45LTExNy42Yy0xMS4xLTQxLjUtNDguOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM3oiLz48L3N2Zz4=";
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTI4OCAzMmMtODAuOCAwLTE0NS41IDM2LjgtMTkyLjYgODAuNkM0OC42IDE1NiAxNy4zIDIwOCAyLjUgMjQzLjdjLTMuMyA3LjktMy4zIDE2LjcgMCAyNC42QzE3LjMgMzA0IDQ4LjYgMzU2IDk1LjQgMzk5LjRDMTQyLjUgNDQzLjIgMjA3LjIgNDgwIDI4OCA0ODBzMTQ1LjUtMzYuOCAxOTIuNi04MC42YzQ2LjgtNDMuNSA3OC4xLTk1LjQgOTMtMTMxLjFjMy4zLTcuOSAzLjMtMTYuNyAwLTI0LjZjLTE0LjktMzUuNy00Ni4yLTg3LjctOTMtMTMxLjFDNDMzLjUgNjguOCAzNjguOCAzMiAyODggMzJ6TTE0NCAyNTZhMTQ0IDE0NCAwIDEgMSAyODggMCAxNDQgMTQ0IDAgMSAxIC0yODggMHptMTQ0LTY0YzAgMzUuMy0yOC43IDY0LTY0IDY0Yy03LjEgMC0xMy45LTEuMi0yMC4zLTMuM2MtNS41LTEuOC0xMS45IDEuNi0xMS43IDguNGMuMyA2LjkgMS4zIDEzLjggMy4yIDIwLjdjMTMuT0 5MS4yIDY2LjQgODEuNiAxMTcuNiA2Ny45czgxLjYtNjYuNCA2Ny45LTExNy42Yy0xMS4xLTQxLjUtNDguOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM3oiLz48L3N2Zz4=";
             toggleIcon.addEventListener("click", function () {
                 const passwordInput = document.getElementById("staticrypt-password");
                 if (passwordInput.type === "password") {
