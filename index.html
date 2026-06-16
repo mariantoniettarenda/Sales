@@ -13,152 +13,47 @@
         <meta http-equiv="pragma" content="no-cache" />
 
         <style>
-            .staticrypt-hr {
-                margin-top: 20px;
-                margin-bottom: 20px;
-                border: 0;
-                border-top: 1px solid #eee;
+            :root {
+                --brand-50: #eaf6ec;
+                --brand-400: #5fb35a;
+                --brand-500: #3f8f4c;
+                --brand-600: #2f6e3a;
+                --ink-900: #1f2a24;
+                --ink-600: #4b5b50;
+                --ink-400: #6b7d72;
+                --border: #e3e8e4;
+                --surface: #ffffff;
+                --radius-lg: 16px;
+                --radius-md: 10px;
+                --shadow-card: 0 1px 2px rgba(15, 35, 20, 0.05), 0 16px 36px rgba(15, 35, 20, 0.16);
+                --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             }
 
-            .staticrypt-page {
-                width: 360px;
-                padding: 8% 0 0;
-                margin: auto;
+            * {
                 box-sizing: border-box;
             }
 
-            .staticrypt-form {
-                position: relative;
-                z-index: 1;
-                background: #ffffff;
-                max-width: 360px;
-                margin: 0 auto 100px;
-                padding: 45px;
-                text-align: center;
-                box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-            }
-
-            .staticrypt-form input[type="password"],
-            input[type="text"] {
-                background: inherit;
-                border: 0;
-                box-sizing: border-box; /* This ensures padding is included in the total width */
-                font-size: 14px;
-                outline: 0;
-                padding: 15px 30px 15px 15px; /* Adjust the padding to ensure there is space for the icon */
-                width: 100%;
-            }
-
-            .staticrypt-password-container {
-                position: relative;
-                outline: 0;
-                background: #f2f2f2;
-                width: 100%;
-                border: 0;
-                margin: 0 0 15px;
-                box-sizing: border-box;
-            }
-
-            .staticrypt-toggle-password-visibility {
-                cursor: pointer;
-                height: 20px;
-                opacity: 60%;
-                padding: 13px;
-                position: absolute;
-                right: 0;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 20px;
-            }
-
-            .staticrypt-form .staticrypt-decrypt-button {
-                text-transform: uppercase;
-                outline: 0;
-                background: #4CAF50;
-                width: 100%;
-                border: 0;
-                padding: 15px;
-                color: #ffffff;
-                font-size: 14px;
-                cursor: pointer;
-            }
-
-            .staticrypt-form .staticrypt-decrypt-button:hover,
-            .staticrypt-form .staticrypt-decrypt-button:active,
-            .staticrypt-form .staticrypt-decrypt-button:focus {
-                background: #4CAF50;
-                filter: brightness(92%);
-            }
-
-            .staticrypt-html {
-                height: 100%;
-            }
-
+            .staticrypt-html,
             .staticrypt-body {
                 height: 100%;
                 margin: 0;
             }
 
-            .staticrypt-content {
-                height: 100%;
-                margin-bottom: 1em;
-                background: #76B852;
-                font-family: "Arial", sans-serif;
+            .staticrypt-body {
+                background: linear-gradient(160deg, var(--brand-400) 0%, var(--brand-500) 55%, var(--brand-600) 100%);
+                font-family: var(--font-sans);
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
-            }
-
-            .staticrypt-instructions {
-                margin-top: -1em;
-                margin-bottom: 1em;
-            }
-
-            .staticrypt-title {
-                font-size: 1.5em;
-                font-weight: bold;
-                margin-bottom: 5px;
-            }
-
-            .staticrypt-update-info {
-                font-size: 0.85em;
-                color: #666666;
-                margin-top: 8px;
-                margin-bottom: 8px;
-            }
-
-            .staticrypt-link-container {
-                margin-top: 12px;
-                margin-bottom: 15px;
-            }
-
-            .staticrypt-link {
-                color: #4CAF50;
-                text-decoration: none;
-                font-weight: bold;
-                font-size: 0.9em;
-            }
-
-            .staticrypt-link:hover {
-                text-decoration: underline;
-            }
-
-            label.staticrypt-remember {
-                display: flex;
-                align-items: center;
-                margin-bottom: 1em;
-            }
-
-            .staticrypt-remember input[type="checkbox"] {
-                transform: scale(1.5);
-                margin-right: 1em;
             }
 
             .hidden {
                 display: none !important;
             }
 
+            /* loading spinner */
             .staticrypt-spinner-container {
                 height: 100%;
+                min-height: 100vh;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -166,22 +61,12 @@
 
             .staticrypt-spinner {
                 display: inline-block;
-                width: 2rem;
-                height: 2rem;
-                vertical-align: text-bottom;
-                border: 0.25em solid gray;
+                width: 2.25rem;
+                height: 2.25rem;
+                border: 3px solid rgba(255, 255, 255, 0.35);
                 border-right-color: transparent;
                 border-radius: 50%;
-                -webkit-animation: spinner-border 0.75s linear infinite;
                 animation: spinner-border 0.75s linear infinite;
-                animation-duration: 0.75s;
-                animation-timing-function: linear;
-                animation-delay: 0s;
-                animation-iteration-count: infinite;
-                animation-direction: normal;
-                animation-fill-mode: none;
-                animation-play-state: running;
-                animation-name: spinner-border;
             }
 
             @keyframes spinner-border {
@@ -190,10 +75,242 @@
                 }
             }
 
-            @media screen and (-webkit-min-device-pixel-ratio: 0) {
-                .staticrypt-form input[type="password"],
-                input[type="text"] {
-                    font-size: 16px;
+            /* page layout */
+            .staticrypt-content {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 32px 20px;
+            }
+
+            .staticrypt-page {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .staticrypt-form {
+                position: relative;
+                z-index: 1;
+                background: var(--surface);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-card);
+                padding: 40px 36px;
+                text-align: center;
+            }
+
+            /* header */
+            .staticrypt-badge {
+                width: 52px;
+                height: 52px;
+                margin: 0 auto 18px;
+                border-radius: 50%;
+                background: var(--brand-50);
+                color: var(--brand-600);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .staticrypt-title {
+                font-size: clamp(20px, 5vw, 23px);
+                font-weight: 700;
+                color: var(--ink-900);
+                letter-spacing: -0.01em;
+                margin: 0 0 4px;
+            }
+
+            .staticrypt-subtitle {
+                font-size: 14px;
+                color: var(--ink-600);
+                margin: 0;
+            }
+
+            .staticrypt-update-info {
+                display: inline-flex;
+                align-items: center;
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--brand-600);
+                background: var(--brand-50);
+                padding: 6px 12px;
+                border-radius: 999px;
+                margin-top: 16px;
+            }
+
+            /* quick access (no password required) */
+            .staticrypt-eyebrow {
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                color: var(--ink-400);
+                margin: 0 0 10px;
+                text-align: left;
+            }
+
+            .staticrypt-link-container {
+                margin-top: 22px;
+            }
+
+            .staticrypt-link {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+                padding: 12px 14px;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                color: var(--ink-900);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 13.5px;
+                transition: border-color 0.15s ease, background 0.15s ease;
+            }
+
+            .staticrypt-link:hover,
+            .staticrypt-link:focus-visible {
+                border-color: var(--brand-400);
+                background: var(--brand-50);
+            }
+
+            .staticrypt-link-icon {
+                display: flex;
+                color: var(--brand-600);
+                flex-shrink: 0;
+            }
+
+            .staticrypt-link-arrow {
+                margin-left: auto;
+                color: var(--ink-400);
+                flex-shrink: 0;
+            }
+
+            .staticrypt-hr {
+                margin: 26px 0;
+                border: 0;
+                border-top: 1px solid var(--border);
+            }
+
+            /* password form */
+            #staticrypt-form {
+                text-align: left;
+            }
+
+            .staticrypt-password-container {
+                position: relative;
+                display: flex;
+                align-items: center;
+                background: #f4f6f4;
+                border: 1px solid var(--border);
+                border-radius: var(--radius-md);
+                margin: 0 0 16px;
+                transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+            }
+
+            .staticrypt-password-container:focus-within {
+                background: var(--surface);
+                border-color: var(--brand-500);
+                box-shadow: 0 0 0 3px var(--brand-50);
+            }
+
+            .staticrypt-password-icon {
+                position: absolute;
+                left: 14px;
+                display: flex;
+                color: var(--ink-400);
+                pointer-events: none;
+            }
+
+            .staticrypt-form input[type="password"],
+            .staticrypt-form input[type="text"] {
+                background: transparent;
+                border: 0;
+                font-family: var(--font-sans);
+                font-size: 15px;
+                color: var(--ink-900);
+                outline: 0;
+                padding: 13px 44px 13px 40px;
+                width: 100%;
+            }
+
+            .staticrypt-toggle-btn {
+                position: absolute;
+                right: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 34px;
+                height: 34px;
+                border: 0;
+                background: transparent;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: background 0.15s ease;
+            }
+
+            .staticrypt-toggle-btn:hover {
+                background: var(--brand-50);
+            }
+
+            .staticrypt-toggle-password-visibility {
+                width: 20px;
+                height: 20px;
+                pointer-events: none;
+            }
+
+            label.staticrypt-remember {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                font-size: 13.5px;
+                color: var(--ink-600);
+                margin: 2px 0 20px;
+                cursor: pointer;
+            }
+
+            .staticrypt-remember input[type="checkbox"] {
+                width: 17px;
+                height: 17px;
+                margin: 0;
+                accent-color: var(--brand-500);
+                cursor: pointer;
+            }
+
+            .staticrypt-form .staticrypt-decrypt-button {
+                outline: 0;
+                background: var(--brand-500);
+                width: 100%;
+                border: 0;
+                border-radius: var(--radius-md);
+                padding: 14px;
+                color: #ffffff;
+                font-family: var(--font-sans);
+                font-size: 14.5px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.15s ease, transform 0.05s ease;
+            }
+
+            .staticrypt-form .staticrypt-decrypt-button:hover {
+                background: var(--brand-600);
+            }
+
+            .staticrypt-form .staticrypt-decrypt-button:active {
+                transform: scale(0.99);
+            }
+
+            a:focus-visible,
+            button:focus-visible,
+            input:focus-visible {
+                outline: 2px solid var(--brand-600);
+                outline-offset: 2px;
+            }
+
+            @media (max-width: 380px) {
+                .staticrypt-form {
+                    padding: 32px 22px;
                 }
             }
         </style>
@@ -207,47 +324,77 @@
         <div id="staticrypt_content" class="staticrypt-content hidden">
             <div class="staticrypt-page">
                 <div class="staticrypt-form">
-                    <div class="staticrypt-instructions">
-                        <p class="staticrypt-title">Sales</p>
-                        <p>Visualizzazioni Sales</p>
-                        
-                        <!-- Data dell'ultimo aggiornamento -->
-                        <p class="staticrypt-update-info">Ultimo aggiornamento: 15 Giugno 2026</p>
-                        
-                        <!-- Link ai Carrelli Abbandonati -->
-                        <div class="staticrypt-link-container">
-                            <a class="staticrypt-link" href="https://docs.google.com/spreadsheets/d/1_9F_NaAbRGdm_IFfCu61Bd4Sb20v0m-R031Y8dJzWDs/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer">
-                                Carrelli Abbandonati
-                            </a>
-                        </div>
+                    <div class="staticrypt-badge">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="11" width="14" height="9" rx="2" />
+                            <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                        </svg>
+                    </div>
+
+                    <p class="staticrypt-title">Sales</p>
+                    <p class="staticrypt-subtitle">Report e analisi vendite</p>
+
+                    <!-- Data dell'ultimo aggiornamento -->
+                    <p class="staticrypt-update-info">Ultimo aggiornamento: 15 Giugno 2026</p>
+
+                    <!-- Link ai Carrelli Abbandonati: consultabile senza password -->
+                    <div class="staticrypt-link-container">
+                        <p class="staticrypt-eyebrow">Accesso rapido &middot; senza password</p>
+                        <a class="staticrypt-link" href="https://docs.google.com/spreadsheets/d/1_9F_NaAbRGdm_IFfCu61Bd4Sb20v0m-R031Y8dJzWDs/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer">
+                            <span class="staticrypt-link-icon">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="9" cy="20" r="1.4" />
+                                    <circle cx="18" cy="20" r="1.4" />
+                                    <path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6" />
+                                </svg>
+                            </span>
+                            Carrelli abbandonati
+                            <span class="staticrypt-link-arrow">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M7 17 17 7M9 7h8v8" />
+                                </svg>
+                            </span>
+                        </a>
                     </div>
 
                     <hr class="staticrypt-hr" />
 
                     <form id="staticrypt-form" action="#" method="post">
+                        <p class="staticrypt-eyebrow">Inserisci la password per continuare</p>
+
                         <div class="staticrypt-password-container">
+                            <span class="staticrypt-password-icon">
+                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="5" y="11" width="14" height="9" rx="2" />
+                                    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                                </svg>
+                            </span>
+
                             <input
                                 id="staticrypt-password"
                                 type="password"
                                 name="password"
                                 placeholder="Password"
+                                autocomplete="current-password"
                                 autofocus
                             />
 
-                            <img
-                                class="staticrypt-toggle-password-visibility"
-                                alt="template_toggle_show"
-                                title="template_toggle_show"
-                                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTM4LjggNS4xQzI4LjQtMy4xIDEzLjMtMS4yIDUuMSA5LjJTLTEuMiAzNC43IDkuMiA0Mi45bDU5MiA0NjRjMTAuNCA4LjIgMjUuNSA2LjMgMzMuNy00LjFzNi4zLTI1LjUtNC4xLTMzLjdMNTI1LjYgMzg2LjdjMzkuNi00MC42IDY2LjQtODYuMSA3OS45LTExOC40YzMuMy03LjkgMy4zLTE6NcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4xQzQ2NS41IDY4LjggNDAwLjggMzIgMzIwIDMyYy02OC4yIDAtMTI1IDI2LjMtMTY5LjMgNjAuOEwzOC44IDUuMXpNMjIzLjEgMTQ5LjVDMjQ4LjYgMTI2LjIgMjgyLjcgMTEyIDMyMCAxMTJjNzkuNSAwIDE0NCA2NC41IDE0NCAxNDRjMCAyNC45LTYuMyA0OC4zLTE3LjQgNjguN0w0MDggMjk0LjVjOC40LTE5LjMgMTAuNi00MS40IDQuOC02My4zYy0xMS4xLTQxLjUtNDguOC02OS40LTg4LjYtNzIlMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM3oiLz48L3N2Zz4="
-                            />
+                            <button type="button" class="staticrypt-toggle-btn" aria-label="Mostra o nascondi la password">
+                                <img
+                                    class="staticrypt-toggle-password-visibility"
+                                    alt="template_toggle_show"
+                                    title="template_toggle_show"
+                                    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiM1YjZiNjIiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xIDEyczQtNyAxMS03IDExIDcgMTEgNy00IDctMTEgNy0xMS03LTExLTd6Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjwvc3ZnPg=="
+                                />
+                            </button>
                         </div>
 
                         <label id="staticrypt-remember-label" class="staticrypt-remember hidden">
                             <input id="staticrypt-remember" type="checkbox" name="remember" />
-                            Remember me
+                            Ricordami su questo dispositivo
                         </label>
 
-                        <input type="submit" class="staticrypt-decrypt-button" value="DECRYPT" />
+                        <input type="submit" class="staticrypt-decrypt-button" value="Accedi" />
                     </form>
                 </div>
             </div>
@@ -678,52 +825,161 @@ exports.init = init;
                 rememberExpirationKey: "staticrypt_expiration",
                 rememberPassphraseKey: "staticrypt_passphrase",
                 replaceHtmlCallback: function (plainHTML) {
-                    // Sovrascrive il documento con il contenuto decrittato standard
+                    // Sovrascrive il documento con il contenuto decrittato (questo cancella anche
+                    // gli <style> del documento originale: per questo motivo i token di stile
+                    // qui sotto sono ridichiarati, non importati dall'head della pagina di blocco)
                     document.write(plainHTML);
                     document.close();
 
-                    // Imposta il background per mantenere la coerenza visiva
-                    document.body.style.background = "#76B852";
-                    document.body.style.margin = "0";
-                    document.body.style.fontFamily = "Arial, sans-serif";
+                    const styleTag = document.createElement("style");
+                    styleTag.textContent = `
+                        :root {
+                            --brand-50: #eaf6ec;
+                            --brand-400: #5fb35a;
+                            --brand-500: #3f8f4c;
+                            --brand-600: #2f6e3a;
+                            --ink-900: #1f2a24;
+                            --ink-600: #4b5b50;
+                            --ink-400: #6b7d72;
+                            --border: #e3e8e4;
+                            --radius-lg: 16px;
+                            --radius-md: 10px;
+                            --shadow-card: 0 1px 2px rgba(15, 35, 20, 0.05), 0 16px 36px rgba(15, 35, 20, 0.16);
+                            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                        }
+                        .sales-extra-reports-wrapper {
+                            width: 100%;
+                            max-width: 480px;
+                            box-sizing: border-box;
+                            margin: 32px auto 60px;
+                            padding: 0 20px;
+                        }
+                        .sales-extra-reports-card {
+                            background: #ffffff;
+                            border-radius: var(--radius-lg);
+                            box-shadow: var(--shadow-card);
+                            padding: 28px 26px;
+                            box-sizing: border-box;
+                        }
+                        .sales-extra-reports-eyebrow {
+                            font-size: 11px;
+                            font-weight: 700;
+                            letter-spacing: 0.04em;
+                            text-transform: uppercase;
+                            color: var(--ink-400);
+                            margin: 0 0 16px;
+                        }
+                        .sales-extra-reports-grid {
+                            display: grid;
+                            grid-template-columns: 1fr;
+                            gap: 10px;
+                        }
+                        @media (min-width: 460px) {
+                            .sales-extra-reports-grid {
+                                grid-template-columns: repeat(3, 1fr);
+                            }
+                        }
+                        .sales-report-tile {
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            padding: 14px;
+                            border: 1px solid var(--border);
+                            border-radius: var(--radius-md);
+                            text-decoration: none;
+                            color: var(--ink-900);
+                            font-family: var(--font-sans);
+                            font-weight: 600;
+                            font-size: 13.5px;
+                            transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+                        }
+                        .sales-report-tile:hover,
+                        .sales-report-tile:focus-visible {
+                            border-color: var(--brand-400);
+                            background: var(--brand-50);
+                            transform: translateY(-1px);
+                            outline: none;
+                        }
+                        .sales-report-tile-icon {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 32px;
+                            height: 32px;
+                            border-radius: 8px;
+                            background: var(--brand-50);
+                            color: var(--brand-600);
+                            flex-shrink: 0;
+                        }
+                        .sales-report-tile-arrow {
+                            margin-left: auto;
+                            color: var(--ink-400);
+                            flex-shrink: 0;
+                        }
+                    `;
+                    document.head.appendChild(styleTag);
 
-                    // Crea una scheda (card) centrale per i report aggiuntivi, coerente con lo stile dei carrelli
+                    // Crea una scheda di navigazione verso gli altri report protetti,
+                    // coerente nello stile con la schermata di accesso
                     const wrapper = document.createElement("div");
-                    wrapper.style.width = "360px";
-                    wrapper.style.margin = "40px auto 100px";
-                    wrapper.style.boxSizing = "border-box";
+                    wrapper.className = "sales-extra-reports-wrapper";
 
-                    const container = document.createElement("div");
-                    container.style.backgroundColor = "#ffffff";
-                    container.style.padding = "45px";
-                    container.style.textAlign = "center";
-                    container.style.boxShadow = "0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)";
-                    container.style.borderRadius = "2px";
+                    const card = document.createElement("div");
+                    card.className = "sales-extra-reports-card";
 
-                    container.innerHTML = `
-                        <div style="font-size: 1.5em; font-weight: bold; margin-bottom: 5px; color: #333;">Sales</div>
-                        <div style="color: #666666; font-size: 0.9em; margin-bottom: 20px;">Report Protetti Aggiuntivi</div>
-                        
-                        <hr class="staticrypt-hr" style="margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #eee;" />
-                        
-                        <div style="margin-top: 12px; margin-bottom: 15px;">
-                            <a href="report-prodotti.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 0.9em;">
+                    card.innerHTML = `
+                        <p class="sales-extra-reports-eyebrow">Altri report disponibili</p>
+                        <div class="sales-extra-reports-grid">
+                            <a class="sales-report-tile" href="report-prodotti.html" target="_blank" rel="noopener noreferrer">
+                                <span class="sales-report-tile-icon">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 8 12 3 3 8l9 5 9-5z" />
+                                        <path d="M3 8v8l9 5 9-5V8" />
+                                        <path d="M12 13v8" />
+                                    </svg>
+                                </span>
                                 Report Prodotti
+                                <span class="sales-report-tile-arrow">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M7 17 17 7M9 7h8v8" />
+                                    </svg>
+                                </span>
                             </a>
-                        </div>
-                        <div style="margin-top: 12px; margin-bottom: 15px;">
-                            <a href="report-abbonamenti.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 0.9em;">
+                            <a class="sales-report-tile" href="report-abbonamenti.html" target="_blank" rel="noopener noreferrer">
+                                <span class="sales-report-tile-icon">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                                        <path d="M21 3v5h-5" />
+                                        <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+                                        <path d="M3 21v-5h5" />
+                                    </svg>
+                                </span>
                                 Report Abbonamenti
+                                <span class="sales-report-tile-arrow">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M7 17 17 7M9 7h8v8" />
+                                    </svg>
+                                </span>
                             </a>
-                        </div>
-                        <div style="margin-top: 12px; margin-bottom: 15px;">
-                            <a href="report-carrelli.html" target="_blank" style="color: #4CAF50; text-decoration: none; font-weight: bold; font-size: 0.9em;">
+                            <a class="sales-report-tile" href="report-carrelli.html" target="_blank" rel="noopener noreferrer">
+                                <span class="sales-report-tile-icon">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="9" cy="20" r="1.4" />
+                                        <circle cx="18" cy="20" r="1.4" />
+                                        <path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6" />
+                                    </svg>
+                                </span>
                                 Report Carrelli
+                                <span class="sales-report-tile-arrow">
+                                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M7 17 17 7M9 7h8v8" />
+                                    </svg>
+                                </span>
                             </a>
                         </div>
                     `;
-                    
-                    wrapper.appendChild(container);
+
+                    wrapper.appendChild(card);
                     document.body.appendChild(wrapper);
                 },
                 clearLocalStorageCallback: null,
@@ -754,9 +1010,9 @@ exports.init = init;
 
             const toggleIcon = document.querySelector(".staticrypt-toggle-password-visibility");
             const imgSrcEyeClosed =
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTM4LjggNS4xQzI4LjQtMy4xIDEzLjMtMS4yIDUuMSA5LjJTLTEuMiAzNC43IDkuMiA0Mi45bDU5MiA0NjRjMTAuNCA4LjIgMjUuNSA2LjMgMzMuNy00LjFzNi4zLTI1LjUtNC4xLTMzLjdMNTI1LjYgMzg2LjdjMzkuNi00MC42IDY2LjQtODYuMSA3OS45LTExOC40YzMuMy03LjkgMy4zLTE2LjcgMC0yNC42Yy0xNC45LTM1LjctNDYuMi04Ny43LTkzLTEzMS4xQzQ2NS41IDY4LjggNDAwLjggMzIgMzIwIDMyYy02OC4yIDAtMTI1IDI2LjMtMTY5LjMgNjAuOEwzOC44IDUuMXpNMjIzLjEgMTQ5LjVDMjQ4LjYgMTI2LjIgMjgyLjcgMTEyIDMyMCAxMTJjNzkuNSAwIDE0NCA2NC41IDE0NCAxNDRjMCAyNC45LTYuMyA0OC4zLTE3LjQgNjguN0w0MDggMjk0LjVjOC40LTE5LjMgMTAuNi00MS40IDQuOC02My4zYy0xMS4xLTQxLjUtNDcuOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMi 6MS03LjQgMTEuN2MyLjEgNi40IDMuMyAxMy4yIDMuMyAyMC4zeiIvPjwvc3ZnPg==";
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiM1YjZiNjIiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xIDEyczQtNyAxMS03IDExIDcgMTEgNy00IDctMTEgNy0xMS03LTExLTd6Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjwvc3ZnPg==";
             const imgSrcEyeOpened =
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48IS0tIUZvbnQgQXdlc29tZSBGcmVlIDYuNS4yIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlL2ZyZWUgQ29weXJpZ2h0IDIwMjQgRm9udGljb25zLCBJbmMuLS0+PHBhdGggZD0iTTI4OCAzMmMtODAuOCAwLTE0NS41IDM2LjgtMTkyLjYgODAuNkM0OC42IDE1NiAxNy4zIDIwOCAyLjUgMjQzLjdjLTMuMyA3LjktMy4zIDE2LjcgMCAyNC42QzE3LjMgMzA0IDQ4LjYgMzU2IDk1LjQgMzk5LjRDMTQyLjUgNDQzLjIgMjA3LjIgNDgwIDI4OCA0ODBzMTQ1LjUtMzYuOCAxOTIuNi04MC42YzQ2LjgtNDMuNSA3OC4xLTk1LjQgOTMtMTMxLjFjMy4zLTcuOSAzLjMtMTYuNyAwLTI0LjZjLTE0LjktMzUuNy00Ni4yLTg3LjctOTMtMTMxLjFDNDMzLjUgNjguOCAzNjguOCAzMiAyODggMzJ6TTE0NCAyNTZhMTQ0IDE0NCAwIDEgMSAyODggMCAxNDQgMTQ0IDAgMSAxIC0yODggMHptMTQ0LTY0YzAgMzUuMy0yOC43IDY0LTY0IDY0Yy03LjEgMC0xMy45LTEuMi0yMC4zLTMuM2MtNS41LTEuOC0xMS45IDEuNi0xMS43IDguNGMuMyA2LjkgMS4zIDEzLjggMy4yIDIwLjdjMTMuT0 5MS4yIDY2LjQgODEuNiAxMTcuNiA2Ny45czgxLjYtNjYuNCA2Ny45LTExNy42Yy0xMS4xLTQxLjUtNDguOC02OS40LTg4LjYtNzEuMWMtNS44LS4yLTkuMiA2LjEtNy40IDExLjdjMi4xIDYuNCAzLjMgMTMuMiAzLjMgMjAuM3oiLz48L3N2Zz4=";
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiM1YjZiNjIiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xIDEyczQtNyAxMS03IDExIDcgMTEgNy00IDctMTEgNy0xMS03LTExLTd6Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjxsaW5lIHgxPSIyIiB5MT0iMiIgeDI9IjIyIiB5Mj0iMjIiLz48L3N2Zz4=";
             toggleIcon.addEventListener("click", function () {
                 const passwordInput = document.getElementById("staticrypt-password");
                 if (passwordInput.type === "password") {
