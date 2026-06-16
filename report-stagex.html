@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>StageX BI Dashboard - YoY & Channel Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        .chart-wrapper { position: relative; height: 300px; width: 100%; }
+        .filter-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; }
+        .filter-btn { transition: all 0.2s; border: 1px solid #e2e8f0; cursor: pointer; }
+        .kpi-card { transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-900">
+
+    <div class="max-w-7xl mx-auto p-4 md:p-6">
+        <!-- Header -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border border-slate-200">
+            <div>
+                <h1 class="text-2xl font-black uppercase tracking-tighter italic text-slate-800">StageX <span class="text-blue-600">BI Engine v9</span></h1>
+                <p class="text-slate-500 text-sm font-medium">Analisi Comparativa YoY, Canali e Prodotti</p>
+            </div>
+            <input type="file" id="fileInput" accept=".xlsx, .xls" class="hidden">
+            <label for="fileInput" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold cursor-pointer transition-all shadow-lg flex items-center gap-2">
+                <span>📂</span> Carica Dati Excel
+            </label>
+        </div>
+
+        <!-- Pannello Filtri Avanzati -->
+        <div id="filterPanel" class="hidden bg-white p-6 rounded-2xl shadow-sm mb-6 border border-slate-200">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Filtro Anni -->
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 mb-2 block tracking-widest">Anni</label>
+                    <div id="yearFilters" class="flex flex-wrap gap-2"></div>
+                </div>
+                <!-- Filtro Mesi -->
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 mb-2 block tracking-widest">Mesi</label>
+                    <div id="monthFilters" class="flex flex-wrap gap-1"></div>
+                </div>
+                <!-- Filtro Canale -->
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 mb-2 block tracking-widest">Canale di Vendita</label>
+                    <select id="channelFilter" onchange="processAndRender()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-bold text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="ALL">Tutti i Canali</option>
+                    </select>
+                </div>
+                <!-- Filtro Prodotto -->
+                <div>
+                    <label class="text-[10px] font-black uppercase text-slate-400 mb-2 block tracking-widest">Prodotto</label>
+                    <div class="flex flex-col gap-2">
+                        <select id="tabFilter" onchange="updateArticleDropdown(); processAndRender();" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-bold text-sm">
+                            <option value="total">Tutte le Linee</option>
+                            <option value="plus">Solo PLUS</option>
+                            <option value="advanced">Solo ADVANCED</option>
+                        </select>
+                        <select id="articleFilter" onchange="processAndRender()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 font-bold text-sm">
+                            <option value="ALL">Tutti gli articoli</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex justify-end">
+                <button onclick="resetFilters()" class="text-xs font-bold text-blue-600 hover:underline uppercase tracking-tighter">Reset Filtri</button>
+            </div>
+        </div>
+
+        <div id="dashboard" class="hidden">
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 kpi-card">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Fatturato</p>
+                    <p id="kpi-total-rev" class="text-xl font-black text-slate-800">€ 0</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 kpi-card">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Volume</p>
+                    <p id="kpi-volume" class="text-xl font-black text-slate-800">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-blue-500 kpi-card">
+                    <p class="text-[10px] font-bold text-blue-600 uppercase">ARPU</p>
+                    <p id="kpi-arpu" class="text-xl font-black text-blue-600">€ 0</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-purple-500 kpi-card">
+                    <p class="text-[10px] font-bold text-purple-600 uppercase">Incidenza Promo</p>
+                    <p id="kpi-promo-perc" class="text-xl font-black text-purple-600">0%</p>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- NUOVO GRAFICO: Confronto YoY 2025 vs 2026 -->
+                <div class="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xs font-black mb-4 uppercase text-slate-400 tracking-widest">Confronto Fatturato Mensile: 2025 vs 2026 (YoY)</h3>
+                    <div class="chart-wrapper"><canvas id="yoyChart"></canvas></div>
+                </div>
+
+                <!-- Fatturato Promo vs Baseline -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xs font-black mb-4 uppercase text-slate-400 tracking-widest">Revenue: Promo vs Baseline</h3>
+                    <div class="chart-wrapper"><canvas id="revenueChart"></canvas></div>
+                </div>
+
+                <!-- Mix Articoli -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xs font-black mb-4 uppercase text-slate-400 tracking-widest">Mix Articoli</h3>
+                    <div class="chart-wrapper"><canvas id="mixChart"></canvas></div>
+                </div>
+
+                <!-- Canali di Vendita -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xs font-black mb-4 uppercase text-slate-400 tracking-widest">Fatturato per Canale</h3>
+                    <div class="chart-wrapper"><canvas id="channelChart"></canvas></div>
+                </div>
+
+                <!-- ARPU Trend -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xs font-black mb-4 uppercase text-slate-400 tracking-widest">Trend Prezzo Medio (ARPU)</h3>
+                    <div class="chart-wrapper"><canvas id="arpuChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Placeholder -->
+        <div id="placeholder" class="text-center py-32 bg-white rounded-2xl border-2 border-dashed border-slate-300">
+            <p class="text-slate-400 font-medium text-xl italic">Carica il file Excel per analizzare canali e prodotti.</p>
+        </div>
+
+        <!-- Rightmark / Footer -->
+        <footer class="mt-12 pb-8 text-center border-t border-slate-200 pt-8">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+                Analisi eseguita da: <span class="text-slate-700">Mariantonietta Renda</span>
+            </p>
+            <p class="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">
+                Data esecuzione: <span id="executionDate" class="text-slate-600"></span>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Imposta la data di esecuzione al caricamento
+        document.getElementById('executionDate').innerText = new Date().toLocaleDateString('it-IT', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        let rawData = [];
+        let selectedYears = new Set();
+        let selectedMonths = new Set();
+        let charts = { rev: null, arpu: null, mix: null, channel: null, yoy: null };
+
+        const PROMOS = [
+            { name: 'Ottobre All', start: new Date('2025-10-03'), end: new Date('2025-10-17'), items: 'ALL' },
+            { name: 'Novembre All', start: new Date('2025-11-05'), end: new Date('2025-11-19'), items: 'ALL' },
+            { name: 'Black Friday 12M', start: new Date('2025-11-24'), end: new Date('2025-12-01'), items: ['STX12.2', 'STX12.3'] },
+            { name: 'Promo 2026', start: new Date('2026-02-10'), end: new Date('2026-03-31'), items: 'MULTI' }
+        ];
+
+        const ARTICLE_MAP = {
+            'STX0.2': { v: 'PLUS', m: 1 }, 'STX0.3': { v: 'ADVANCED', m: 1 },
+            'STX3.2': { v: 'PLUS', m: 3 }, 'STX3.3': { v: 'ADVANCED', m: 3 },
+            'STX6.2': { v: 'PLUS', m: 6 }, 'STX6.3': { v: 'ADVANCED', m: 6 },
+            'STX12.2': { v: 'PLUS', m: 12 }, 'STX12.3': { v: 'ADVANCED', m: 12 }
+        };
+
+        const MONTH_NAMES = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+
+        document.getElementById('fileInput').addEventListener('change', handleFile);
+
+        function handleFile(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                rawData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+                
+                initFilters();
+                document.getElementById('placeholder').classList.add('hidden');
+                document.getElementById('filterPanel').classList.remove('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                updateArticleDropdown();
+                processAndRender();
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function initFilters() {
+            const years = new Set();
+            const channels = new Set();
+            rawData.forEach(row => {
+                const d = excelDateToJS(row['Data vendita']);
+                if (!isNaN(d)) years.add(d.getFullYear());
+                if (row['Canale']) channels.add(row['Canale']);
+            });
+
+            const yearDiv = document.getElementById('yearFilters');
+            yearDiv.innerHTML = '';
+            Array.from(years).sort().forEach(y => {
+                const btn = createFilterBtn(y, () => toggleFilter(selectedYears, y, btn));
+                yearDiv.appendChild(btn);
+            });
+
+            const monthDiv = document.getElementById('monthFilters');
+            monthDiv.innerHTML = '';
+            MONTH_NAMES.forEach((m, i) => {
+                const btn = createFilterBtn(m, () => toggleFilter(selectedMonths, i, btn));
+                monthDiv.appendChild(btn);
+            });
+
+            const chanSelect = document.getElementById('channelFilter');
+            chanSelect.innerHTML = '<option value="ALL">Tutti i Canali</option>';
+            Array.from(channels).sort().forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c; opt.innerText = c; chanSelect.appendChild(opt);
+            });
+        }
+
+        function createFilterBtn(label, onClick) {
+            const btn = document.createElement('button');
+            btn.innerText = label;
+            btn.className = 'filter-btn px-2 py-1 rounded text-[10px] font-bold bg-white text-slate-500';
+            btn.onclick = onClick;
+            return btn;
+        }
+
+        function toggleFilter(set, value, btn) {
+            if (set.has(value)) { set.delete(value); btn.classList.remove('active'); }
+            else { set.add(value); btn.classList.add('active'); }
+            processAndRender();
+        }
+
+        function resetFilters() {
+            selectedYears.clear(); selectedMonths.clear();
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('channelFilter').value = 'ALL';
+            document.getElementById('tabFilter').value = 'total';
+            updateArticleDropdown();
+            processAndRender();
+        }
+
+        function excelDateToJS(serial) {
+            if (serial instanceof Date) return serial;
+            if (typeof serial === 'number') return new Date(Math.round((serial - 25569) * 86400 * 1000));
+            return new Date(serial);
+        }
+
+        function updateArticleDropdown() {
+            const tab = document.getElementById('tabFilter').value;
+            const select = document.getElementById('articleFilter');
+            select.innerHTML = '<option value="ALL">Tutti gli articoli</option>';
+            Object.keys(ARTICLE_MAP).forEach(code => {
+                if (tab === 'total' || ARTICLE_MAP[code].v === tab.toUpperCase()) {
+                    const opt = document.createElement('option');
+                    opt.value = code; opt.innerText = code; select.appendChild(opt);
+                }
+            });
+        }
+
+        function processAndRender() {
+            const tab = document.getElementById('tabFilter').value;
+            const selectedArt = document.getElementById('articleFilter').value;
+            const selectedChan = document.getElementById('channelFilter').value;
+            
+            const monthly = {};
+            const articleMix = {};
+            const channelMix = {};
+            
+            const yoy2025 = Array(12).fill(0);
+            const yoy2026 = Array(12).fill(0);
+
+            let totalRev = 0, promoRev = 0, totalQty = 0;
+
+            rawData.forEach(row => {
+                const artStr = (row['Articolo'] || "").toString();
+                const foundCode = Object.keys(ARTICLE_MAP).find(code => artStr.includes(code));
+                if (!foundCode) return;
+
+                const info = ARTICLE_MAP[foundCode];
+                const date = excelDateToJS(row['Data vendita']);
+                if (isNaN(date)) return;
+
+                const passProduct = (tab === 'total' || info.v === tab.toUpperCase()) && (selectedArt === 'ALL' || foundCode === selectedArt);
+                const passChannel = (selectedChan === 'ALL' || row['Canale'] === selectedChan);
+                
+                if (!passProduct || !passChannel) return;
+
+                const amount = parseFloat((row['Importo (€)'] || row['Importo'] || "0").toString().replace(/[^\d,.-]/g, '').replace(',', '.')) || 0;
+                const qty = parseInt(row['Quantità']) || 1;
+                const year = date.getFullYear();
+                const month = date.getMonth();
+
+                if (year === 2025) yoy2025[month] += amount;
+                if (year === 2026) yoy2026[month] += amount;
+
+                if (selectedYears.size > 0 && !selectedYears.has(year)) return;
+                if (selectedMonths.size > 0 && !selectedMonths.has(month)) return;
+
+                const monthKey = year + '-' + String(month + 1).padStart(2, '0');
+                const isPromo = getPromoName(date, foundCode);
+
+                if (!monthly[monthKey]) monthly[monthKey] = { baseline: 0, promo: 0, qty: 0 };
+                if (isPromo) { monthly[monthKey].promo += amount; promoRev += amount; }
+                else { monthly[monthKey].baseline += amount; }
+                monthly[monthKey].qty += qty;
+
+                articleMix[foundCode] = (articleMix[foundCode] || 0) + amount;
+                const chan = row['Canale'] || 'N/D';
+                channelMix[chan] = (channelMix[chan] || 0) + amount;
+
+                totalRev += amount;
+                totalQty += qty;
+            });
+
+            updateKPIs(totalRev, promoRev, totalQty);
+            renderCharts(monthly, articleMix, channelMix, yoy2025, yoy2026);
+        }
+
+        function getPromoName(date, artCode) {
+            const artInfo = ARTICLE_MAP[artCode];
+            for (let p of PROMOS) {
+                if (date >= p.start && date <= p.end) {
+                    if (p.items === 'ALL') return p.name;
+                    if (Array.isArray(p.items) && p.items.includes(artCode)) return p.name;
+                    if (p.items === 'MULTI' && artInfo.m > 1) return p.name;
+                }
+            }
+            return null;
+        }
+
+        function updateKPIs(total, promo, qty) {
+            document.getElementById('kpi-total-rev').innerText = '€ ' + total.toLocaleString('it-IT', {maximumFractionDigits:0});
+            document.getElementById('kpi-volume').innerText = qty;
+            document.getElementById('kpi-arpu').innerText = qty > 0 ? '€ ' + (total/qty).toFixed(2) : '€ 0';
+            document.getElementById('kpi-promo-perc').innerText = total > 0 ? ((promo/total)*100).toFixed(1) + '%' : '0%';
+        }
+
+        function renderCharts(monthlyData, mixData, chanData, yoy25, yoy26) {
+            const labels = Object.keys(monthlyData).sort();
+            
+            if (charts.yoy) charts.yoy.destroy();
+            charts.yoy = new Chart(document.getElementById('yoyChart'), {
+                type: 'line',
+                data: {
+                    labels: MONTH_NAMES,
+                    datasets: [
+                        { label: 'Fatturato 2025', data: yoy25, borderColor: '#cbd5e1', backgroundColor: 'transparent', borderDash: [5, 5], tension: 0.3 },
+                        { label: 'Fatturato 2026', data: yoy26.map(v => v === 0 ? null : v), borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3, borderWidth: 3 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { tooltip: { mode: 'index', intersect: false } } }
+            });
+
+            if (charts.rev) charts.rev.destroy();
+            charts.rev = new Chart(document.getElementById('revenueChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Promo', data: labels.map(l => monthlyData[l].promo), backgroundColor: '#9333ea' },
+                        { label: 'Baseline', data: labels.map(l => monthlyData[l].baseline), backgroundColor: '#cbd5e1' }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
+            });
+
+            if (charts.mix) charts.mix.destroy();
+            charts.mix = new Chart(document.getElementById('mixChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(mixData),
+                    datasets: [{ data: Object.values(mixData), backgroundColor: ['#1e293b', '#3b82f6', '#60a5fa', '#9333ea', '#fb923c'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 9 } } } } }
+            });
+
+            if (charts.channel) charts.channel.destroy();
+            charts.channel = new Chart(document.getElementById('channelChart'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(chanData),
+                    datasets: [{ label: 'Fatturato', data: Object.values(chanData), backgroundColor: '#10b981' }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            if (charts.arpu) charts.arpu.destroy();
+            charts.arpu = new Chart(document.getElementById('arpuChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'ARPU (€)',
+                        data: labels.map(l => (monthlyData[l].baseline + monthlyData[l].promo) / monthlyData[l].qty),
+                        borderColor: '#3b82f6', tension: 0.3, fill: true, backgroundColor: 'rgba(59, 130, 246, 0.05)'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
+</body>
+</html>
