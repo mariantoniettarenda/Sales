@@ -14,19 +14,20 @@
 
         <style>
             :root {
-                --brand-50: #eaf6ec;
-                --brand-400: #5fb35a;
-                --brand-500: #3f8f4c;
-                --brand-600: #2f6e3a;
-                --ink-900: #1f2a24;
-                --ink-600: #4b5b50;
-                --ink-400: #6b7d72;
-                --border: #e3e8e4;
-                --surface: #ffffff;
+                --bg-color: #fafafa;
+                --panel-bg: #ffffff;
+                --panel-border: rgba(0, 0, 0, 0.06);
+                --accent: #111111;
+                --accent-hover: #222222;
+                --accent-light: #f4f4f5;
+                --text-primary: #18181b;
+                --text-secondary: #71717a;
+                --text-muted: #a1a1aa;
+                --radius-xl: 20px;
                 --radius-lg: 16px;
                 --radius-md: 10px;
-                --shadow-card: 0 1px 2px rgba(15, 35, 20, 0.05), 0 16px 36px rgba(15, 35, 20, 0.16);
-                --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+                --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             }
 
             * {
@@ -40,7 +41,10 @@
             }
 
             .staticrypt-body {
-                background: linear-gradient(160deg, var(--brand-400) 0%, var(--brand-500) 55%, var(--brand-600) 100%);
+                background-color: var(--bg-color);
+                background-image: 
+                    radial-gradient(at 0% 0%, rgba(244, 244, 245, 0.8) 0, transparent 50%), 
+                    radial-gradient(at 100% 0%, rgba(228, 228, 231, 0.5) 0, transparent 50%);
                 font-family: var(--font-sans);
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
@@ -52,21 +56,22 @@
 
             /* loading spinner */
             .staticrypt-spinner-container {
-                height: 100%;
-                min-height: 100vh;
+                position: fixed;
+                inset: 0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                background: var(--bg-color);
+                z-index: 999;
             }
 
             .staticrypt-spinner {
-                display: inline-block;
-                width: 2.25rem;
-                height: 2.25rem;
-                border: 3px solid rgba(255, 255, 255, 0.35);
-                border-right-color: transparent;
+                width: 28px;
+                height: 28px;
+                border: 2px solid var(--text-muted);
+                border-top-color: var(--accent);
                 border-radius: 50%;
-                animation: spinner-border 0.75s linear infinite;
+                animation: spinner-border 0.8s cubic-bezier(0.6, 0.2, 0.1, 1) infinite;
             }
 
             @keyframes spinner-border {
@@ -81,116 +86,87 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 32px 20px;
+                padding: 40px 24px;
+                animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
             }
 
             .staticrypt-page {
                 width: 100%;
-                max-width: 400px;
+                max-width: 420px;
                 margin: 0 auto;
             }
 
             .staticrypt-form {
                 position: relative;
                 z-index: 1;
-                background: var(--surface);
-                border-radius: var(--radius-lg);
+                background: var(--panel-bg);
+                border: 1px solid var(--panel-border);
+                border-radius: var(--radius-xl);
                 box-shadow: var(--shadow-card);
-                padding: 40px 36px;
+                padding: 48px 40px;
                 text-align: center;
             }
 
             /* header */
             .staticrypt-badge {
-                width: 52px;
-                height: 52px;
-                margin: 0 auto 18px;
+                width: 56px;
+                height: 56px;
+                margin: 0 auto 24px;
                 border-radius: 50%;
-                background: var(--brand-50);
-                color: var(--brand-600);
+                background: var(--accent-light);
+                color: var(--accent);
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                transition: transform 0.3s ease;
+            }
+
+            .staticrypt-form:hover .staticrypt-badge {
+                transform: scale(1.05) rotate(5deg);
             }
 
             .staticrypt-title {
-                font-size: clamp(20px, 5vw, 23px);
+                font-size: 24px;
                 font-weight: 700;
-                color: var(--ink-900);
-                letter-spacing: -0.01em;
-                margin: 0 0 4px;
+                color: var(--text-primary);
+                letter-spacing: -0.03em;
+                margin: 0 0 6px;
             }
 
             .staticrypt-subtitle {
                 font-size: 14px;
-                color: var(--ink-600);
-                margin: 0;
+                color: var(--text-secondary);
+                margin: 0 0 20px;
+                line-height: 1.5;
             }
 
             .staticrypt-update-info {
                 display: inline-flex;
                 align-items: center;
-                font-size: 12px;
+                font-size: 11px;
                 font-weight: 600;
-                color: var(--brand-600);
-                background: var(--brand-50);
-                padding: 6px 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--text-secondary);
+                background: var(--accent-light);
+                padding: 6px 14px;
                 border-radius: 999px;
-                margin-top: 16px;
+                margin: 0 auto 32px;
             }
 
-            /* quick access (no password required) */
             .staticrypt-eyebrow {
                 font-size: 11px;
                 font-weight: 700;
-                letter-spacing: 0.04em;
+                letter-spacing: 0.06em;
                 text-transform: uppercase;
-                color: var(--ink-400);
-                margin: 0 0 10px;
-                text-align: left;
-            }
-
-            .staticrypt-link-container {
-                margin-top: 22px;
-            }
-
-            .staticrypt-link {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                width: 100%;
-                padding: 12px 14px;
-                border: 1px solid var(--border);
-                border-radius: var(--radius-md);
-                color: var(--ink-900);
-                text-decoration: none;
-                font-weight: 600;
-                font-size: 13.5px;
-                transition: border-color 0.15s ease, background 0.15s ease;
-            }
-
-            .staticrypt-link:hover,
-            .staticrypt-link:focus-visible {
-                border-color: var(--brand-400);
-                background: var(--brand-50);
-            }
-
-            .staticrypt-link-icon {
-                display: flex;
-                color: var(--brand-600);
-                flex-shrink: 0;
-            }
-
-            .staticrypt-link-arrow {
-                margin-left: auto;
-                color: var(--ink-400);
-                flex-shrink: 0;
-            }
-
-            .staticrypt-hr {
-                margin: 26px 0;
-                border: 0;
-                border-top: 1px solid var(--border);
+                color: var(--text-muted);
+                margin-bottom: 12px;
+                display: block;
             }
 
             /* password form */
@@ -202,24 +178,24 @@
                 position: relative;
                 display: flex;
                 align-items: center;
-                background: #f4f6f4;
-                border: 1px solid var(--border);
+                background: var(--accent-light);
+                border: 1px solid transparent;
                 border-radius: var(--radius-md);
                 margin: 0 0 16px;
-                transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+                transition: all 0.2s ease;
             }
 
             .staticrypt-password-container:focus-within {
-                background: var(--surface);
-                border-color: var(--brand-500);
-                box-shadow: 0 0 0 3px var(--brand-50);
+                background: var(--panel-bg);
+                border-color: var(--accent);
+                box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
             }
 
             .staticrypt-password-icon {
                 position: absolute;
-                left: 14px;
+                left: 16px;
                 display: flex;
-                color: var(--ink-400);
+                color: var(--text-secondary);
                 pointer-events: none;
             }
 
@@ -229,29 +205,29 @@
                 border: 0;
                 font-family: var(--font-sans);
                 font-size: 15px;
-                color: var(--ink-900);
+                color: var(--text-primary);
                 outline: 0;
-                padding: 13px 44px 13px 40px;
+                padding: 14px 48px 14px 44px;
                 width: 100%;
             }
 
             .staticrypt-toggle-btn {
                 position: absolute;
-                right: 4px;
+                right: 8px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 34px;
-                height: 34px;
+                width: 36px;
+                height: 36px;
                 border: 0;
                 background: transparent;
                 border-radius: 50%;
                 cursor: pointer;
-                transition: background 0.15s ease;
+                transition: background 0.2s ease;
             }
 
             .staticrypt-toggle-btn:hover {
-                background: var(--brand-50);
+                background: rgba(0, 0, 0, 0.04);
             }
 
             .staticrypt-toggle-password-visibility {
@@ -264,37 +240,40 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                font-size: 13.5px;
-                color: var(--ink-600);
-                margin: 2px 0 20px;
+                font-size: 13px;
+                color: var(--text-secondary);
+                margin: 8px 0 24px;
                 cursor: pointer;
+                user-select: none;
             }
 
             .staticrypt-remember input[type="checkbox"] {
-                width: 17px;
-                height: 17px;
-                margin: 0;
-                accent-color: var(--brand-500);
+                width: 16px;
+                height: 16px;
+                border-radius: 4px;
+                accent-color: var(--accent);
                 cursor: pointer;
             }
 
             .staticrypt-form .staticrypt-decrypt-button {
                 outline: 0;
-                background: var(--brand-500);
+                background: var(--accent);
                 width: 100%;
                 border: 0;
                 border-radius: var(--radius-md);
-                padding: 14px;
+                padding: 15px;
                 color: #ffffff;
                 font-family: var(--font-sans);
                 font-size: 14.5px;
                 font-weight: 600;
                 cursor: pointer;
-                transition: background 0.15s ease, transform 0.05s ease;
+                transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             }
 
             .staticrypt-form .staticrypt-decrypt-button:hover {
-                background: var(--brand-600);
+                background: var(--accent-hover);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
 
             .staticrypt-form .staticrypt-decrypt-button:active {
@@ -304,13 +283,13 @@
             a:focus-visible,
             button:focus-visible,
             input:focus-visible {
-                outline: 2px solid var(--brand-600);
+                outline: 2px solid var(--accent);
                 outline-offset: 2px;
             }
 
             @media (max-width: 380px) {
                 .staticrypt-form {
-                    padding: 32px 22px;
+                    padding: 36px 24px;
                 }
             }
         </style>
@@ -335,29 +314,7 @@
                     <p class="staticrypt-subtitle">Report e analisi vendite</p>
 
                     <!-- Data dell'ultimo aggiornamento -->
-                    <p class="staticrypt-update-info">Ultimo aggiornamento: 15 Giugno 2026</p>
-
-                    <!-- Link ai Carrelli Abbandonati: consultabile senza password -->
-                    <div class="staticrypt-link-container">
-                        <p class="staticrypt-eyebrow">Accesso rapido &middot; senza password</p>
-                        <a class="staticrypt-link" href="https://docs.google.com/spreadsheets/d/1_9F_NaAbRGdm_IFfCu61Bd4Sb20v0m-R031Y8dJzWDs/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer">
-                            <span class="staticrypt-link-icon">
-                                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="9" cy="20" r="1.4" />
-                                    <circle cx="18" cy="20" r="1.4" />
-                                    <path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6" />
-                                </svg>
-                            </span>
-                            Carrelli abbandonati
-                            <span class="staticrypt-link-arrow">
-                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M7 17 17 7M9 7h8v8" />
-                                </svg>
-                            </span>
-                        </a>
-                    </div>
-
-                    <hr class="staticrypt-hr" />
+                    <p class="staticrypt-update-info">Ultimo aggiornamento: </p>
 
                     <form id="staticrypt-form" action="#" method="post">
                         <p class="staticrypt-eyebrow">Inserisci la password per continuare</p>
@@ -825,56 +782,54 @@ exports.init = init;
                 rememberExpirationKey: "staticrypt_expiration",
                 rememberPassphraseKey: "staticrypt_passphrase",
                 replaceHtmlCallback: function (plainHTML) {
-                    // Sovrascrive il documento con il contenuto decrittato (questo cancella anche
-                    // gli <style> del documento originale: per questo motivo i token di stile
-                    // qui sotto sono ridichiarati, non importati dall'head della pagina di blocco)
                     document.write(plainHTML);
                     document.close();
 
                     const styleTag = document.createElement("style");
                     styleTag.textContent = `
                         :root {
-                            --brand-50: #eaf6ec;
-                            --brand-400: #5fb35a;
-                            --brand-500: #3f8f4c;
-                            --brand-600: #2f6e3a;
-                            --ink-900: #1f2a24;
-                            --ink-600: #4b5b50;
-                            --ink-400: #6b7d72;
-                            --border: #e3e8e4;
-                            --radius-lg: 16px;
+                            --accent: #111111;
+                            --accent-hover: #222222;
+                            --accent-light: #f4f4f5;
+                            --text-primary: #18181b;
+                            --text-secondary: #71717a;
+                            --text-muted: #a1a1aa;
+                            --border: #e4e4e7;
+                            --radius-xl: 20px;
                             --radius-md: 10px;
-                            --shadow-card: 0 1px 2px rgba(15, 35, 20, 0.05), 0 16px 36px rgba(15, 35, 20, 0.16);
-                            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                            --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+                            --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                         }
                         .sales-extra-reports-wrapper {
                             width: 100%;
-                            max-width: 480px;
+                            max-width: 900px;
                             box-sizing: border-box;
-                            margin: 32px auto 60px;
-                            padding: 0 20px;
+                            margin: 48px auto 80px;
+                            padding: 0 24px;
+                            font-family: var(--font-sans);
                         }
                         .sales-extra-reports-card {
                             background: #ffffff;
-                            border-radius: var(--radius-lg);
-                            box-shadow: var(--shadow-card);
-                            padding: 28px 26px;
+                            border: 1px solid var(--border);
+                            border-radius: var(--radius-xl);
+                            box-shadow: var(--shadow-premium);
+                            padding: 32px;
                             box-sizing: border-box;
                         }
                         .sales-extra-reports-eyebrow {
                             font-size: 11px;
                             font-weight: 700;
-                            letter-spacing: 0.04em;
+                            letter-spacing: 0.06em;
                             text-transform: uppercase;
-                            color: var(--ink-400);
-                            margin: 0 0 16px;
+                            color: var(--text-muted);
+                            margin: 0 0 20px;
                         }
                         .sales-extra-reports-grid {
                             display: grid;
                             grid-template-columns: 1fr;
-                            gap: 10px;
+                            gap: 16px;
                         }
-                        @media (min-width: 460px) {
+                        @media (min-width: 640px) {
                             .sales-extra-reports-grid {
                                 grid-template-columns: repeat(3, 1fr);
                             }
@@ -882,45 +837,54 @@ exports.init = init;
                         .sales-report-tile {
                             display: flex;
                             align-items: center;
-                            gap: 10px;
-                            padding: 14px;
+                            gap: 14px;
+                            padding: 16px;
                             border: 1px solid var(--border);
                             border-radius: var(--radius-md);
                             text-decoration: none;
-                            color: var(--ink-900);
-                            font-family: var(--font-sans);
+                            color: var(--text-primary);
                             font-weight: 600;
-                            font-size: 13.5px;
-                            transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+                            font-size: 14px;
+                            background: #ffffff;
+                            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
                         }
                         .sales-report-tile:hover,
                         .sales-report-tile:focus-visible {
-                            border-color: var(--brand-400);
-                            background: var(--brand-50);
-                            transform: translateY(-1px);
+                            border-color: var(--accent);
+                            background: var(--accent-light);
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
                             outline: none;
                         }
                         .sales-report-tile-icon {
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            width: 32px;
-                            height: 32px;
+                            width: 36px;
+                            height: 36px;
                             border-radius: 8px;
-                            background: var(--brand-50);
-                            color: var(--brand-600);
+                            background: var(--accent-light);
+                            color: var(--accent);
                             flex-shrink: 0;
+                            transition: all 0.2s ease;
+                        }
+                        .sales-report-tile:hover .sales-report-tile-icon {
+                            background: var(--accent);
+                            color: #ffffff;
                         }
                         .sales-report-tile-arrow {
                             margin-left: auto;
-                            color: var(--ink-400);
+                            color: var(--text-muted);
                             flex-shrink: 0;
+                            transition: transform 0.2s ease;
+                        }
+                        .sales-report-tile:hover .sales-report-tile-arrow {
+                            transform: translate(1px, -1px);
+                            color: var(--accent);
                         }
                     `;
                     document.head.appendChild(styleTag);
 
-                    // Crea una scheda di navigazione verso gli altri report protetti,
-                    // coerente nello stile con la schermata di accesso
                     const wrapper = document.createElement("div");
                     wrapper.className = "sales-extra-reports-wrapper";
 
@@ -1012,7 +976,7 @@ exports.init = init;
             const imgSrcEyeClosed =
                 "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiM1YjZiNjIiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xIDEyczQtNyAxMS03IDExIDcgMTEgNy00IDctMTEgNy0xMS03LTExLTd6Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjwvc3ZnPg==";
             const imgSrcEyeOpened =
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiM1YjZiNjIiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xIDEyczQtNyAxMS03IDExIDcgMTEgNy00IDctMTEgNy0xMS03LTExLTd6Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPjxsaW5lIHgxPSIyIiB5MT0iMiIgeDI9IjIyIiB5Mj0iMjIiLz48L3N2Zz4=";
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiM1YjZiNjIiIHN0cm9rZS13aWR0aD0iMS44IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xIDEyczQtNyAxMS03IDExIDcgMTEgNy00IDctMTEgNy0xMS03LTExLTd6Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMyIvPmxpbmUgeDE9IjIiIHkxPSIyIiB4Mj0iMjIiIHkyPSIyMiIvPjwvc3ZnPg==";
             toggleIcon.addEventListener("click", function () {
                 const passwordInput = document.getElementById("staticrypt-password");
                 if (passwordInput.type === "password") {
