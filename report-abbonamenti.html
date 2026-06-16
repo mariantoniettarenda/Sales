@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Report Abbonamenti in Scadenza — Magicmotorsport</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --navy: #1e3a5f;
+      --blue: #2563eb;
+      --blue-light: #dbeafe;
+      --purple: #7c3aed;
+      --cyan: #0891b2;
+      --green: #059669;
+      --amber: #d97706;
+      --red: #dc2626;
+      --border: #e2e8f0;
+      --muted: #64748b;
+      --text: #0f172a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper { max-width: 1400px; margin: 0 auto; }
+
+    /* HEADER */
+    .header {
+      background: var(--navy);
+      border-radius: 10px;
+      padding: 28px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .header-eyebrow {
+      margin: 0 0 4px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+    .header h1 span { color: #60a5fa; }
+    .badge {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 3px;
+      margin-bottom: 6px;
+    }
+    .header-date { margin: 0; font-size: 12px; color: #94a3b8; }
+    .header-meta { text-align: right; }
+
+    /* KPI */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 22px;
+    }
+    .kpi-title {
+      margin: 0 0 8px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .kpi-val {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .kpi-sub { margin: 6px 0 0; font-size: 11px; color: var(--muted); }
+
+    /* LAYOUT */
+    .grid-2 { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 22px; margin-bottom: 22px; }
+    .grid-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 22px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-bottom: 22px; }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px;
+    }
+    .card-header {
+      border-bottom: 2px solid var(--navy);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin: 0;
+      color: var(--navy);
+    }
+    .card-num {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .chart-wrap {
+      position: relative;
+      height: 240px;
+    }
+
+    /* TABLES */
+    .dt { width: 100%; border-collapse: collapse; }
+    .dt th {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 8px 8px 0;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* TREND SUMMARY */
+    .trend-summary {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 14px;
+      margin-top: 16px;
+      gap: 4px;
+    }
+    .ts-item { text-align: center; flex: 1; }
+    .ts-item p { margin: 2px 0; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .kpi-row { grid-template-columns: 1fr; }
+      .header { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .header-meta { text-align: left; }
+      .grid-equal { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <p class="header-eyebrow">Magicmotorsport · Subscription Renewals</p>
+      <h1>Abbonamenti <span>in Scadenza</span></h1>
+    </div>
+    <div class="header-meta">
+      <span class="badge">Report Mensile</span>
+      <p class="header-date">16/06/2026</p>
+    </div>
+  </header>
+
+  <!-- KPI STRIP -->
+  <section class="kpi-row">
+    <div class="kpi-card">
+    <p class="kpi-title">Totale Contratti</p>
+    <p class="kpi-val" style="color:var(--navy)">9469</p>
+    <p class="kpi-sub">Abbonamenti monitorati YTD</p>
+  </div>
+    <div class="kpi-card">
+    <p class="kpi-title">Rinnovati YTD</p>
+    <p class="kpi-val" style="color:var(--green)">5254</p>
+    <p class="kpi-sub"><strong>418</strong> in Giugno</p>
+  </div>
+    <div class="kpi-card">
+    <p class="kpi-title">Tasso di Rinnovo</p>
+    <p class="kpi-val" style="color:var(--blue)">55.5%</p>
+    <p class="kpi-sub">Media globale di conversione</p>
+  </div>
+    <div class="kpi-card">
+    <p class="kpi-title">Fatturato Rinnovato</p>
+    <p class="kpi-val" style="color:var(--purple)">€ 2.956.757</p>
+    <p class="kpi-sub"><strong>€ 249.921</strong> a Giugno</p>
+  </div>
+  </section>
+
+  <!-- ROW 1: TREND + COMPETENZE -->
+  <div class="grid-2">
+    <!-- TREND MENSILE -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Trend Mensile <span style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none;color:var(--muted)">— Volumi e fatturato</span></h2>
+        <span class="card-num">01/05</span>
+      </div>
+      <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+      <div class="trend-summary">
+        <div class="ts-item">
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Gen</p>
+            <p style="font-size:12px;font-weight:700;color:var(--navy)">439</p>
+            <p style="font-size:11px;font-weight:700;color:var(--green)">263 rin.</p>
+            <p style="font-size:10px;font-weight:700;color:var(--blue)">60%</p>
+          </div><div class="ts-item">
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Feb</p>
+            <p style="font-size:12px;font-weight:700;color:var(--navy)">1997</p>
+            <p style="font-size:11px;font-weight:700;color:var(--green)">1374 rin.</p>
+            <p style="font-size:10px;font-weight:700;color:var(--blue)">69%</p>
+          </div><div class="ts-item">
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Mar</p>
+            <p style="font-size:12px;font-weight:700;color:var(--navy)">1825</p>
+            <p style="font-size:11px;font-weight:700;color:var(--green)">1288 rin.</p>
+            <p style="font-size:10px;font-weight:700;color:var(--blue)">71%</p>
+          </div><div class="ts-item">
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Apr</p>
+            <p style="font-size:12px;font-weight:700;color:var(--navy)">1534</p>
+            <p style="font-size:11px;font-weight:700;color:var(--green)">998 rin.</p>
+            <p style="font-size:10px;font-weight:700;color:var(--blue)">65%</p>
+          </div><div class="ts-item">
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Mag</p>
+            <p style="font-size:12px;font-weight:700;color:var(--navy)">1599</p>
+            <p style="font-size:11px;font-weight:700;color:var(--green)">910 rin.</p>
+            <p style="font-size:10px;font-weight:700;color:var(--blue)">57%</p>
+          </div><div class="ts-item">
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Giu</p>
+            <p style="font-size:12px;font-weight:700;color:var(--navy)">1443</p>
+            <p style="font-size:11px;font-weight:700;color:var(--green)">418 rin.</p>
+            <p style="font-size:10px;font-weight:700;color:var(--blue)">29%</p>
+          </div><div class="ts-item">
+            <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Lug</p>
+            <p style="font-size:12px;font-weight:700;color:var(--navy)">632</p>
+            <p style="font-size:11px;font-weight:700;color:var(--green)">3 rin.</p>
+            <p style="font-size:10px;font-weight:700;color:var(--blue)">0%</p>
+          </div>
+      </div>
+    </div>
+
+    <!-- COMPETENZE -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Competenze <span style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none;color:var(--muted)">— Performance per area</span></h2>
+        <span class="card-num">02/05</span>
+      </div>
+      <table class="dt">
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th style="text-align:center;width:40px">Inv.</th>
+            <th style="text-align:center;width:40px">Rin.</th>
+            <th style="width:120px">Trend</th>
+            <th style="text-align:right;width:50px">Tasso</th>
+            <th style="text-align:right;width:90px">Valore</th>
+          </tr>
+        </thead>
+        <tbody><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:12px 12px 12px 0;font-size:13px;font-weight:700;color:#1e3a5f">CCS</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:600;color:#334155;text-align:center">7508</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center">4303</td>
+      <td style="padding:12px 8px;width:120px">
+        <div style="background:#e2e8f0;height:6px;border-radius:3px">
+          <div style="background:#2563eb;height:6px;width:57%;border-radius:3px"></div>
+        </div>
+      </td>
+      <td style="padding:12px 8px;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:#ecfdf5;color:#059669">57.3%</span>
+      </td>
+      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 2.430.823</td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:12px 12px 12px 0;font-size:13px;font-weight:700;color:#1e3a5f">Iberica</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:600;color:#334155;text-align:center">1631</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center">786</td>
+      <td style="padding:12px 8px;width:120px">
+        <div style="background:#e2e8f0;height:6px;border-radius:3px">
+          <div style="background:#2563eb;height:6px;width:48%;border-radius:3px"></div>
+        </div>
+      </td>
+      <td style="padding:12px 8px;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:#fffbeb;color:#b45309">48.2%</span>
+      </td>
+      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 418.472</td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:12px 12px 12px 0;font-size:13px;font-weight:700;color:#1e3a5f">USA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:600;color:#334155;text-align:center">247</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center">121</td>
+      <td style="padding:12px 8px;width:120px">
+        <div style="background:#e2e8f0;height:6px;border-radius:3px">
+          <div style="background:#2563eb;height:6px;width:49%;border-radius:3px"></div>
+        </div>
+      </td>
+      <td style="padding:12px 8px;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:#fffbeb;color:#b45309">49.0%</span>
+      </td>
+      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 77.886</td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:12px 12px 12px 0;font-size:13px;font-weight:700;color:#1e3a5f">Cina</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:600;color:#334155;text-align:center">83</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center">44</td>
+      <td style="padding:12px 8px;width:120px">
+        <div style="background:#e2e8f0;height:6px;border-radius:3px">
+          <div style="background:#2563eb;height:6px;width:53%;border-radius:3px"></div>
+        </div>
+      </td>
+      <td style="padding:12px 8px;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:#ecfdf5;color:#059669">53.0%</span>
+      </td>
+      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 29.576</td>
+    </tr><tr style="border-top:2px solid #1e3a5f;background:#f8fafc">
+    <td style="padding:14px 12px 14px 0;font-size:13px;font-weight:800;color:#1e3a5f">Grand Total</td>
+    <td style="padding:14px 8px;font-size:13px;font-weight:800;color:#334155;text-align:center">9469</td>
+    <td style="padding:14px 8px;font-size:13px;font-weight:800;color:#059669;text-align:center">5254</td>
+    <td style="padding:14px 8px;width:120px">
+      <div style="background:#e2e8f0;height:6px;border-radius:3px">
+        <div style="background:#1e3a5f;height:6px;width:56%;border-radius:3px"></div>
+      </div>
+    </td>
+    <td style="padding:14px 8px;text-align:right">
+      <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;background:#dbeafe;color:#1d4ed8">55.5%</span>
+    </td>
+    <td style="padding:14px 0 14px 8px;font-size:12px;font-weight:800;color:#1e3a5f;text-align:right;white-space:nowrap">€ 2.956.757</td>
+  </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ROW 2: CANALI + CONFRONTO BAR -->
+  <div class="grid-equal">
+    <!-- CANALI DI RECUPERO -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Canali di Recupero</h2>
+        <span class="card-num">03/05</span>
+      </div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center">
+        <div style="position:relative;width:130px;height:130px;flex-shrink:0">
+          <canvas id="donutChart" width="130" height="130"></canvas>
+        </div>
+        <div>
+          <table class="dt">
+            <thead>
+              <tr>
+                <th>Canale</th>
+                <th style="text-align:center;width:40px">Q</th>
+                <th style="width:90px">Vol.</th>
+                <th style="text-align:right">Fatturato</th>
+              </tr>
+            </thead>
+            <tbody><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:10px 8px 10px 0">
+        <span style="display:inline-flex;align-items:center;gap:6px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#2563eb;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#1e3a5f">HELPDESK</span>
+        </span>
+      </td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">2650</td>
+      <td style="padding:10px 8px;width:90px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:100%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 1.476.166</td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:10px 8px 10px 0">
+        <span style="display:inline-flex;align-items:center;gap:6px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#7c3aed;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#1e3a5f">DISTRIBUTORE</span>
+        </span>
+      </td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">2121</td>
+      <td style="padding:10px 8px;width:90px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#7c3aed;height:5px;width:82%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 1.203.674</td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:10px 8px 10px 0">
+        <span style="display:inline-flex;align-items:center;gap:6px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#0891b2;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#1e3a5f">CCS</span>
+        </span>
+      </td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">307</td>
+      <td style="padding:10px 8px;width:90px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#0891b2;height:5px;width:12%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 178.342</td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:10px 8px 10px 0">
+        <span style="display:inline-flex;align-items:center;gap:6px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#059669;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#1e3a5f">DIREZIONALE</span>
+        </span>
+      </td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">156</td>
+      <td style="padding:10px 8px;width:90px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#059669;height:5px;width:6%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 86.149</td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:10px 8px 10px 0">
+        <span style="display:inline-flex;align-items:center;gap:6px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#d97706;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#1e3a5f">SHOP</span>
+        </span>
+      </td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">18</td>
+      <td style="padding:10px 8px;width:90px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#d97706;height:5px;width:1%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 10.976</td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="padding:10px 8px 10px 0">
+        <span style="display:inline-flex;align-items:center;gap:6px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#dc2626;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:700;color:#1e3a5f">ACADEMY</span>
+        </span>
+      </td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">1</td>
+      <td style="padding:10px 8px;width:90px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap">€ 650</td>
+    </tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFRONTO COMPETENZE (BAR) -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Confronto Aree <span style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none;color:var(--muted)">— CCS vs Iberica vs USA</span></h2>
+        <span class="card-num">04/05</span>
+      </div>
+      <div class="chart-wrap"><canvas id="compChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ROW 3: OPERATORI CCS + GEOGRAFIA -->
+  <div class="grid-equal">
+    <!-- OPERATORI CCS -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Operatori CCS <span style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none;color:var(--muted)">— Performance individuale</span></h2>
+        <span class="card-num">05/05</span>
+      </div>
+      <table class="dt">
+        <thead>
+          <tr>
+            <th style="width:24px">#</th>
+            <th>Operatore</th>
+            <th style="text-align:center;width:50px">Rin.</th>
+            <th style="text-align:right;width:90px">Fatturato</th>
+            <th style="width:140px">Incidenza %</th>
+          </tr>
+        </thead>
+        <tbody><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">01</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">Distributore</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">425</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 242.215</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:21%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">21%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">02</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">DOMENICOG</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">204</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 121.110</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:11%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">11%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">03</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">EMIRATES KEYS CO.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">146</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 89.650</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:8%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">8%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">04</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">RAMPULLA SRLS</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">148</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 84.649</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:7%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">7%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">05</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">MARCIN MACHCINSKI</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">115</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 77.500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:7%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">7%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">06</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">DIAGTEC PLUS LDA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">114</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 65.150</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:6%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">6%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">07</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">M.S. GROUP SPLKA Z OGRANICZON</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">81</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 49.150</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:4%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">4%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">08</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">Hio Trading LTD.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">64</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 40.800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:4%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">4%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">09</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">VITALIY KALESNIK</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">44</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 27.050</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:2%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">2%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">10</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">CORRAO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">45</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 26.632</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:2%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">2%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">11</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">ZANOTTO AUTOMOTIVE SRL</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">35</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 19.650</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:2%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">2%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">12</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">ROBERTO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">32</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 18.206</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:2%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">2%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">13</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">MAGIC DIAGNOSTIC S.R.L.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">30</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 16.550</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">14</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">ROBERTOM</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">26</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 14.500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">15</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">SARA.MOTISI</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">23</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 12.650</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">16</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">TOSCA.PIZZURRO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">22</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 11.610</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">17</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">YUKOPEL TRADING FREE PORT LTD</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">21</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 11.250</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">18</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">DIGICAR B.V.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">21</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 9800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">19</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">MARIAQ</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">15</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 9583</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">20</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">CHIPTUNINGSHOP LTD</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">15</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 9400</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">21</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">GAETANO.ORTOLANO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">14</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 8930</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">22</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">NICOLO.ROCCA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">19</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 8449</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">23</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">TEKNOSERVICE MOTOR SAS DI F.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">11</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 7200</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">24</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">ECUTools O</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">13</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 7000</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">25</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">SAS OBD AUTO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">9</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 6600</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">26</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">ECUTools Oš</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">12</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 6450</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">27</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">KAGER CHRISTIAN</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">9</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 6150</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:1%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">1%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">28</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">ROMAN ILIN</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">9</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 5100</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">29</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">YUJI NOMA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">6</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 4800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">30</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">TUNINGFILES-GERMANY GMBH</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">9</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 4800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">31</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">BV Ecu-Soft Fileservice</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">11</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 4500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">32</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">MARTINELLI</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">7</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 4350</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">33</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">VALERIAG</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">6</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 4205</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">34</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">NI TUNING IGOR MARINKOVIC</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">9</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 3900</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">35</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">SAMUELE.COSTANTINO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">6</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 3800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">36</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">RAMPOLLA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">7</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 3590</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">37</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">NAZIR PROG S.A.R.L</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">5</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 3550</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">38</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">POWER DIVISION sp. z o.o.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">6</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 3300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">39</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">SM SPORT</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">9</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 3100</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">40</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">MORMINO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">5</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2990</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">41</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">MAGIC IBERICA S.L.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">6</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2900</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">42</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">Sedox Performance</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">5</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2750</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">43</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">EURL ELECTRONIQUE PERFORMANCE</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">4</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2700</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">44</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">ROBERTA.COFFARO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">6</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2540</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">45</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">ANDREAM</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">4</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2356</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">46</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">NICOLO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2250</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">47</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">AUTO VEGA MOTORSPORT</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2100</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">48</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">STEFANOV SERVICE - EOOD</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">4</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 2000</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">49</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">Nedeljko Simanic</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">4</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1900</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">50</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">OBD2 d.o.o</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">4</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">51</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">NICOLOR</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">52</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">JORDAN CAINE</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1600</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">53</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">CASTIGLIA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1600</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">54</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">M.S. GROUP SPàLKA Z OGRANICZON</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1600</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">55</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">Etem Bajmak</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1600</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">56</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">MAGIC USA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1600</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">57</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">MH-POWER PROGRAMMER</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">58</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">DARIO.LAFATA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1450</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">59</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">RENDA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1450</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">60</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">SIMONA.GORETTI</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1440</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">61</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">MY TUNING PERFORMANCE D.O.O.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">62</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">ASF Tuning doo</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">63</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">TEKSYSTEM SNC DI G.CASANO E P.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">64</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">VIEZU TECHNOLOGIES LTD</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">65</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">Abi's Performance & Solutions</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">66</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">AS CHIP-TUNING d.o.o</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">67</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">SDcom FZCO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">68</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">DIREZIONALE</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1225</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">69</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">ROBERTAP</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">4</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1220</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">70</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">DNA TECHNOLOGY S.R.L.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1100</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">71</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">HPREMAPS TECHNOLOGY - FZCO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1100</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">72</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">Martinelli</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1050</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">73</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">ROBERTAC</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 1000</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">74</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">DT TUNNING SH.P.K.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">3</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 900</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">75</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">Ervis Ymeralilaj</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">76</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">TUNINGSERVICE AS</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">77</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">Shenzhen Sinoy Technology</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">78</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">OBD AUTO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">79</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">NICOLO'</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">80</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">FB ENGINEERING S.R.O</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">81</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">DUBLIN REMAPS</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">82</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">Raptor work s.r.o.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">83</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">DNA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">84</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">PPHU ELTRANS POLUSZCZYK DARIUS</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">85</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">PAWEL ZYNEK</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">86</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">POWER DIVISION SPàLKA Z</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">87</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">MAGIC DIAGNOSTIC S.R.L</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">88</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">USA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">89</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">SARL NEORIV</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">90</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">VI TRONIC car-software</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">91</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">Wiesinger Siegfried</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">92</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">PERIC BORIS</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">93</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">UAB BALTIC DIAGNOSTIC SERVICE</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">94</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">FB ENGINEERING S.R.O.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 800</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">95</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">REVOLUTION MAP</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 760</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">96</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">Alienworld Technology Berhad</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 650</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">97</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">DIM TRONIC S.R.L.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 650</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">98</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">Iberica</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 650</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">99</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">GAETANO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 650</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">100</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">SASU ALSACE AUTOPROG</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">2</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 600</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">101</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">ECU BOOST SERVICE GBR</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">102</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">AUTOMAX AIN AL SHAMS LLC</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">103</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">ERINA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">104</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">HIBERT PERFORMANCE</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">105</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">ZANOTTO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">106</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">Vasyl Byshevych</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">107</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">EFE Performance - Taner Efe</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">108</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">MAGTEST ELEKTRONIK OTOMOTIV</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">109</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">POWER DIVISION SPLKA Z</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">110</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">M-TECHNICS PERFORMANCE LTD</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">111</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">TUNING-SHOP B.V.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">112</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">Rade Jovanovic</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">113</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">LUCA RIAVIZ</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">114</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">DARIOD</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">115</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">Individual Entrepreneur</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">116</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">DUBLINREMAPS BARTOSZ POWICKI</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 500</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">117</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">Nitro Group</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 400</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">118</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">Car Base Iraq LTD</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 400</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">119</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">P.H. "JURA" S.C., MALGORZATA</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 400</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">120</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">REMIGIUSZ KRAJCZYNSKI</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">121</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">MASTER TUNING S.R.L</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">122</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">ROBERT</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">123</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">MH POWERTRONIQ s.r.o.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">124</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">JORDAN CAINe</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">125</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">GT-SERVIS D.O.O.</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">126</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">EXPRESS SERVICE LTD</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">127</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">EVGENY RESHETNIKOV</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">128</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">TUMMINELLO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 300</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">129</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#0891b2;vertical-align:middle">marketing</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 0</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#0891b2;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#0891b2;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">130</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#059669;vertical-align:middle">Digicar Performance</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 0</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#059669;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#059669;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">131</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;vertical-align:middle">Valentin Moritz</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 0</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#d97706;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#d97706;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">132</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#dc2626;vertical-align:middle">Christian Kager</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">1</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 0</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#dc2626;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#dc2626;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">133</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#2563eb;vertical-align:middle">NITRO</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">0</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 0</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#2563eb;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#2563eb;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:12px 8px 12px 0;width:24px;vertical-align:middle">134</td>
+      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#7c3aed;vertical-align:middle">Autotronik Limited</td>
+      <td style="padding:12px 8px;font-size:13px;font-weight:700;color:#059669;text-align:center;vertical-align:middle">0</td>
+      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle">€ 0</td>
+      <td style="padding:12px 0 12px 8px;vertical-align:middle;width:120px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex:1;background:#e2e8f0;height:5px;border-radius:2px">
+            <div style="background:#7c3aed;height:5px;width:0%;border-radius:2px"></div>
+          </div>
+          <span style="font-size:10px;font-weight:700;color:#7c3aed;min-width:28px;text-align:right">0%</span>
+        </div>
+      </td>
+    </tr></tbody>
+      </table>
+    </div>
+
+    <!-- GEOGRAFIA -->
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Performance Geografica <span style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none;color:var(--muted)">— Top 12 Paesi</span></h2>
+      </div>
+      <table class="dt">
+        <thead>
+          <tr>
+            <th style="width:24px">#</th>
+            <th>Paese</th>
+            <th style="text-align:center;width:45px">Tot.</th>
+            <th style="text-align:center;width:45px">Rin.</th>
+            <th style="width:130px">Volume</th>
+            <th style="text-align:right;width:55px">Tasso</th>
+          </tr>
+        </thead>
+        <tbody><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">01</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">IT</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">891</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">571</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:100%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">64.1%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">02</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">PL</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">836</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">561</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:98%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">67.1%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">03</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">ES</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">879</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">512</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:90%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">58.2%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">04</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">GB</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">654</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">400</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:70%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">61.2%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">05</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">PT</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">393</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">252</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:44%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">64.1%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">06</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">DE</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">495</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">251</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:44%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">50.7%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">07</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">TR</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">636</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">232</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:41%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#fffbeb;color:#b45309">36.5%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">08</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">FR</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">347</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">207</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:36%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">59.7%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">09</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">NL</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">204</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">122</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:21%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">59.8%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">10</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">RO</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">188</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">112</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:20%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">59.6%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">11</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">RS</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">176</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">110</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:19%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#059669">62.5%</span>
+      </td>
+    </tr><tr style="border-bottom:1px solid #f1f5f9">
+      <td style="font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:10px 8px 10px 0;width:24px">12</td>
+      <td style="padding:10px 8px 10px 0;font-size:12px;font-weight:700;color:#1e3a5f;white-space:nowrap">BR</td>
+      <td style="padding:10px 8px;font-size:12px;color:#334155;text-align:center">243</td>
+      <td style="padding:10px 8px;font-size:12px;font-weight:700;color:#059669;text-align:center">98</td>
+      <td style="padding:10px 8px;width:130px">
+        <div style="background:#e2e8f0;height:5px;border-radius:2px">
+          <div style="background:#2563eb;height:5px;width:17%;border-radius:2px"></div>
+        </div>
+      </td>
+      <td style="padding:10px 0;text-align:right">
+        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#fffbeb;color:#b45309">40.3%</span>
+      </td>
+    </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer style="margin-top:28px;padding:18px 28px;background:var(--navy);border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:#94a3b8;font-size:11px">
+    <div>
+      <p style="margin:0;font-weight:800;color:#fff;letter-spacing:0.5px;text-transform:uppercase">MAGICMOTORSPORT</p>
+      <p style="margin:2px 0 0">Report abbonamenti automatico via n8n · Giugno 2026</p>
+    </div>
+    <div style="font-family:'Courier New',monospace;font-weight:700;color:#475569">SUBS_YTD_2026</div>
+  </footer>
+
+</div>
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {
+  // ── TREND MENSILE ──────────────────────────────────────────────
+  const trendCtx = document.getElementById('trendChart').getContext('2d');
+  new Chart(trendCtx, {
+    type: 'line',
+    data: {
+      labels: ["Gen","Feb","Mar","Apr","Mag","Giu","Lug"],
+      datasets: [
+        {
+          label: 'Inviati',
+          data: [439,1997,1825,1534,1599,1443,632],
+          borderColor: '#1e3a5f',
+          backgroundColor: 'rgba(30,58,95,0.04)',
+          fill: true, borderWidth: 2, pointRadius: 4,
+          pointBackgroundColor: '#1e3a5f', tension: 0.35, yAxisID: 'y'
+        },
+        {
+          label: 'Rinnovati',
+          data: [263,1374,1288,998,910,418,3],
+          borderColor: '#059669',
+          backgroundColor: 'rgba(5,150,105,0.04)',
+          fill: true, borderWidth: 2, pointRadius: 4,
+          pointBackgroundColor: '#059669', tension: 0.35, yAxisID: 'y'
+        },
+        {
+          label: 'Fatturato (€)',
+          data: [144340.5,767207.74,710869.11,554252.29,528966.5,249920.5,1200],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.04)',
+          fill: true, borderWidth: 2, pointRadius: 4,
+          pointBackgroundColor: '#2563eb', tension: 0.35, yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 }, color: '#64748b' } },
+        tooltip: {
+          mode: 'index', intersect: false,
+          backgroundColor: '#0f172a', titleColor: '#fff', bodyColor: '#cbd5e1',
+          callbacks: {
+            label: ctx => {
+              let l = ctx.dataset.label + ': ';
+              return ctx.dataset.yAxisID === 'y1' ? l + '€' + Math.round(ctx.parsed.y).toLocaleString('it-IT') : l + ctx.parsed.y;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+        y: { position: 'left', grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#64748b', font: { size: 10 } } },
+        y1: { position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#2563eb', font: { size: 10 }, callback: v => '€' + Math.round(v).toLocaleString('it-IT') } }
+      }
+    }
+  });
+
+  // ── DONUT CANALI ──────────────────────────────────────────────
+  const donutCtx = document.getElementById('donutChart').getContext('2d');
+  new Chart(donutCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ["HELPDESK","DISTRIBUTORE","CCS","DIREZIONALE","SHOP","ACADEMY"],
+      datasets: [{
+        data: [2650,2121,307,156,18,1],
+        backgroundColor: ["#2563eb","#7c3aed","#0891b2","#059669","#d97706","#dc2626"],
+        borderWidth: 2, borderColor: '#ffffff', hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: false, cutout: '68%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#0f172a', titleColor: '#fff', bodyColor: '#cbd5e1' }
+      }
+    }
+  });
+
+  // ── CONFRONTO COMPETENZE (BAR) ────────────────────────────────
+  const compCtx = document.getElementById('compChart').getContext('2d');
+  new Chart(compCtx, {
+    type: 'bar',
+    data: {
+      labels: ["CCS","Iberica","USA","Cina"],
+      datasets: [
+        {
+          label: 'Inviati',
+          data: [7508,1631,247,83],
+          backgroundColor: 'rgba(30,58,95,0.15)',
+          borderColor: '#1e3a5f', borderWidth: 2, borderRadius: 4
+        },
+        {
+          label: 'Rinnovati',
+          data: [4303,786,121,44],
+          backgroundColor: 'rgba(5,150,105,0.75)',
+          borderColor: '#059669', borderWidth: 0, borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 }, color: '#64748b' } },
+        tooltip: { backgroundColor: '#0f172a', titleColor: '#fff', bodyColor: '#cbd5e1' }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 11, weight: '600' } } },
+        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#64748b', font: { size: 10 } } }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
