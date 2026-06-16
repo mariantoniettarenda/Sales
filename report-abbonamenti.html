@@ -4,132 +4,705 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Report Abbonamenti — Magicmotorsport 2026</title>
+
+<!-- Google Fonts per un look audace e asimmetrico -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --navy:#1e3a5f;--blue:#2563eb;--blue-l:#dbeafe;--purple:#7c3aed;
-    --cyan:#0891b2;--green:#059669;--amber:#d97706;--red:#dc2626;
-    --bg:#f1f5f9;--card:#ffffff;--border:#e2e8f0;--muted:#64748b;--text:#0f172a;
+  /* --- PALETTE GIOCOSA (Sowieso Wero Style) --- */
+  :root {
+    --bg: #FFFCEB;               /* Sfondo crema delicato */
+    --card: #ffffff;             /* Sfondo schede bianco lucido */
+    --dark: #19191D;             /* Nero antracite per bordi spessi e testi */
+    --border: #19191D;
+    --navy: #19191D;
+    --text: #19191D;
+    --muted: rgba(25, 25, 29, 0.7);
+
+    /* Evidenziatori Neon */
+    --pink: #FF678B;             
+    --yellow: #FFF48D;           
+    --lime: #8FF977;             
+    --cyan: #70FAFD;             
+
+    /* Variabili compatibilità del report originale */
+    --blue: #2563eb;
+    --purple: #7c3aed;
+    --cyan-dark: #0891b2;
+    --green: #059669;
+    --amber: #d97706;
+    --red: #dc2626;
+
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --card-shadow: 6px 6px 0px #19191D;
+    --card-shadow-hover: 10px 10px 0px #19191D;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1400px;margin:0 auto;padding:28px 24px}
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 60px;
+  }
+
+  .wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 24px;
+  }
 
   /* ─ HEADER ─ */
-  .header{background:linear-gradient(135deg,#0f2847 0%,#1e3a5f 60%,#1e4080 100%);border-radius:12px;padding:28px 36px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;position:relative;overflow:hidden}
-  .header::before{content:'';position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:50%;background:rgba(37,99,235,0.12)}
-  .header::after{content:'';position:absolute;right:80px;bottom:-60px;width:150px;height:150px;border-radius:50%;background:rgba(124,58,237,0.1)}
-  .header-eyebrow{margin:0 0 4px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#94a3b8}
-  .header h1{margin:0;font-size:28px;font-weight:800;color:#fff;letter-spacing:-0.5px}
-  .header h1 span{color:#60a5fa}
-  .badge{display:inline-block;background:var(--blue);color:#fff;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 9px;border-radius:4px;margin-bottom:6px}
-  .badge-new{background:#7c3aed}
-  .header-date{margin:0;font-size:12px;color:#94a3b8}
-  .header-meta{text-align:right;position:relative;z-index:1}
+  .header {
+    background: var(--pink);
+    border: 3px solid var(--dark);
+    border-radius: var(--radius-xl);
+    padding: 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: var(--yellow);
+    border: 3px solid var(--dark);
+    z-index: 0;
+  }
+
+  .header-eyebrow {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 6px;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+
+  .header h1 {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--dark);
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 span {
+    background: var(--yellow);
+    color: var(--dark);
+    padding: 2px 10px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--dark);
+    display: inline-block;
+    transform: rotate(-1.5deg);
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--cyan);
+    color: var(--dark);
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 30px;
+    border: 2px solid var(--dark);
+    box-shadow: 2px 2px 0px var(--dark);
+    margin-bottom: 6px;
+  }
+
+  .badge-new {
+    background: var(--lime);
+  }
+
+  .header-date {
+    position: relative;
+    z-index: 1;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .header-meta {
+    text-align: right;
+    position: relative;
+    z-index: 1;
+  }
 
   /* ─ SECTION HEADER ─ */
-  .section-hdr{display:flex;align-items:center;gap:10px;margin:28px 0 14px}
-  .section-hdr-line{flex:1;height:1px;background:var(--border)}
-  .section-hdr-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
-  .section-hdr-new{font-size:9px;font-weight:700;letter-spacing:0.5px;padding:2px 7px;border-radius:3px;background:#ede9fe;color:#5b21b6;white-space:nowrap}
+  .section-hdr {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 40px 0 24px;
+  }
+
+  .section-hdr-line {
+    flex: 1;
+    height: 3px;
+    background: var(--dark);
+  }
+
+  .section-hdr-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--yellow);
+    padding: 6px 16px;
+    border: 3px solid var(--dark);
+    border-radius: 30px;
+    white-space: nowrap;
+    transform: rotate(1deg);
+  }
+
+  .section-hdr-new {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    background: var(--pink);
+    color: var(--dark);
+    border: 3px solid var(--dark);
+    white-space: nowrap;
+    transform: rotate(-1deg);
+  }
 
   /* ─ KPI ─ */
-  .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-  .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;position:relative;overflow:hidden}
-  .kpi-card::after{content:'';position:absolute;right:-12px;bottom:-12px;width:60px;height:60px;border-radius:50%;background:currentColor;opacity:0.04}
-  .kpi-icon{font-size:20px;margin-bottom:8px}
-  .kpi-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-  .kpi-val{font-size:26px;font-weight:800;line-height:1.1}
-  .kpi-sub{margin-top:6px;font-size:11px;color:var(--muted)}
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .kpi-card {
+    background: var(--card);
+    border: 3px solid var(--dark);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+  }
+
+  .kpi-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  .kpi-icon {
+    font-size: 26px;
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border: 2px solid var(--dark);
+    border-radius: 50%;
+    background: var(--bg);
+  }
+
+  .kpi-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--dark);
+    margin-bottom: 6px;
+  }
+
+  .kpi-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--dark) !important;
+  }
+
+  .kpi-sub {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+  }
 
   /* ─ GRID ─ */
-  .g2{display:grid;grid-template-columns:1.3fr 0.7fr;gap:20px;margin-bottom:20px}
-  .g2r{display:grid;grid-template-columns:0.7fr 1.3fr;gap:20px;margin-bottom:20px}
-  .geq{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
-  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px}
-  .g1{margin-bottom:20px}
+  .g2 { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 24px; margin-bottom: 24px; }
+  .g2r { display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 24px; margin-bottom: 24px; }
+  .geq { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .g1 { margin-bottom: 24px; }
 
-  /* ─ CARD ─ */
-  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:22px}
-  .card-hdr{border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
-  .card-hdr.purple{border-color:var(--purple)}
-  .card-hdr.green{border-color:var(--green)}
-  .card-hdr.amber{border-color:var(--amber)}
-  .card-hdr.red{border-color:var(--red)}
-  .card-title{font-size:12px;font-weight:800;letter-spacing:0.8px;text-transform:uppercase;color:var(--navy)}
-  .card-title.purple{color:var(--purple)}
-  .card-title.green{color:var(--green)}
-  .card-title.amber{color:var(--amber)}
-  .card-title.red{color:var(--red)}
-  .card-sub{font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted);font-weight:400}
-  .card-num{font-family:'Courier New',monospace;font-size:11px;font-weight:700;color:var(--muted)}
-  .chart-wrap{position:relative;height:220px}
-  .chart-wrap-lg{position:relative;height:260px}
+  /* ─ CARDS ─ */
+  .card {
+    background: var(--card);
+    border: 3px solid var(--dark);
+    border-radius: var(--radius-xl);
+    padding: 28px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease;
+  }
 
-  /* ─ TABLE BASE ─ */
-  .dt{width:100%;border-collapse:collapse}
-  .dt th{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:8px 8px 8px 0;text-align:left;border-bottom:1px solid var(--border)}
-  .dt-row{border-bottom:1px solid #f8fafc;transition:background .1s}
-  .dt-row:hover{background:#fafbfd}
-  .dt-row:last-child{border-bottom:none}
-  .dt-rank{font-family:'Courier New',monospace;font-size:11px;color:#94a3b8;padding:11px 8px 11px 0;width:24px;vertical-align:middle}
-  .dt-area{padding:11px 12px 11px 0;font-size:13px;font-weight:700;color:#1e3a5f;vertical-align:middle}
-  .dt-center{padding:11px 8px;font-size:13px;font-weight:600;color:#334155;text-align:center;vertical-align:middle}
-  .dt-center.ren{font-weight:700;color:#059669}
-  .dt-right{padding:11px 8px;text-align:right;vertical-align:middle}
-  .dt-val{padding:11px 0 11px 8px;font-size:12px;font-weight:700;color:#1e3a5f;text-align:right;white-space:nowrap;vertical-align:middle}
-  .dt-bar{padding:11px 8px;width:100px;vertical-align:middle}
-  .dt-bar-cell{padding:11px 0;vertical-align:middle;display:flex;align-items:center;gap:6px}
-  .dt-op{padding:11px 8px 11px 0;font-size:12px;font-weight:700;vertical-align:middle}
-  .bar-bg{background:#e2e8f0;height:5px;border-radius:3px;flex:1}
-  .bar-fill{height:5px;border-radius:3px}
-  .pct-label{font-size:10px;font-weight:700;min-width:28px;text-align:right}
-  .tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px}
-  .grand-row{border-top:2px solid #1e3a5f;background:#f8fafc}
-  .grand-row td{padding:14px 8px 14px 0!important;font-size:13px!important;font-weight:800!important}
-  .grand-row .dt-val{font-size:12px!important}
-  .empty-cell{font-size:12px;color:#94a3b8;padding:20px 0;text-align:center}
-  .tier-pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px}
+  .card-hdr {
+    border-bottom: 3px solid var(--dark);
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--dark) !important;
+  }
+
+  .card-sub {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: none;
+    color: var(--muted);
+    margin-left: 5px;
+  }
+
+  .card-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    background: var(--bg);
+    border: 2px solid var(--dark);
+    padding: 4px 10px;
+    border-radius: 30px;
+  }
+
+  .chart-wrap { position: relative; height: 220px; }
+  .chart-wrap-lg { position: relative; height: 260px; }
+
+  /* ─ TABLES ─ */
+  .dt {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .dt th {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--dark);
+    padding: 10px 8px 10px 0;
+    text-align: left;
+    border-bottom: 3px solid var(--dark);
+  }
+
+  .dt-row {
+    border-bottom: 2px solid rgba(25, 25, 29, 0.08);
+    transition: background 0.15s ease;
+  }
+
+  .dt-row:hover {
+    background: #FFFDF4;
+  }
+
+  .dt-row:last-child {
+    border-bottom: none;
+  }
+
+  .dt-rank {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 12px 8px 12px 0;
+    width: 24px;
+    vertical-align: middle;
+  }
+
+  .dt-area {
+    padding: 12px 12px 12px 0;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--dark);
+    vertical-align: middle;
+  }
+
+  .dt-center {
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .dt-center.ren {
+    font-weight: 800;
+    color: var(--dark);
+  }
+
+  .dt-right {
+    padding: 12px 8px;
+    text-align: right;
+    vertical-align: middle;
+  }
+
+  .dt-val {
+    padding: 12px 0 12px 8px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--dark);
+    text-align: right;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  .dt-bar {
+    padding: 12px 8px;
+    width: 100px;
+    vertical-align: middle;
+  }
+
+  .dt-bar-cell {
+    padding: 12px 0;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dt-op {
+    padding: 12px 8px 12px 0;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--dark) !important;
+    vertical-align: middle;
+  }
+
+  .bar-bg {
+    background: var(--bg);
+    border: 2px solid var(--dark);
+    height: 10px;
+    border-radius: 10px;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 10px;
+  }
+
+  .pct-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    min-width: 32px;
+    text-align: right;
+    color: var(--dark) !important;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--dark);
+    box-shadow: 2px 2px 0px var(--dark);
+  }
+
+  .grand-row {
+    border-top: 3px solid var(--dark);
+    background: var(--yellow) !important;
+  }
+
+  .grand-row td {
+    padding: 14px 8px 14px 0 !important;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: var(--dark) !important;
+  }
+
+  .grand-row .dt-val {
+    font-size: 13px !important;
+  }
+
+  .empty-cell {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 20px 0;
+    text-align: center;
+  }
+
+  .tier-pill {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 2px solid var(--dark);
+    box-shadow: 2px 2px 0px var(--dark);
+    background: #fff !important;
+  }
 
   /* ─ TREND SUMMARY ─ */
-  .trend-summary{display:flex;justify-content:space-between;border-top:1px solid #f1f5f9;padding-top:12px;margin-top:14px;gap:2px}
-  .ts-item{text-align:center;flex:1;padding:4px 2px;border-radius:5px}
-  .ts-current{background:#f0f7ff}
-  .ts-month{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)}
-  .ts-tot{font-size:12px;font-weight:700;color:var(--navy)}
-  .ts-ren{font-size:11px;font-weight:700;color:var(--green)}
-  .ts-pct{font-size:10px;font-weight:700;color:var(--blue)}
-  .ts-item p{margin:2px 0}
+  .trend-summary {
+    display: flex;
+    justify-content: space-between;
+    border-top: 3px solid var(--dark);
+    padding-top: 16px;
+    margin-top: 16px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .ts-item {
+    text-align: center;
+    flex: 1;
+    padding: 10px 6px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--dark);
+    background: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  .ts-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 3px 3px 0px var(--dark);
+  }
+
+  .ts-current {
+    background: var(--cyan) !important;
+    border-width: 3px;
+    box-shadow: 3px 3px 0px var(--dark);
+  }
+
+  .ts-month {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--dark);
+    margin-bottom: 2px;
+  }
+
+  .ts-tot {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--dark);
+  }
+
+  .ts-ren {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .ts-pct {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--dark);
+  }
 
   /* ─ HEATMAP ─ */
-  .heatmap-grid{display:grid;grid-template-columns:52px repeat(5,1fr);gap:4px}
-  .heat-col-lbl{font-size:10px;font-weight:700;color:var(--muted);text-align:center;padding-bottom:4px;text-transform:uppercase;letter-spacing:0.5px}
-  .heat-row-lbl{font-size:11px;font-weight:700;display:flex;align-items:center;padding-right:8px}
-  .heat-cell{aspect-ratio:1;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;min-height:36px}
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: 52px repeat(5, 1fr);
+    gap: 6px;
+  }
+
+  .heat-col-lbl {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--dark);
+    text-align: center;
+    padding-bottom: 6px;
+  }
+
+  .heat-row-lbl {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    padding-right: 8px;
+    color: var(--dark) !important;
+  }
+
+  .heat-cell {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: 2px solid var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    min-height: 40px;
+    box-shadow: 2px 2px 0px var(--dark);
+  }
 
   /* ─ CHURN RISK ─ */
-  .churn-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f8fafc}
-  .churn-row:last-child{border-bottom:none}
-  .churn-badge{font-size:9px;font-weight:700;padding:3px 7px;border-radius:3px;min-width:52px;text-align:center;flex-shrink:0;letter-spacing:0.3px}
-  .churn-info{flex:1;display:flex;flex-direction:column;gap:1px}
-  .churn-name{font-size:12px;font-weight:700;color:#1e3a5f}
-  .churn-country{font-size:10px;color:var(--muted)}
-  .churn-subs{font-size:12px;font-weight:700;min-width:50px;text-align:right}
-  .churn-days{font-size:10px;color:var(--muted);min-width:40px;text-align:right;font-family:'Courier New',monospace}
+  .churn-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 2px solid rgba(25, 25, 29, 0.08);
+  }
 
-  /* ─ DONUT LEGEND ─ */
-  .donut-legend{margin-top:12px;display:flex;flex-direction:column;gap:5px}
-  .donut-legend-item{display:flex;align-items:center;gap:7px;font-size:11px;color:#334155}
-  .donut-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .churn-row:last-child {
+    border-bottom: none;
+  }
+
+  .churn-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--dark);
+    box-shadow: 2px 2px 0px var(--dark);
+    min-width: 68px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .churn-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .churn-name {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--dark);
+  }
+
+  .churn-country {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .churn-subs {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    min-width: 60px;
+    text-align: right;
+    color: var(--dark);
+  }
+
+  .churn-days {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--dark);
+    min-width: 50px;
+    text-align: right;
+  }
 
   /* ─ FOOTER ─ */
-  .footer{margin-top:28px;padding:18px 28px;background:var(--navy);border-radius:10px;display:flex;justify-content:space-between;align-items:center;color:#94a3b8;font-size:11px}
-  .footer-brand{margin:0;font-weight:800;color:#fff;letter-spacing:0.5px;text-transform:uppercase;font-size:13px}
-  .footer-sub{margin:3px 0 0;font-size:11px}
-  .footer-code{font-family:'Courier New',monospace;font-weight:700;color:#475569}
+  .footer {
+    margin-top: 40px;
+    padding: 24px 32px;
+    background: var(--lime);
+    border: 3px solid var(--dark);
+    border-radius: var(--radius-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--dark);
+    box-shadow: var(--card-shadow);
+  }
+
+  .footer-brand {
+    margin: 0;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    color: var(--dark);
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+  .footer-sub {
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .footer-code {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    background: #ffffff;
+    border: 2px solid var(--dark);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+  }
 
   /* ─ RESPONSIVE ─ */
-  @media(max-width:1100px){.g2,.g2r,.g3{grid-template-columns:1fr}.kpi-row{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:640px){.kpi-row{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start;gap:14px}.geq{grid-template-columns:1fr}}
+  @media(max-width:1100px){
+    .g2, .g2r, .g3 { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media(max-width:640px){
+    .kpi-row { grid-template-columns: 1fr; }
+    .header { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .geq { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -786,7 +1359,7 @@
       <td class="dt-op" style="color:#7c3aed">MAGIC DIAGNOSTIC S.R.L</td>
       <td class="dt-center ren">1</td>
       <td class="dt-val">€ 800</td>
-      <td class="dt-bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:0%;background:#7c3aed"></div></div><span class="pct-label" style="color:#7c3aed">0%</span></td>
+      <td class="dt-bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:0%;background:#7c3aed"></div></div><span class="pct-label" style="color:#7c3aed">1%</span></td>
     </tr><tr class="dt-row">
       <td class="dt-rank">81</td>
       <td class="dt-op" style="color:#0891b2">SARL NEORIV</td>
@@ -1140,11 +1713,11 @@
 <!-- ROW 4: URGENZA SCADENZE -->
 <div class="g2r">
   <div class="card">
-    <div class="card-hdr red"><h2 class="card-title red">Urgenza Scadenze <span class="card-sub">— Tasso rinnovo per finestra</span></h2><span class="card-num">07/09</span></div>
+    <div class="card-hdr" style="border-bottom-color: var(--pink);"><h2 class="card-title">Urgenza Scadenze <span class="card-sub">— Tasso rinnovo per finestra</span></h2><span class="card-num">07/09</span></div>
     <div class="chart-wrap"><canvas id="urgencyChart" role="img" aria-label="Tasso di rinnovo per fascia di urgenza scadenza"></canvas></div>
   </div>
   <div class="card">
-    <div class="card-hdr red"><h2 class="card-title red">Dettaglio Fasce</h2></div>
+    <div class="card-hdr" style="border-bottom-color: var(--pink);"><h2 class="card-title">Dettaglio Fasce</h2></div>
     <table class="dt"><thead><tr>
       <th>Fascia</th><th style="text-align:center;width:38px">Tot.</th><th style="text-align:center;width:38px">Rin.</th>
       <th style="width:80px">%</th><th style="text-align:right;width:45px">Rate</th><th style="text-align:right">Valore</th>
@@ -1203,50 +1776,50 @@
 <!-- ROW 5: TIER + DISTRIBUTORI -->
 <div class="geq">
   <div class="card">
-    <div class="card-hdr purple"><h2 class="card-title purple">Tier Abbonamento <span class="card-sub">— Performance per fascia</span></h2><span class="card-num">08/09</span></div>
+    <div class="card-hdr" style="border-bottom-color: var(--pink);"><h2 class="card-title">Tier Abbonamento <span class="card-sub">— Performance per fascia</span></h2><span class="card-num">08/09</span></div>
     <table class="dt"><thead><tr>
       <th>Tier</th><th style="text-align:center;width:38px">Tot.</th><th style="text-align:center;width:38px">Rin.</th>
       <th style="width:80px">Rate</th><th style="text-align:right;width:45px">%</th><th style="text-align:right">Valore</th>
     </tr></thead><tbody><tr class="dt-row">
-      <td style="padding:11px 8px 11px 0"><span class="tier-pill" style="background:#0891b220;color:#0891b2;border:1px solid #0891b240">€ 300</span></td>
+      <td style="padding:11px 8px 11px 0"><span class="tier-pill">€ 300</span></td>
       <td class="dt-center" style="color:#334155">1955</td>
       <td class="dt-center ren">925</td>
       <td style="padding:11px 8px;width:90px"><div class="bar-bg"><div class="bar-fill" style="width:47%;background:#0891b2"></div></div></td>
-      <td class="dt-right"><span class="tag" style="background:#0891b215;color:#0891b2">47.3%</span></td>
+      <td class="dt-right"><span class="tag" style="background:#70FAFD;color:#19191D">47.3%</span></td>
       <td class="dt-val">€ 280.557</td>
     </tr><tr class="dt-row">
-      <td style="padding:11px 8px 11px 0"><span class="tier-pill" style="background:#7c3aed20;color:#7c3aed;border:1px solid #7c3aed40">€ 400</span></td>
+      <td style="padding:11px 8px 11px 0"><span class="tier-pill">€ 400</span></td>
       <td class="dt-center" style="color:#334155">327</td>
       <td class="dt-center ren">213</td>
       <td style="padding:11px 8px;width:90px"><div class="bar-bg"><div class="bar-fill" style="width:65%;background:#7c3aed"></div></div></td>
       <td class="dt-right"><span class="tag" style="background:#7c3aed15;color:#7c3aed">65.1%</span></td>
       <td class="dt-val">€ 87.530</td>
     </tr><tr class="dt-row">
-      <td style="padding:11px 8px 11px 0"><span class="tier-pill" style="background:#2563eb20;color:#2563eb;border:1px solid #2563eb40">€ 500</span></td>
+      <td style="padding:11px 8px 11px 0"><span class="tier-pill">€ 500</span></td>
       <td class="dt-center" style="color:#334155">3857</td>
       <td class="dt-center ren">1924</td>
       <td style="padding:11px 8px;width:90px"><div class="bar-bg"><div class="bar-fill" style="width:50%;background:#2563eb"></div></div></td>
       <td class="dt-right"><span class="tag" style="background:#2563eb15;color:#2563eb">49.9%</span></td>
       <td class="dt-val">€ 964.590</td>
     </tr><tr class="dt-row">
-      <td style="padding:11px 8px 11px 0"><span class="tier-pill" style="background:#d9770620;color:#d97706;border:1px solid #d9770640">€ 650</span></td>
+      <td style="padding:11px 8px 11px 0"><span class="tier-pill">€ 650</span></td>
       <td class="dt-center" style="color:#334155">1219</td>
       <td class="dt-center ren">921</td>
       <td style="padding:11px 8px;width:90px"><div class="bar-bg"><div class="bar-fill" style="width:76%;background:#d97706"></div></div></td>
-      <td class="dt-right"><span class="tag" style="background:#d9770615;color:#d97706">75.6%</span></td>
+      <td class="dt-right"><span class="tag" style="background:#FFF48D;color:#19191D">75.6%</span></td>
       <td class="dt-val">€ 609.156</td>
     </tr><tr class="dt-row">
-      <td style="padding:11px 8px 11px 0"><span class="tier-pill" style="background:#dc262620;color:#dc2626;border:1px solid #dc262640">€ 800</span></td>
+      <td style="padding:11px 8px 11px 0"><span class="tier-pill">€ 800</span></td>
       <td class="dt-center" style="color:#334155">2079</td>
       <td class="dt-center ren">1261</td>
       <td style="padding:11px 8px;width:90px"><div class="bar-bg"><div class="bar-fill" style="width:61%;background:#dc2626"></div></div></td>
-      <td class="dt-right"><span class="tag" style="background:#dc262615;color:#dc2626">60.7%</span></td>
+      <td class="dt-right"><span class="tag" style="background:#FF678B;color:#19191D">60.7%</span></td>
       <td class="dt-val">€ 1.005.250</td>
     </tr></tbody></table>
     <div style="margin-top:16px"><div class="chart-wrap" style="height:160px"><canvas id="tierChart" role="img" aria-label="Confronto tasso di rinnovo per tier di abbonamento"></canvas></div></div>
   </div>
   <div class="card">
-    <div class="card-hdr purple"><h2 class="card-title purple">Top Distributori <span class="card-sub">— Ranked per fatturato</span></h2></div>
+    <div class="card-hdr" style="border-bottom-color: var(--pink);"><h2 class="card-title">Top Distributori <span class="card-sub">— Ranked per fatturato</span></h2></div>
     <table class="dt"><thead><tr>
       <th style="width:24px">#</th><th>Distributore</th><th style="text-align:center;width:38px">Rin.</th>
       <th style="width:90px">Volume</th><th style="text-align:right">Fatturato</th>
@@ -1305,7 +1878,7 @@
 <!-- ROW 6: HEATMAP + CHURN RISK -->
 <div class="geq">
   <div class="card">
-    <div class="card-hdr amber"><h2 class="card-title amber">Heatmap Scadenze <span class="card-sub">— Settimana × Area</span></h2><span class="card-num">09/09</span></div>
+    <div class="card-hdr" style="border-bottom-color: var(--pink);"><h2 class="card-title">Heatmap Scadenze <span class="card-sub">— Settimana × Area</span></h2><span class="card-num">09/09</span></div>
     <div class="heatmap-grid"><div></div><div class="heat-col-lbl">S1</div><div class="heat-col-lbl">S2</div><div class="heat-col-lbl">S3</div><div class="heat-col-lbl">S4</div><div class="heat-col-lbl">S5</div><div class="heat-row-lbl" style="color:#2563eb">CCS</div><div class="heat-cell" style="background:#2563eb;color:#fff">1715</div><div class="heat-cell" style="background:#2563eb;color:#fff">1877</div><div class="heat-cell" style="background:#2563eb;color:#fff">1631</div><div class="heat-cell" style="background:#2563eb;color:#fff">1722</div><div class="heat-cell" style="background:#2563eb44;color:#2563eb">563</div><div class="heat-row-lbl" style="color:#7c3aed">Iberica</div><div class="heat-cell" style="background:#7c3aed44;color:#7c3aed">353</div><div class="heat-cell" style="background:#7c3aed44;color:#7c3aed">398</div><div class="heat-cell" style="background:#7c3aed44;color:#7c3aed">341</div><div class="heat-cell" style="background:#7c3aed44;color:#7c3aed">389</div><div class="heat-cell" style="background:#f1f5f9;color:#7c3aed">150</div><div class="heat-row-lbl" style="color:#059669">USA</div><div class="heat-cell" style="background:#f1f5f9;color:#059669">61</div><div class="heat-cell" style="background:#f1f5f9;color:#059669">47</div><div class="heat-cell" style="background:#f1f5f9;color:#059669">63</div><div class="heat-cell" style="background:#f1f5f9;color:#059669">57</div><div class="heat-cell" style="background:#f1f5f9;color:#059669">19</div><div class="heat-row-lbl" style="color:#d97706">Cina</div><div class="heat-cell" style="background:#f1f5f9;color:#d97706">19</div><div class="heat-cell" style="background:#f1f5f9;color:#d97706">21</div><div class="heat-cell" style="background:#f1f5f9;color:#d97706">19</div><div class="heat-cell" style="background:#f1f5f9;color:#d97706">20</div><div class="heat-cell" style="background:#f1f5f9;color:#d97706">4</div></div>
     <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)"><div style="width:12px;height:12px;border-radius:2px;background:#f1f5f9;border:1px solid #e2e8f0"></div>Nessuno</div>
@@ -1315,74 +1888,74 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-hdr red"><h2 class="card-title red">⚠ Churn Risk Alert <span class="card-sub">— Priorità contatto</span></h2></div>
+    <div class="card-hdr" style="border-bottom-color: var(--pink);"><h2 class="card-title">⚠ Churn Risk Alert <span class="card-sub">— Priorità contatto</span></h2></div>
     <div class="churn-row">
-      <span class="churn-badge" style="background:#fef2f2;color:#991b1b">CRITICO</span>
+      <span class="churn-badge" style="background:#FF678B;color:#19191D">CRITICO</span>
       <div class="churn-info">
         <span class="churn-name">Zhong Xing Huang</span>
         <span class="churn-country">CN</span>
       </div>
-      <span class="churn-subs" style="color:#991b1b">€ 1300</span>
+      <span class="churn-subs" style="color:#19191D">€ 1300</span>
       <span class="churn-days">+69gg</span>
     </div><div class="churn-row">
-      <span class="churn-badge" style="background:#fef2f2;color:#991b1b">CRITICO</span>
+      <span class="churn-badge" style="background:#FF678B;color:#19191D">CRITICO</span>
       <div class="churn-info">
         <span class="churn-name">hudai kirak</span>
         <span class="churn-country">FR</span>
       </div>
-      <span class="churn-subs" style="color:#991b1b">€ 800</span>
+      <span class="churn-subs" style="color:#19191D">€ 800</span>
       <span class="churn-days">+148gg</span>
     </div><div class="churn-row">
-      <span class="churn-badge" style="background:#fef2f2;color:#991b1b">CRITICO</span>
+      <span class="churn-badge" style="background:#FF678B;color:#19191D">CRITICO</span>
       <div class="churn-info">
         <span class="churn-name">ELENILTON COSTA DE FRE</span>
         <span class="churn-country">BR</span>
       </div>
-      <span class="churn-subs" style="color:#991b1b">€ 800</span>
+      <span class="churn-subs" style="color:#19191D">€ 800</span>
       <span class="churn-days">+148gg</span>
     </div><div class="churn-row">
-      <span class="churn-badge" style="background:#fef2f2;color:#991b1b">CRITICO</span>
+      <span class="churn-badge" style="background:#FF678B;color:#19191D">CRITICO</span>
       <div class="churn-info">
         <span class="churn-name">dimitris</span>
         <span class="churn-country">GR</span>
       </div>
-      <span class="churn-subs" style="color:#991b1b">€ 800</span>
+      <span class="churn-subs" style="color:#19191D">€ 800</span>
       <span class="churn-days">+148gg</span>
     </div><div class="churn-row">
-      <span class="churn-badge" style="background:#fef2f2;color:#991b1b">CRITICO</span>
+      <span class="churn-badge" style="background:#FF678B;color:#19191D">CRITICO</span>
       <div class="churn-info">
         <span class="churn-name">Hell Devil</span>
         <span class="churn-country">UA</span>
       </div>
-      <span class="churn-subs" style="color:#991b1b">€ 800</span>
+      <span class="churn-subs" style="color:#19191D">€ 800</span>
       <span class="churn-days">+147gg</span>
     </div><div class="churn-row">
-      <span class="churn-badge" style="background:#fef2f2;color:#991b1b">CRITICO</span>
+      <span class="churn-badge" style="background:#FF678B;color:#19191D">CRITICO</span>
       <div class="churn-info">
         <span class="churn-name">Gervasios Mouratidis</span>
         <span class="churn-country">CY</span>
       </div>
-      <span class="churn-subs" style="color:#991b1b">€ 800</span>
+      <span class="churn-subs" style="color:#19191D">€ 800</span>
       <span class="churn-days">+146gg</span>
     </div><div class="churn-row">
-      <span class="churn-badge" style="background:#fef2f2;color:#991b1b">CRITICO</span>
+      <span class="churn-badge" style="background:#FF678B;color:#19191D">CRITICO</span>
       <div class="churn-info">
         <span class="churn-name">TORRES Y GIMENEZ MOTOR</span>
         <span class="churn-country">ES</span>
       </div>
-      <span class="churn-subs" style="color:#991b1b">€ 800</span>
+      <span class="churn-subs" style="color:#19191D">€ 800</span>
       <span class="churn-days">+146gg</span>
     </div><div class="churn-row">
-      <span class="churn-badge" style="background:#fef2f2;color:#991b1b">CRITICO</span>
+      <span class="churn-badge" style="background:#FF678B;color:#19191D">CRITICO</span>
       <div class="churn-info">
         <span class="churn-name">mike</span>
         <span class="churn-country">US</span>
       </div>
-      <span class="churn-subs" style="color:#991b1b">€ 800</span>
+      <span class="churn-subs" style="color:#19191D">€ 800</span>
       <span class="churn-days">+145gg</span>
     </div>
-    <div style="margin-top:14px;padding:10px 12px;background:#fef2f2;border-radius:6px;border-left:3px solid var(--red)">
-      <p style="font-size:11px;color:#7f1d1d;font-weight:600;line-height:1.5">Logica: <strong>Rinnovo Flag = 0</strong> + scaduto &gt; 7 giorni · Score = giorni×0.4 + valore×0.6</p>
+    <div style="margin-top:14px;padding:12px;background:#FFF48D;border-radius:12px;border:3px solid var(--dark);box-shadow: 3px 3px 0 var(--dark);">
+      <p style="font-size:11px;color:#19191D;font-weight:700;line-height:1.5">Logica: <strong>Rinnovo Flag = 0</strong> + scaduto &gt; 7 giorni · Score = giorni×0.4 + valore×0.6</p>
     </div>
   </div>
 </div>
@@ -1407,18 +1980,18 @@
     data:{
       labels:["Gen","Feb","Mar","Apr","Mag","Giu","Lug"],
       datasets:[
-        {label:'Inviati',data:[439,1997,1825,1534,1599,1443,632],borderColor:'#1e3a5f',backgroundColor:'rgba(30,58,95,0.04)',fill:true,borderWidth:2,pointRadius:4,pointBackgroundColor:'#1e3a5f',tension:0.35,yAxisID:'y'},
-        {label:'Rinnovati',data:[263,1374,1288,998,910,418,3],borderColor:'#059669',backgroundColor:'rgba(5,150,105,0.04)',fill:true,borderWidth:2,pointRadius:4,pointBackgroundColor:'#059669',tension:0.35,yAxisID:'y'},
-        {label:'Fatturato (€)',data:[144340.5,767207.74,710869.11,554252.29,528966.5,249920.5,1200],borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,0.04)',fill:true,borderWidth:2,pointRadius:4,pointBackgroundColor:'#7c3aed',tension:0.35,yAxisID:'y1',borderDash:[4,3]}
+        {label:'Inviati',data:[439,1997,1825,1534,1599,1443,632],borderColor:'#19191D',backgroundColor:'rgba(25,25,29,0.04)',fill:true,borderWidth:3,pointRadius:5,pointBackgroundColor:'#FFF48D',tension:0.35,yAxisID:'y'},
+        {label:'Rinnovati',data:[263,1374,1288,998,910,418,3],borderColor:'#059669',backgroundColor:'rgba(5,150,105,0.04)',fill:true,borderWidth:3,pointRadius:5,pointBackgroundColor:'#8FF977',tension:0.35,yAxisID:'y'},
+        {label:'Fatturato (€)',data:[144340.5,767207.74,710869.11,554252.29,528966.5,249920.5,1200],borderColor:'#7c3aed',backgroundColor:'rgba(124,58,237,0.04)',fill:true,borderWidth:3,pointRadius:5,pointBackgroundColor:'#FF678B',tension:0.35,yAxisID:'y1',borderDash:[4,3]}
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},color:'#64748b'}},
-        tooltip:{mode:'index',intersect:false,backgroundColor:'#0f172a',titleColor:'#fff',bodyColor:'#cbd5e1',
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10,weight:'600'},color:'#19191D'}},
+        tooltip:{mode:'index',intersect:false,backgroundColor:'#19191D',titleColor:'#fff',bodyColor:'#cbd5e1',
           callbacks:{label:ctx=>{let l=ctx.dataset.label+': ';return ctx.dataset.yAxisID==='y1'?l+'€'+Math.round(ctx.parsed.y).toLocaleString('it-IT'):l+ctx.parsed.y;}}}},
       scales:{
-        x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:10},autoSkip:false,maxRotation:0}},
-        y:{position:'left',grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#64748b',font:{size:10}}},
+        x:{grid:{display:false},ticks:{color:'#19191D',font:{size:10,weight:'600'},autoSkip:false,maxRotation:0}},
+        y:{position:'left',grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#19191D',font:{size:10}}},
         y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#7c3aed',font:{size:10},callback:v=>'€'+Math.round(v).toLocaleString('it-IT')}}
       }
     }
@@ -1427,8 +2000,8 @@
   // ── DONUT CANALI ──
   new Chart(document.getElementById('donutChart').getContext('2d'),{
     type:'doughnut',
-    data:{labels:["HELPDESK","DISTRIBUTORE","CCS","DIREZIONALE","SHOP","ACADEMY"],datasets:[{data:[2650,2122,307,156,18,1],backgroundColor:["#2563eb","#7c3aed","#0891b2","#059669","#d97706","#dc2626"],borderWidth:2,borderColor:'#fff',hoverOffset:6}]},
-    options:{responsive:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#fff',bodyColor:'#cbd5e1'}}}
+    data:{labels:["HELPDESK","DISTRIBUTORE","CCS","DIREZIONALE","SHOP","ACADEMY"],datasets:[{data:[2650,2122,307,156,18,1],backgroundColor:["#FF678B","#7c3aed","#70FAFD","#8FF977","#FFF48D","#dc2626"],borderWidth:3,borderColor:'#19191D',hoverOffset:6}]},
+    options:{responsive:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{backgroundColor:'#19191D',titleColor:'#fff',bodyColor:'#cbd5e1'}}}
   });
 
   // ── CONFRONTO COMPETENZE ──
@@ -1437,13 +2010,13 @@
     data:{
       labels:["CCS","Iberica","USA","Cina"],
       datasets:[
-        {label:'Inviati',data:[7508,1631,247,83],backgroundColor:'rgba(30,58,95,0.15)',borderColor:'#1e3a5f',borderWidth:2,borderRadius:5},
-        {label:'Rinnovati',data:[4303,786,121,44],backgroundColor:'rgba(5,150,105,0.75)',borderColor:'#059669',borderWidth:0,borderRadius:5}
+        {label:'Inviati',data:[7508,1631,247,83],backgroundColor:'rgba(25,25,29,0.12)',borderColor:'#19191D',borderWidth:3,borderRadius:5},
+        {label:'Rinnovati',data:[4303,786,121,44],backgroundColor:'#8FF977',borderColor:'#19191D',borderWidth:3,borderRadius:5}
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},color:'#64748b'}},tooltip:{backgroundColor:'#0f172a',titleColor:'#fff',bodyColor:'#cbd5e1'}},
-      scales:{x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:11,weight:'600'}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#64748b',font:{size:10}}}}
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10,weight:'600'},color:'#19191D'}},tooltip:{backgroundColor:'#19191D',titleColor:'#fff',bodyColor:'#cbd5e1'}},
+      scales:{x:{grid:{display:false},ticks:{color:'#19191D',font:{size:11,weight:'700'}}},y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#19191D',font:{size:10}}}}
     }
   });
 
@@ -1453,16 +2026,16 @@
     data:{
       labels:["Già scaduti","0 – 7 giorni","8 – 15 giorni","16 – 30 giorni"],
       datasets:[
-        {label:'Tasso Rinnovo %',data:[67,40,10,1],backgroundColor:["#dc2626","#d97706","#f59e0b","#059669"],borderRadius:6,borderWidth:0,yAxisID:'y'},
-        {label:'Contratti',data:[6482,403,728,584],backgroundColor:'rgba(30,58,95,0.12)',borderColor:'#1e3a5f',borderWidth:1.5,borderRadius:6,type:'bar',yAxisID:'y1'}
+        {label:'Tasso Rinnovo %',data:[67,40,10,1],backgroundColor:["#FF678B","#FFF48D","#f59e0b","#8FF977"],borderColor:'#19191D',borderWidth:3,borderRadius:6,yAxisID:'y'},
+        {label:'Contratti',data:[6482,403,728,584],backgroundColor:'rgba(25,25,29,0.08)',borderColor:'#19191D',borderWidth:2,borderRadius:6,type:'bar',yAxisID:'y1'}
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10},color:'#64748b'}},tooltip:{backgroundColor:'#0f172a',titleColor:'#fff',bodyColor:'#cbd5e1',callbacks:{label:ctx=>ctx.dataset.yAxisID==='y'?ctx.dataset.label+': '+ctx.parsed.y+'%':ctx.dataset.label+': '+ctx.parsed.y}}},
+      plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:10,font:{size:10,weight:'600'},color:'#19191D'}},tooltip:{backgroundColor:'#19191D',titleColor:'#fff',bodyColor:'#cbd5e1',callbacks:{label:ctx=>ctx.dataset.yAxisID==='y'?ctx.dataset.label+': '+ctx.parsed.y+'%':ctx.dataset.label+': '+ctx.parsed.y}}},
       scales:{
-        x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:11}}},
-        y:{position:'left',max:100,grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#dc2626',font:{size:10},callback:v=>v+'%'}},
-        y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#64748b',font:{size:10}}}
+        x:{grid:{display:false},ticks:{color:'#19191D',font:{size:11,weight:'700'}}},
+        y:{position:'left',max:100,grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#19191D',font:{size:10},callback:v=>v+'%'}},
+        y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#19191D',font:{size:10}}}
       }
     }
   });
@@ -1473,16 +2046,16 @@
     data:{
       labels:["€300","€400","€500","€650","€800"],
       datasets:[
-        {label:'Tasso %',data:[47.3,65.1,49.9,75.6,60.7],backgroundColor:["#0891b2cc","#7c3aedcc","#2563ebcc","#d97706cc","#dc2626cc"],borderRadius:5,borderWidth:0,yAxisID:'y'},
-        {label:'Fatturato €',data:[280556.51,87530,964589.52,609156.45,1005250.16],backgroundColor:'rgba(30,58,95,0.12)',borderColor:'#1e3a5f',borderWidth:1.5,borderRadius:5,yAxisID:'y1'}
+        {label:'Tasso %',data:[47.3,65.1,49.9,75.6,60.7],backgroundColor:["#70FAFD","#7c3aedcc","#2563ebcc","#FFF48D","#FF678B"],borderColor:'#19191D',borderWidth:3,borderRadius:5,yAxisID:'y'},
+        {label:'Fatturato €',data:[280556.51,87530,964589.52,609156.45,1005250.16],backgroundColor:'rgba(25,25,29,0.08)',borderColor:'#19191D',borderWidth:2,borderRadius:5,yAxisID:'y1'}
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#fff',bodyColor:'#cbd5e1',callbacks:{label:ctx=>ctx.dataset.yAxisID==='y'?'Tasso: '+ctx.parsed.y+'%':'Fatturato: €'+Math.round(ctx.parsed.y).toLocaleString('it-IT')}}},
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#19191D',titleColor:'#fff',bodyColor:'#cbd5e1',callbacks:{label:ctx=>ctx.dataset.yAxisID==='y'?'Tasso: '+ctx.parsed.y+'%':'Fatturato: €'+Math.round(ctx.parsed.y).toLocaleString('it-IT')}}},
       scales:{
-        x:{grid:{display:false},ticks:{color:'#94a3b8',font:{size:10}}},
-        y:{position:'left',max:100,grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#7c3aed',font:{size:10},callback:v=>v+'%'}},
-        y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#64748b',font:{size:10},callback:v=>'€'+Math.round(v/1000)+'k'}}
+        x:{grid:{display:false},ticks:{color:'#19191D',font:{size:10,weight:'700'}}},
+        y:{position:'left',max:100,grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:'#19191D',font:{size:10},callback:v=>v+'%'}},
+        y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#19191D',font:{size:10},callback:v=>'€'+Math.round(v/1000)+'k'}}
       }
     }
   });
