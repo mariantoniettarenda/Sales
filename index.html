@@ -826,6 +826,8 @@ exports.init = init;
             --yellow: #FFF48D;
             --lime: #8FF977;
             --cyan: #70FAFD;
+            --locked-bg: #ECE9DC;
+            --locked-text: rgba(25, 25, 29, 0.45);
             --card-shadow: 6px 6px 0px #19191D;
             --card-shadow-hover: 10px 10px 0px #19191D;
             --radius-xl: 32px;
@@ -846,32 +848,120 @@ exports.init = init;
             min-height: 100vh;
         }
 
-        /* --- CONTROLLER LAYOUT CON SIDEBAR --- */
-        .app-layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Neobrutalist fissa */
-        .sidebar {
-            width: 320px;
-            background: #ffffff;
-            border-right: 3px solid var(--dark);
-            padding: 40px 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            flex-shrink: 0;
+        /* ============================================================
+           TOP BAR — qui vive il selettore di modalità Live / Archivio.
+           È l'unico elemento sempre visibile: serve a far capire subito
+           all'utente in che "stanza" si trova.
+           ============================================================ */
+        .top-bar {
             position: sticky;
             top: 0;
-            height: 100vh;
-            overflow-y: auto;
+            z-index: 50;
+            background: #ffffff;
+            border-bottom: 3px solid var(--dark);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .mode-switch {
+            display: inline-flex;
+            background: var(--bg-page);
+            border: 3px solid var(--dark);
+            border-radius: 999px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .mode-btn {
+            border: 0;
+            background: transparent;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border-radius: 999px;
+            cursor: pointer;
+            color: var(--dark);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mode-btn:hover {
+            background: rgba(25, 25, 29, 0.06);
+        }
+
+        .mode-btn.active {
+            box-shadow: 3px 3px 0px var(--dark);
+            border: 2px solid var(--dark);
+        }
+
+        .mode-btn[data-mode="live"].active {
+            background: var(--cyan);
+        }
+
+        .mode-btn[data-mode="archive"].active {
+            background: var(--yellow);
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #1FA855;
+            display: inline-block;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
+        }
+
+        /* ============================================================
+           CONTEXT BAR — riga sottile che spiega cosa si sta guardando,
+           cambia testo via JS in base alla modalità attiva.
+           ============================================================ */
+        .context-bar {
+            border-bottom: 3px solid var(--dark);
+            padding: 12px 24px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .context-bar.context-live {
+            background: var(--cyan);
+        }
+
+        .context-bar.context-archive {
+            background: var(--yellow);
+        }
+
+        .context-bar .context-sub {
+            font-weight: 500;
+            opacity: 0.75;
         }
 
         .main-content {
-            flex-grow: 1;
             padding: 40px 20px;
-            overflow-y: auto;
         }
 
         .container {
@@ -880,109 +970,7 @@ exports.init = init;
             width: 100%;
         }
 
-        /* Elementi grafici Sidebar */
-        .sidebar-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--dark);
-            border-bottom: 3px solid var(--dark);
-            padding-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .home-btn {
-            background-color: var(--cyan);
-            border: 3px solid var(--dark);
-            font-family: 'Syne', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 800;
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--dark);
-            transition: all 0.2s ease;
-            text-align: left;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .home-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--dark);
-            background-color: var(--yellow);
-        }
-
-        /* Struttura ad Albero dell'archivio */
-        .archive-tree {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .tree-year {
-            background-color: var(--lime);
-            border: 3px solid var(--dark);
-            border-radius: var(--radius-md);
-            padding: 12px 16px;
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 1.1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--dark);
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-
-        .tree-year:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px var(--dark);
-        }
-
-        .tree-months {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-left: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .tree-months.collapsed {
-            display: none;
-        }
-
-        .tree-month {
-            background: #ffffff;
-            border: 2px solid var(--dark);
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .tree-month:hover, 
-        .tree-month.active {
-            background-color: var(--pink);
-            color: var(--dark);
-            transform: translate(-2px, -2px);
-            box-shadow: 3px 3px 0px var(--dark);
-        }
-
-        /* --- FINE STILI SIDEBAR --- */
-
-        header {
+        header.page-header {
             text-align: center;
             margin-bottom: 50px;
         }
@@ -1181,6 +1169,13 @@ exports.init = init;
             align-items: center;
             justify-content: space-between;
             margin-top: auto;
+            gap: 10px;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
         .card-tag {
@@ -1189,6 +1184,7 @@ exports.init = init;
             padding: 4px 10px;
             border-radius: 8px;
             border: 2px solid var(--dark);
+            white-space: nowrap;
         }
 
         .badge-prodotti { background-color: var(--yellow); }
@@ -1198,6 +1194,7 @@ exports.init = init;
         .badge-carrelli { background-color: #ff9d76; }
         .badge-distributori { background-color: #c9b2ff; }
         .badge-competitors { background-color: var(--yellow); }
+        .badge-snapshot { background-color: #fff; }
 
         .arrow-icon {
             width: 32px;
@@ -1209,6 +1206,7 @@ exports.init = init;
             justify-content: center;
             color: #fff;
             transition: transform 0.2s ease;
+            flex-shrink: 0;
         }
 
         .report-card:hover .arrow-icon {
@@ -1234,471 +1232,718 @@ exports.init = init;
             font-weight: 700;
         }
 
-        /* Adattabilità Mobile / Tablet */
+        /* ============================================================
+           ARCHIVIO — layout interno a due colonne, presente SOLO
+           quando la modalità "archive" è attiva. Non è più una sidebar
+           di pagina permanente: compare ed esce insieme alla vista.
+           ============================================================ */
+        .archive-layout {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .archive-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            background: #ffffff;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 100px;
+        }
+
+        .archive-sidebar-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-bottom: 3px solid var(--dark);
+            padding-bottom: 12px;
+        }
+
+        .archive-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tree-year {
+            background-color: var(--lime);
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.05rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px var(--dark);
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .tree-year:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--dark);
+        }
+
+        .tree-months {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-left: 10px;
+        }
+
+        .tree-months.collapsed {
+            display: none;
+        }
+
+        .tree-month {
+            background: #ffffff;
+            border: 2px solid var(--dark);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tree-month:hover,
+        .tree-month.active {
+            background-color: var(--pink);
+            color: var(--dark);
+            transform: translate(-2px, -2px);
+            box-shadow: 3px 3px 0px var(--dark);
+        }
+
+        .tree-month.locked {
+            background: var(--locked-bg);
+            color: var(--locked-text);
+            cursor: not-allowed;
+        }
+
+        .tree-month.locked:hover {
+            transform: none;
+            box-shadow: none;
+            background: var(--locked-bg);
+        }
+
+        .archive-content {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .archive-header-block {
+            margin-bottom: 30px;
+        }
+
+        .archive-period-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .archive-snapshot-note {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(25, 25, 29, 0.65);
+        }
+
+        .archive-placeholder,
+        .archive-locked-notice {
+            background: #fff;
+            border: 3px dashed var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .archive-placeholder p,
+        .archive-locked-notice p {
+            font-size: 1rem;
+            font-weight: 600;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .archive-placeholder .big-emoji,
+        .archive-locked-notice .big-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
         @media (max-width: 900px) {
-            .app-layout {
+            .archive-layout {
                 flex-direction: column;
             }
-            .sidebar {
+            .archive-sidebar {
                 width: 100%;
-                height: auto;
                 position: relative;
-                border-right: none;
-                border-bottom: 3px solid var(--dark);
-                padding: 24px 20px;
-            }
-            .main-content {
-                padding: 30px 10px;
+                top: 0;
             }
             h1 {
                 font-size: 2.2rem;
+            }
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="app-layout">
-        <!-- SIDEBAR DELL'ARCHIVIO -->
-        <aside class="sidebar">
-            <div class="sidebar-title">
-                📁 Archivio Storico
-            </div>
-            
-            <button class="home-btn" id="btn-go-home">
-                <span>🏠</span> Dashboard Attuale
+    <!-- ============================================================
+         SELETTORE DI MODALITÀ — sempre visibile, sempre in cima.
+         È la risposta a "dove sono?": Live o Archivio, non c'è una
+         terza opzione e non sono mai visibili insieme.
+         ============================================================ -->
+    <div class="top-bar">
+        <div class="brand">🛠️ Sales Analytics Vault</div>
+        <div class="mode-switch">
+            <button class="mode-btn active" data-mode="live" id="btn-mode-live">
+                <span class="live-dot"></span> Vista Live
             </button>
-
-            <div class="archive-tree">
-                <!-- Anno 2026 -->
-                <div class="tree-year" id="year-2026-toggle">
-                    <span>📅 Anno 2026</span>
-                    <span class="chevron">▼</span>
-                </div>
-                <div class="tree-months" id="months-2026">
-                    <div class="tree-month" data-month="gen" data-year="2026" data-month-name="Gennaio">Gennaio <span>➔</span></div>
-                    <div class="tree-month" data-month="feb" data-year="2026" data-month-name="Febbraio">Febbraio <span>➔</span></div>
-                    <div class="tree-month" data-month="mar" data-year="2026" data-month-name="Marzo">Marzo <span>➔</span></div>
-                    <div class="tree-month" data-month="apr" data-year="2026" data-month-name="Aprile">Aprile <span>➔</span></div>
-                    <div class="tree-month" data-month="mag" data-year="2026" data-month-name="Maggio">Maggio <span>➔</span></div>
-                    <div class="tree-month" data-month="giu" data-year="2026" data-month-name="Giugno">Giugno <span>➔</span></div>
-                    <div class="tree-month" data-month="lug" data-year="2026" data-month-name="Luglio">Luglio <span>➔</span></div>
-                    <div class="tree-month" data-month="ago" data-year="2026" data-month-name="Agosto">Agosto <span>➔</span></div>
-                    <div class="tree-month" data-month="set" data-year="2026" data-month-name="Settembre">Settembre <span>➔</span></div>
-                    <div class="tree-month" data-month="ott" data-year="2026" data-month-name="Ottobre">Ottobre <span>➔</span></div>
-                    <div class="tree-month" data-month="nov" data-year="2026" data-month-name="Novembre">Novembre <span>➔</span></div>
-                    <div class="tree-month" data-month="dic" data-year="2026" data-month-name="Dicembre">Dicembre <span>➔</span></div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- CONTENUTO PRINCIPALE -->
-        <main class="main-content">
-            <div class="container">
-                
-                <!-- VIEW 1: DASHBOARD CORRENTE -->
-                <div id="dashboard-view">
-                    <header>
-                        <div class="title-badge">Sales Vault 🛠️</div>
-                        <h1>Analitiche <span class="highlight-pink">Magic Sales</span></h1>
-                        <p class="subtitle">
-                            Di seguito trovi l'elenco dei report interattivi di Analisi Vendita, Clienti e Competitors.
-                        </p>
-                    </header>
-
-                    <div class="controls">
-                        <div class="search-wrapper">
-                            <input type="text" id="searchInput" class="search-input" placeholder="Cerca un report...">
-                        </div>
-                        <div class="filter-pills">
-                            <button class="pill active" data-filter="all">Mostra Tutti</button>
-                            <button class="pill" data-filter="vendite">Analisi Vendita</button>
-                            <button class="pill" data-filter="clienti-finali">Clienti Finali</button>
-                            <button class="pill" data-filter="distributori">Distributori</button>
-                            <button class="pill" data-filter="competitors">Competitors</button>
-                        </div>
-                    </div>
-
-                    <!-- SEZIONE: ANALISI DI VENDITA -->
-                    <div class="section-wrapper" data-category-group="vendite">
-                        <div class="section-header">
-                            <span class="section-title vendite">Analisi di Vendita</span>
-                        </div>
-                        
-                        <div class="grid-layout">
-                            <a href="report-prodotti.html" target="_blank" class="report-card" data-search="analisi prodotti hardware magicmotorsport">
-                                <div class="card-top">
-                                    <div class="card-category">Sales & Product</div>
-                                    <h3 class="card-title">Analisi Prodotti</h3>
-                                    <p class="card-description">Andamento commerciale, trend di acquisto hardware e accessori Magicmotorsport.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-prodotti">Hardware / Accessori</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-
-                            <a href="report-stagex.html" target="_blank" class="report-card" data-search="analisi stagex software rimappatura coins licenze">
-                                <div class="card-top">
-                                    <div class="card-category">Software Suite</div>
-                                    <h3 class="card-title">Analisi StageX</h3>
-                                    <p class="card-description">Andamento vendite: licenze, acquisto coins e recurring.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-stagex">StageX</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- SEZIONE: ANALISI CLIENTI (DIVISA IN FINALI E DISTRIBUTORI) -->
-                    <div class="section-wrapper" data-category-group="clienti">
-                        <div class="section-header">
-                            <span class="section-title clienti">Analisi Clienti</span>
-                        </div>
-
-                        <!-- Sotto-categoria: Clienti Finali -->
-                        <div class="sub-category-tag">Clienti Finali</div>
-                        <div class="grid-layout" style="margin-top: 15px;">
-                            <a href="report-helpdesk.html" target="_blank" class="report-card" data-category-type="clienti-finali" data-search="anagrafica helpdesk ticket supporto utenti finali">
-                                <div class="card-top">
-                                    <div class="card-category">Support & CRM</div>
-                                    <h3 class="card-title">Anagrafica Helpdesk</h3>
-                                    <p class="card-description">Anagrafiche HD, profilazione degli utenti finali.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-helpdesk">Helpdesk CRM</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-
-                            <a href="report-abbonamenti.html" target="_blank" class="report-card" data-category-type="clienti-finali" data-search="abbonamenti rinnovo scadenze churn rate subscription">
-                                <div class="card-top">
-                                    <div class="card-category">Retention</div>
-                                    <h3 class="card-title">Abbonamenti</h3>
-                                    <p class="card-description">Analisi degli abbonamenti in scadenza mese per mese, tassi di rinnovo e stato di recupero.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-abbonamenti">Abbonamenti</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-
-                            <a href="report-carrelli.html" target="_blank" class="report-card" data-category-type="clienti-finali" data-search="carrelli abbandonati checkout e-commerce conversioni">
-                                <div class="card-top">
-                                    <div class="card-category">E-commerce</div>
-                                    <h3 class="card-title">Carrelli Abbandonati</h3>
-                                    <p class="card-description">Tracciamento delle transazioni e-commerce non concluse ed efficacia dei flussi di recupero.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-carrelli">E-commerce</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <!-- Sotto-categoria: Distributori -->
-                        <div class="sub-category-tag">Distributori</div>
-                        <div class="grid-layout" style="margin-top: 15px;">
-                            <a href="report-liste.html" target="_blank" class="report-card" data-category-type="distributori" data-search="analisi liste contatti b2b partner canali">
-                                <div class="card-top">
-                                    <div class="card-category">B2B Channels</div>
-                                    <h3 class="card-title">Analisi Liste</h3>
-                                    <p class="card-description">Valutazione delle liste partner, classificazione per tier e andamento delle vendite indirette.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-distributori">B2B Liste</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-
-                            <a href="report-magazzini.html" target="_blank" class="report-card" data-category-type="distributori" data-search="analisi magazzini stock scorte logistica rotazione">
-                                <div class="card-top">
-                                    <div class="card-category">Logistics</div>
-                                    <h3 class="card-title">Analisi Magazzini</h3>
-                                    <p class="card-description">Giacenze presso i distributori, pianificazione della logistica e rotazione dello stock HW/SW.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-distributori">Stock / Magazzino</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- SEZIONE: ANALISI COMPETITORS -->
-                    <div class="section-wrapper" data-category-group="competitors">
-                        <div class="section-header">
-                            <span class="section-title competitors">Analisi Competitors</span>
-                        </div>
-                        
-                        <div class="grid-layout">
-                            <a href="competitors-updates.html" target="_blank" class="report-card" data-search="weekly report competitor prezzi mercato">
-                                <div class="card-top">
-                                    <div class="card-category">Intelligence</div>
-                                    <h3 class="card-title">Weekly Report</h3>
-                                    <p class="card-description">Sintesi giornaliera dei competitors Flex, nuovi protocolli e novità.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-competitors">Weekly Intelligence</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-
-                            <a href="report-protocolli.html" target="_blank" class="report-card" data-search="analisi protocolli ecu tcu compatibilita competitors">
-                                <div class="card-top">
-                                    <div class="card-category">Coverage comparison</div>
-                                    <h3 class="card-title">Analisi Protocolli</h3>
-                                    <p class="card-description">Mappatura tecnica e comparazione della copertura dei protocolli di lettura e scrittura ECU/TCU.</p>
-                                </div>
-                                <div class="card-bottom">
-                                    <span class="card-tag badge-competitors">Protocolli OBD/Bench</span>
-                                    <div class="arrow-icon">➔</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- VIEW 2: ARCHIVIO STORICO GENERATO DINAMICAMENTE -->
-                <div id="archive-view" class="hidden">
-                    <header>
-                        <div class="title-badge" id="archive-badge-title">Archivio 📁</div>
-                        <h1>Report Storici - <span id="archive-month-title" class="highlight-pink">Seleziona</span></h1>
-                        <p class="subtitle">
-                            Visualizzazione dei report consolidati e salvati per il periodo selezionato.
-                        </p>
-                    </header>
-                    
-                    <div class="grid-layout" id="archive-grid">
-                        <!-- Le schede dei report archiviati per mese verranno inserite qui via JS -->
-                    </div>
-                </div>
-
-                <footer>
-                    <p>Magicmotorsport Sales Analytics Vault • Hub di analisi progettato <span>MRenda</span></p>
-                </footer>
-            </div>
-        </main>
+            <button class="mode-btn" data-mode="archive" id="btn-mode-archive">
+                📁 Archivio Storico
+            </button>
+        </div>
     </div>
 
+    <div class="context-bar context-live" id="context-bar">
+        <span id="context-bar-text">🟢 Dati in tempo reale, aggiornati ogni giorno dalla pipeline automatica.</span>
+        <span class="context-sub" id="context-bar-sub"></span>
+    </div>
+
+    <main class="main-content">
+        <div class="container">
+
+            <!-- VIEW 1: DASHBOARD LIVE -->
+            <div id="dashboard-view">
+                <header class="page-header">
+                    <div class="title-badge">Sales Vault 🛠️</div>
+                    <h1>Analitiche <span class="highlight-pink">Magic Sales</span></h1>
+                    <p class="subtitle">
+                        Di seguito trovi l'elenco dei report interattivi di Analisi Vendita, Clienti e Competitors, aggiornati automaticamente ogni giorno.
+                    </p>
+                </header>
+
+                <div class="controls">
+                    <div class="search-wrapper">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Cerca un report...">
+                    </div>
+                    <div class="filter-pills" id="live-filter-pills">
+                        <button class="pill active" data-filter="all">Mostra Tutti</button>
+                        <button class="pill" data-filter="vendite">Analisi Vendita</button>
+                        <button class="pill" data-filter="clienti-finali">Clienti Finali</button>
+                        <button class="pill" data-filter="distributori">Distributori</button>
+                        <button class="pill" data-filter="competitors">Competitors</button>
+                    </div>
+                </div>
+
+                <!-- SEZIONE: ANALISI DI VENDITA -->
+                <div class="section-wrapper" data-category-group="vendite">
+                    <div class="section-header">
+                        <span class="section-title vendite">Analisi di Vendita</span>
+                    </div>
+
+                    <div class="grid-layout">
+                        <a href="report-prodotti.html" target="_blank" class="report-card" data-search="analisi prodotti hardware magicmotorsport">
+                            <div class="card-top">
+                                <div class="card-category">Sales & Product</div>
+                                <h3 class="card-title">Analisi Prodotti</h3>
+                                <p class="card-description">Andamento commerciale, trend di acquisto hardware e accessori Magicmotorsport.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-prodotti">Hardware / Accessori</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+
+                        <a href="report-stagex.html" target="_blank" class="report-card" data-search="analisi stagex software rimappatura coins licenze">
+                            <div class="card-top">
+                                <div class="card-category">Software Suite</div>
+                                <h3 class="card-title">Analisi StageX</h3>
+                                <p class="card-description">Andamento vendite: licenze, acquisto coins e recurring.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-stagex">StageX</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SEZIONE: ANALISI CLIENTI (DIVISA IN FINALI E DISTRIBUTORI) -->
+                <div class="section-wrapper" data-category-group="clienti">
+                    <div class="section-header">
+                        <span class="section-title clienti">Analisi Clienti</span>
+                    </div>
+
+                    <div class="sub-category-tag">Clienti Finali</div>
+                    <div class="grid-layout" style="margin-top: 15px;">
+                        <a href="report-helpdesk.html" target="_blank" class="report-card" data-category-type="clienti-finali" data-search="anagrafica helpdesk ticket supporto utenti finali">
+                            <div class="card-top">
+                                <div class="card-category">Support & CRM</div>
+                                <h3 class="card-title">Anagrafica Helpdesk</h3>
+                                <p class="card-description">Anagrafiche HD, profilazione degli utenti finali.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-helpdesk">Helpdesk CRM</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+
+                        <a href="report-abbonamenti.html" target="_blank" class="report-card" data-category-type="clienti-finali" data-search="abbonamenti rinnovo scadenze churn rate subscription">
+                            <div class="card-top">
+                                <div class="card-category">Retention</div>
+                                <h3 class="card-title">Abbonamenti</h3>
+                                <p class="card-description">Analisi degli abbonamenti in scadenza mese per mese, tassi di rinnovo e stato di recupero.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-abbonamenti">Abbonamenti</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+
+                        <a href="report-carrelli.html" target="_blank" class="report-card" data-category-type="clienti-finali" data-search="carrelli abbandonati checkout e-commerce conversioni">
+                            <div class="card-top">
+                                <div class="card-category">E-commerce</div>
+                                <h3 class="card-title">Carrelli Abbandonati</h3>
+                                <p class="card-description">Tracciamento delle transazioni e-commerce non concluse ed efficacia dei flussi di recupero.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-carrelli">E-commerce</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="sub-category-tag">Distributori</div>
+                    <div class="grid-layout" style="margin-top: 15px;">
+                        <a href="report-liste.html" target="_blank" class="report-card" data-category-type="distributori" data-search="analisi liste contatti b2b partner canali">
+                            <div class="card-top">
+                                <div class="card-category">B2B Channels</div>
+                                <h3 class="card-title">Analisi Liste</h3>
+                                <p class="card-description">Valutazione delle liste partner, classificazione per tier e andamento delle vendite indirette.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-distributori">B2B Liste</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+
+                        <a href="report-magazzini.html" target="_blank" class="report-card" data-category-type="distributori" data-search="analisi magazzini stock scorte logistica rotazione">
+                            <div class="card-top">
+                                <div class="card-category">Logistics</div>
+                                <h3 class="card-title">Analisi Magazzini</h3>
+                                <p class="card-description">Giacenze presso i distributori, pianificazione della logistica e rotazione dello stock HW/SW.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-distributori">Stock / Magazzino</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SEZIONE: ANALISI COMPETITORS -->
+                <div class="section-wrapper" data-category-group="competitors">
+                    <div class="section-header">
+                        <span class="section-title competitors">Analisi Competitors</span>
+                    </div>
+
+                    <div class="grid-layout">
+                        <a href="competitors-updates.html" target="_blank" class="report-card" data-search="weekly report competitor prezzi mercato">
+                            <div class="card-top">
+                                <div class="card-category">Intelligence</div>
+                                <h3 class="card-title">Weekly Report</h3>
+                                <p class="card-description">Sintesi giornaliera dei competitors Flex, nuovi protocolli e novità.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-competitors">Weekly Intelligence</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+
+                        <a href="report-protocolli.html" target="_blank" class="report-card" data-search="analisi protocolli ecu tcu compatibilita competitors">
+                            <div class="card-top">
+                                <div class="card-category">Coverage comparison</div>
+                                <h3 class="card-title">Analisi Protocolli</h3>
+                                <p class="card-description">Mappatura tecnica e comparazione della copertura dei protocolli di lettura e scrittura ECU/TCU.</p>
+                            </div>
+                            <div class="card-bottom">
+                                <span class="card-tag badge-competitors">Protocolli OBD/Bench</span>
+                                <div class="arrow-icon">➔</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: ARCHIVIO STORICO -->
+            <div id="archive-view" class="hidden">
+                <header class="page-header">
+                    <div class="title-badge">Archivio 📁</div>
+                    <h1>Report <span class="highlight-pink">Storici</span></h1>
+                    <p class="subtitle">
+                        Snapshot mensili cristallizzati: i numeri non si muovono più, restano fissi al giorno in cui il mese è stato archiviato.
+                    </p>
+                </header>
+
+                <div class="archive-layout">
+                    <!-- Albero anno/mese: generato da JS, una sola fonte di verità (ARCHIVE_YEARS + MONTHS) -->
+                    <aside class="archive-sidebar">
+                        <div class="archive-sidebar-title">📅 Periodi disponibili</div>
+                        <div class="archive-tree" id="archive-tree"></div>
+                    </aside>
+
+                    <section class="archive-content" id="archive-content">
+                        <div class="archive-placeholder">
+                            <span class="big-emoji">📁</span>
+                            <p>Seleziona un mese dall'elenco a sinistra per consultare i report archiviati di quel periodo.</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <footer>
+                <p>Magicmotorsport Sales Analytics Vault • Hub di analisi progettato <span>MRenda</span></p>
+            </footer>
+        </div>
+    </main>
+
     <script>
-        // --- LOGICA DI FILTRO E RICERCA (DASHBOARD) ---
-        const searchInput = document.getElementById('searchInput');
-        const filterButtons = document.querySelectorAll('.pill');
-        const cards = document.querySelectorAll('#dashboard-view .report-card');
-        const sections = document.querySelectorAll('#dashboard-view .section-wrapper');
+        /* ============================================================
+           1) CONFIGURAZIONE ARCHIVIO
+           ------------------------------------------------------------
+           ARCHIVE_YEARS: aggiungere qui un nuovo anno quando inizia
+           (es. [2027, 2026]) — la sidebar si genera da sola, niente
+           markup HTML da duplicare a mano.
+
+           archiveManifest: la fonte di verità su QUALI mesi sono stati
+           davvero cristallizzati e hanno file reali da linkare.
+           È pensata per essere scritta dalla pipeline n8n a fine mese
+           (un append, non una riscrittura): se un mese non è qui dentro,
+           in UI appare "bloccato" invece di generare un link rotto.
+           Formato chiave: "ANNO-abbr_mese", valore: data di
+           cristallizzazione mostrata all'utente.
+           ============================================================ */
+        const ARCHIVE_YEARS = [2026];
+
+        const MONTHS = [
+            { abbr: "gen", name: "Gennaio" },
+            { abbr: "feb", name: "Febbraio" },
+            { abbr: "mar", name: "Marzo" },
+            { abbr: "apr", name: "Aprile" },
+            { abbr: "mag", name: "Maggio" },
+            { abbr: "giu", name: "Giugno" },
+            { abbr: "lug", name: "Luglio" },
+            { abbr: "ago", name: "Agosto" },
+            { abbr: "set", name: "Settembre" },
+            { abbr: "ott", name: "Ottobre" },
+            { abbr: "nov", name: "Novembre" },
+            { abbr: "dic", name: "Dicembre" },
+        ];
+
+        // 👉 n8n: aggiungere qui una riga ad ogni chiusura mensile.
+        const archiveManifest = {
+            "2026-gen": { archivedOn: "01/02/2026" },
+            "2026-feb": { archivedOn: "01/03/2026" },
+            "2026-mar": { archivedOn: "01/04/2026" },
+            "2026-apr": { archivedOn: "01/05/2026" },
+            "2026-mag": { archivedOn: "01/06/2026" },
+        };
+
+        const reportsMetadata = [
+            { categoryGroup: "vendite", categoryType: null, category: "Sales & Product", title: "Analisi Prodotti", desc: "Andamento commerciale, trend di acquisto hardware e accessori Magicmotorsport.", tag: "Hardware / Accessori", tagClass: "badge-prodotti", filePrefix: "report-prodotti" },
+            { categoryGroup: "vendite", categoryType: null, category: "Software Suite", title: "Analisi StageX", desc: "Andamento vendite: licenze, acquisto coins e recurring.", tag: "StageX", tagClass: "badge-stagex", filePrefix: "report-stagex" },
+            { categoryGroup: "clienti", categoryType: "clienti-finali", category: "Support & CRM", title: "Anagrafica Helpdesk", desc: "Anagrafiche HD, profilazione degli utenti finali.", tag: "Helpdesk CRM", tagClass: "badge-helpdesk", filePrefix: "report-helpdesk" },
+            { categoryGroup: "clienti", categoryType: "clienti-finali", category: "Retention", title: "Abbonamenti", desc: "Analisi degli abbonamenti in scadenza mese per mese, tassi di rinnovo e stato di recupero.", tag: "Abbonamenti", tagClass: "badge-abbonamenti", filePrefix: "report-abbonamenti" },
+            { categoryGroup: "clienti", categoryType: "clienti-finali", category: "E-commerce", title: "Carrelli Abbandonati", desc: "Tracciamento delle transazioni e-commerce non concluse ed efficacia dei flussi di recupero.", tag: "E-commerce", tagClass: "badge-carrelli", filePrefix: "report-carrelli" },
+            { categoryGroup: "clienti", categoryType: "distributori", category: "B2B Channels", title: "Analisi Liste", desc: "Valutazione delle liste partner, classificazione per tier e andamento delle vendite indirette.", tag: "B2B Liste", tagClass: "badge-distributori", filePrefix: "report-liste" },
+            { categoryGroup: "clienti", categoryType: "distributori", category: "Logistics", title: "Analisi Magazzini", desc: "Giacenze presso i distributori, pianificazione della logistica e rotazione dello stock HW/SW.", tag: "Stock / Magazzino", tagClass: "badge-distributori", filePrefix: "report-magazzini" },
+            { categoryGroup: "competitors", categoryType: null, category: "Intelligence", title: "Weekly Report", desc: "Sintesi giornaliera dei competitors Flex, nuovi protocolli e novità.", tag: "Weekly Intelligence", tagClass: "badge-competitors", filePrefix: "competitors-updates" },
+            { categoryGroup: "competitors", categoryType: null, category: "Coverage comparison", title: "Analisi Protocolli", desc: "Mappatura tecnica e comparazione della copertura dei protocolli di lettura e scrittura ECU/TCU.", tag: "Protocolli OBD/Bench", tagClass: "badge-competitors", filePrefix: "report-protocolli" },
+        ];
+
+        /* ============================================================
+           2) SELETTORE DI MODALITÀ (Live ↔ Archivio)
+           ============================================================ */
+        const btnModeLive = document.getElementById("btn-mode-live");
+        const btnModeArchive = document.getElementById("btn-mode-archive");
+        const dashboardView = document.getElementById("dashboard-view");
+        const archiveView = document.getElementById("archive-view");
+        const contextBar = document.getElementById("context-bar");
+        const contextBarText = document.getElementById("context-bar-text");
+        const contextBarSub = document.getElementById("context-bar-sub");
+
+        function setMode(mode) {
+            const isLive = mode === "live";
+
+            btnModeLive.classList.toggle("active", isLive);
+            btnModeArchive.classList.toggle("active", !isLive);
+            dashboardView.classList.toggle("hidden", !isLive);
+            archiveView.classList.toggle("hidden", isLive);
+
+            contextBar.classList.toggle("context-live", isLive);
+            contextBar.classList.toggle("context-archive", !isLive);
+
+            if (isLive) {
+                contextBarText.textContent = "🟢 Dati in tempo reale, aggiornati ogni giorno dalla pipeline automatica.";
+                contextBarSub.textContent = "";
+            } else {
+                contextBarText.textContent = "📁 Stai consultando l'Archivio Storico: numeri cristallizzati, non più in movimento.";
+                contextBarSub.textContent = "";
+            }
+        }
+
+        btnModeLive.addEventListener("click", () => setMode("live"));
+        btnModeArchive.addEventListener("click", () => setMode("archive"));
+
+        /* ============================================================
+           3) DASHBOARD LIVE — ricerca e filtri (logica invariata)
+           ============================================================ */
+        const searchInput = document.getElementById("searchInput");
+        const liveFilterButtons = document.querySelectorAll("#live-filter-pills .pill");
+        const cards = document.querySelectorAll("#dashboard-view .report-card");
+        const sections = document.querySelectorAll("#dashboard-view .section-wrapper");
 
         function applyFilterAndSearch() {
             const searchValue = searchInput.value.toLowerCase().trim();
-            const activePill = document.querySelector('.pill.active');
-            const activeFilter = activePill.getAttribute('data-filter');
+            const activePill = document.querySelector("#live-filter-pills .pill.active");
+            const activeFilter = activePill.getAttribute("data-filter");
 
-            cards.forEach(card => {
-                const searchText = card.getAttribute('data-search') || '';
-                const titleText = card.querySelector('.card-title').textContent.toLowerCase();
-                const descText = card.querySelector('.card-description').textContent.toLowerCase();
-                
-                const matchesSearch = titleText.includes(searchValue) || 
-                                      descText.includes(searchValue) || 
-                                      searchText.includes(searchValue);
+            cards.forEach((card) => {
+                const searchText = card.getAttribute("data-search") || "";
+                const titleText = card.querySelector(".card-title").textContent.toLowerCase();
+                const descText = card.querySelector(".card-description").textContent.toLowerCase();
+
+                const matchesSearch = titleText.includes(searchValue) || descText.includes(searchValue) || searchText.includes(searchValue);
 
                 let matchesFilter = false;
-                if (activeFilter === 'all') {
+                if (activeFilter === "all") {
                     matchesFilter = true;
-                } else if (activeFilter === 'vendite') {
+                } else if (activeFilter === "vendite") {
                     matchesFilter = card.closest('[data-category-group="vendite"]') !== null;
-                } else if (activeFilter === 'competitors') {
+                } else if (activeFilter === "competitors") {
                     matchesFilter = card.closest('[data-category-group="competitors"]') !== null;
                 } else {
-                    const cardType = card.getAttribute('data-category-type');
-                    matchesFilter = cardType === activeFilter;
+                    matchesFilter = card.getAttribute("data-category-type") === activeFilter;
                 }
 
-                if (matchesSearch && matchesFilter) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
+                card.classList.toggle("hidden", !(matchesSearch && matchesFilter));
             });
 
-            sections.forEach(section => {
-                const visibleCards = section.querySelectorAll('.report-card:not(.hidden)');
-                const subTags = section.querySelectorAll('.sub-category-tag');
-                
-                if (visibleCards.length === 0) {
-                    section.classList.add('hidden');
-                } else {
-                    section.classList.remove('hidden');
-                    subTags.forEach(tag => {
-                        const nextGrid = tag.nextElementSibling;
-                        if (nextGrid && nextGrid.classList.contains('grid-layout')) {
-                            const visibleSubCards = nextGrid.querySelectorAll('.report-card:not(.hidden)');
-                            if (visibleSubCards.length === 0) {
-                                tag.classList.add('hidden');
-                            } else {
-                                tag.classList.remove('hidden');
-                            }
-                        }
-                    });
-                }
+            sections.forEach((section) => {
+                const visibleCards = section.querySelectorAll(".report-card:not(.hidden)");
+                const subTags = section.querySelectorAll(".sub-category-tag");
+
+                section.classList.toggle("hidden", visibleCards.length === 0);
+
+                subTags.forEach((tag) => {
+                    const nextGrid = tag.nextElementSibling;
+                    if (nextGrid && nextGrid.classList.contains("grid-layout")) {
+                        const visibleSubCards = nextGrid.querySelectorAll(".report-card:not(.hidden)");
+                        tag.classList.toggle("hidden", visibleSubCards.length === 0);
+                    }
+                });
             });
         }
 
-        searchInput.addEventListener('input', applyFilterAndSearch);
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
+        searchInput.addEventListener("input", applyFilterAndSearch);
+        liveFilterButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                liveFilterButtons.forEach((btn) => btn.classList.remove("active"));
+                button.classList.add("active");
                 applyFilterAndSearch();
             });
         });
 
-        // --- LOGICA GESTIONE ALBERO ARCHIVIO ---
-        const yearToggle = document.getElementById('year-2026-toggle');
-        const monthsContainer = document.getElementById('months-2026');
-        
-        yearToggle.addEventListener('click', () => {
-            monthsContainer.classList.toggle('collapsed');
-            const chevron = yearToggle.querySelector('.chevron');
-            chevron.innerText = monthsContainer.classList.contains('collapsed') ? '►' : '▼';
-        });
+        /* ============================================================
+           4) ARCHIVIO — albero anno/mese generato dinamicamente
+           ============================================================ */
+        const archiveTree = document.getElementById("archive-tree");
+        const archiveContent = document.getElementById("archive-content");
+        let activeArchiveFilter = "all";
 
-        // Configurazione delle schede report dell'archivio (7+ report del portale)
-        const reportsMetadata = [
-            {
-                category: "Sales & Product",
-                title: "Analisi Prodotti",
-                desc: "Andamento commerciale, trend di acquisto hardware e accessori Magicmotorsport.",
-                tag: "Hardware / Accessori",
-                tagClass: "badge-prodotti",
-                filePrefix: "report-prodotti"
-            },
-            {
-                category: "Software Suite",
-                title: "Analisi StageX",
-                desc: "Andamento vendite: licenze, acquisto coins e recurring.",
-                tag: "StageX",
-                tagClass: "badge-stagex",
-                filePrefix: "report-stagex"
-            },
-            {
-                category: "Support & CRM",
-                title: "Anagrafica Helpdesk",
-                desc: "Anagrafiche HD, profilazione degli utenti finali.",
-                tag: "Helpdesk CRM",
-                tagClass: "badge-helpdesk",
-                filePrefix: "report-helpdesk"
-            },
-            {
-                category: "Retention",
-                title: "Abbonamenti",
-                desc: "Analisi degli abbonamenti in scadenza mese per mese, tassi di rinnovo e stato di recupero.",
-                tag: "Abbonamenti",
-                tagClass: "badge-abbonamenti",
-                filePrefix: "report-abbonamenti"
-            },
-            {
-                category: "E-commerce",
-                title: "Carrelli Abbandonati",
-                desc: "Tracciamento delle transazioni e-commerce non concluse ed efficacia dei flussi di recupero.",
-                tag: "E-commerce",
-                tagClass: "badge-carrelli",
-                filePrefix: "report-carrelli"
-            },
-            {
-                category: "B2B Channels",
-                title: "Analisi Liste",
-                desc: "Valutazione delle liste partner, classificazione per tier e andamento delle vendite indirette.",
-                tag: "B2B Liste",
-                tagClass: "badge-distributori",
-                filePrefix: "report-liste"
-            },
-            {
-                category: "Logistics",
-                title: "Analisi Magazzini",
-                desc: "Giacenze presso i distributori, pianificazione della logistica e rotazione dello stock HW/SW.",
-                tag: "Stock / Magazzino",
-                tagClass: "badge-distributori",
-                filePrefix: "report-magazzini"
-            },
-            {
-                category: "Intelligence",
-                title: "Weekly Report",
-                desc: "Sintesi giornaliera dei competitors Flex, nuovi protocolli e novità.",
-                tag: "Weekly Intelligence",
-                tagClass: "badge-competitors",
-                filePrefix: "competitors-updates"
-            },
-            {
-                category: "Coverage comparison",
-                title: "Analisi Protocolli",
-                desc: "Mappatura tecnica e comparazione della copertura dei protocolli di lettura e scrittura ECU/TCU.",
-                tag: "Protocolli OBD/Bench",
-                tagClass: "badge-competitors",
-                filePrefix: "report-protocolli"
+        function buildArchiveTree() {
+            archiveTree.innerHTML = "";
+
+            ARCHIVE_YEARS.forEach((year, index) => {
+                const yearBlock = document.createElement("div");
+
+                const yearToggle = document.createElement("div");
+                yearToggle.className = "tree-year";
+                yearToggle.innerHTML = "<span>📅 " + year + "</span><span class=\"chevron\">▼</span>";
+
+                const monthsWrapper = document.createElement("div");
+                monthsWrapper.className = "tree-months";
+
+                MONTHS.forEach((month) => {
+                    const key = year + "-" + month.abbr;
+                    const isAvailable = Boolean(archiveManifest[key]);
+
+                    const monthEl = document.createElement("div");
+                    monthEl.className = "tree-month" + (isAvailable ? "" : " locked");
+                    monthEl.dataset.month = month.abbr;
+                    monthEl.dataset.year = year;
+                    monthEl.dataset.monthName = month.name;
+                    monthEl.dataset.available = isAvailable ? "1" : "0";
+                    monthEl.innerHTML = "<span>" + month.name + "</span><span>" + (isAvailable ? "➔" : "🔒") + "</span>";
+
+                    monthEl.addEventListener("click", () => onMonthClick(monthEl, isAvailable, year, month));
+
+                    monthsWrapper.appendChild(monthEl);
+                });
+
+                yearToggle.addEventListener("click", () => {
+                    monthsWrapper.classList.toggle("collapsed");
+                    const chevron = yearToggle.querySelector(".chevron");
+                    chevron.textContent = monthsWrapper.classList.contains("collapsed") ? "►" : "▼";
+                });
+
+                yearBlock.appendChild(yearToggle);
+                yearBlock.appendChild(monthsWrapper);
+                archiveTree.appendChild(yearBlock);
+            });
+        }
+
+        function onMonthClick(monthEl, isAvailable, year, month) {
+            document.querySelectorAll(".tree-month").forEach((m) => m.classList.remove("active"));
+
+            if (!isAvailable) {
+                renderLockedNotice(month.name, year);
+                return;
             }
-        ];
 
-        const dashboardView = document.getElementById('dashboard-view');
-        const archiveView = document.getElementById('archive-view');
-        const archiveGrid = document.getElementById('archive-grid');
-        const archiveBadgeTitle = document.getElementById('archive-badge-title');
-        const archiveMonthTitle = document.getElementById('archive-month-title');
-        const monthButtons = document.querySelectorAll('.tree-month');
-        const btnGoHome = document.getElementById('btn-go-home');
+            monthEl.classList.add("active");
+            renderArchiveMonth(year, month);
+        }
 
-        // Navigazione verso la dashboard principale
-        btnGoHome.addEventListener('click', () => {
-            monthButtons.forEach(btn => btn.classList.remove('active'));
-            archiveView.classList.add('hidden');
-            dashboardView.classList.remove('hidden');
-        });
+        function renderLockedNotice(monthName, year) {
+            archiveContent.innerHTML =
+                '<div class="archive-locked-notice">' +
+                '<span class="big-emoji">🔒</span>' +
+                "<p>Il report di " + monthName + " " + year + " non è ancora stato archiviato. Sarà disponibile alla chiusura del mese, quando la pipeline genera lo snapshot.</p>" +
+                "</div>";
+        }
 
-        // Caricamento dei report storici del mese selezionato
-        monthButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                monthButtons.forEach(m => m.classList.remove('active'));
-                btn.classList.add('active');
+        function renderArchiveMonth(year, month) {
+            const key = year + "-" + month.abbr;
+            const manifestEntry = archiveManifest[key];
+            const archivedOn = manifestEntry ? manifestEntry.archivedOn : "";
+            activeArchiveFilter = "all";
 
-                const monthAbbr = btn.getAttribute('data-month');
-                const monthName = btn.getAttribute('data-month-name');
-                const year = btn.getAttribute('data-year');
+            archiveContent.innerHTML =
+                '<div class="archive-header-block">' +
+                '<h2 class="archive-period-title">' + month.name + " " + year + "</h2>" +
+                '<p class="archive-snapshot-note">📁 Snapshot cristallizzato il ' + archivedOn + " — i dati non vengono più aggiornati per questo periodo.</p>" +
+                "</div>" +
+                '<div class="filter-pills" id="archive-filter-pills" style="justify-content: flex-start; margin-bottom: 30px;">' +
+                '<button class="pill active" data-filter="all">Mostra Tutti</button>' +
+                '<button class="pill" data-filter="vendite">Analisi Vendita</button>' +
+                '<button class="pill" data-filter="clienti-finali">Clienti Finali</button>' +
+                '<button class="pill" data-filter="distributori">Distributori</button>' +
+                '<button class="pill" data-filter="competitors">Competitors</button>' +
+                "</div>" +
+                '<div id="archive-grid-wrapper"></div>';
 
-                // Passaggio di visualizzazione
-                dashboardView.classList.add('hidden');
-                archiveView.classList.remove('hidden');
-
-                // Aggiornamento testate
-                archiveBadgeTitle.textContent = "Archivio " + monthName + " " + year + " 📁";
-                archiveMonthTitle.textContent = monthName + " " + year;
-
-                // Generazione dei link
-                archiveGrid.innerHTML = '';
-                reportsMetadata.forEach(rep => {
-                    const filename = rep.filePrefix + "-" + monthAbbr + "-" + year + ".html";
-                    
-                    const card = document.createElement('a');
-                    card.href = filename;
-                    card.target = "_blank";
-                    card.className = "report-card";
-                    card.innerHTML = " \
-                        <div class='card-top'> \
-                            <div class='card-category'>" + rep.category + "</div> \
-                            <h3 class='card-title'>" + rep.title + "</h3> \
-                            <p class='card-description'>" + rep.desc + "</p> \
-                        </div> \
-                        <div class='card-bottom'> \
-                            <span class='card-tag " + rep.tagClass + "'>" + rep.tag + "</span> \
-                            <div class='arrow-icon'>➔</div> \
-                        </div> \
-                    ";
-                    archiveGrid.appendChild(card);
+            document.querySelectorAll("#archive-filter-pills .pill").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    document.querySelectorAll("#archive-filter-pills .pill").forEach((b) => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    activeArchiveFilter = btn.getAttribute("data-filter");
+                    renderArchiveGrid(year, month);
                 });
             });
-        });
+
+            renderArchiveGrid(year, month);
+        }
+
+        function renderArchiveGrid(year, month) {
+            const wrapper = document.getElementById("archive-grid-wrapper");
+            wrapper.innerHTML = "";
+
+            const groups = [
+                { key: "vendite", title: "Analisi di Vendita", titleClass: "vendite" },
+                { key: "clienti-finali", title: "Clienti Finali", titleClass: "clienti", isSub: true, parentGroup: "clienti" },
+                { key: "distributori", title: "Distributori", titleClass: "clienti", isSub: true, parentGroup: "clienti" },
+                { key: "competitors", title: "Analisi Competitors", titleClass: "competitors" },
+            ];
+
+            let renderedAny = false;
+
+            groups.forEach((group) => {
+                const items = reportsMetadata.filter((rep) => {
+                    if (group.parentGroup) {
+                        return rep.categoryGroup === group.parentGroup && rep.categoryType === group.key;
+                    }
+                    return rep.categoryGroup === group.key;
+                });
+
+                if (items.length === 0) return;
+                if (activeArchiveFilter !== "all" && activeArchiveFilter !== group.key) return;
+
+                renderedAny = true;
+
+                const sectionEl = document.createElement("div");
+                sectionEl.className = "section-wrapper";
+
+                const headerHTML = group.isSub
+                    ? '<div class="sub-category-tag">' + group.title + "</div>"
+                    : '<div class="section-header"><span class="section-title ' + group.titleClass + '">' + group.title + "</span></div>";
+
+                const cardsHTML = items
+                    .map((rep) => {
+                        const filename = rep.filePrefix + "-" + month.abbr + "-" + year + ".html";
+                        return (
+                            '<a href="' + filename + '" target="_blank" class="report-card">' +
+                            '<div class="card-top">' +
+                            '<div class="card-category">' + rep.category + "</div>" +
+                            '<h3 class="card-title">' + rep.title + "</h3>" +
+                            '<p class="card-description">' + rep.desc + "</p>" +
+                            "</div>" +
+                            '<div class="card-bottom">' +
+                            '<div class="card-tags">' +
+                            '<span class="card-tag ' + rep.tagClass + '">' + rep.tag + "</span>" +
+                            '<span class="card-tag badge-snapshot">📁 ' + month.name + " " + year + "</span>" +
+                            "</div>" +
+                            '<div class="arrow-icon">➔</div>' +
+                            "</div>" +
+                            "</a>"
+                        );
+                    })
+                    .join("");
+
+                sectionEl.innerHTML = headerHTML + '<div class="grid-layout" style="margin-top: 15px;">' + cardsHTML + "</div>";
+                wrapper.appendChild(sectionEl);
+            });
+
+            if (!renderedAny) {
+                wrapper.innerHTML =
+                    '<div class="archive-placeholder">' +
+                    '<span class="big-emoji">🔍</span>' +
+                    "<p>Nessun report archiviato corrisponde a questo filtro per " + month.name + " " + year + ".</p>" +
+                    "</div>";
+            }
+        }
+
+        buildArchiveTree();
+        setMode("live");
     <\/script>
 </body>
 </html>
