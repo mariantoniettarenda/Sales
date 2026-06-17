@@ -1,3 +1,5 @@
+--- START OF FILE Paste June 17, 2026 - 2:41PM ---
+
 <!DOCTYPE html>
 <html class="staticrypt-html">
     <head>
@@ -1361,6 +1363,25 @@ exports.init = init;
             color: rgba(25, 25, 29, 0.65);
         }
 
+        /* Contenitore e Iframe per l'integrazione fluida dei report mensili storici */
+        .archive-iframe-wrapper {
+            width: 100%;
+            height: 750px;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            background: #ffffff;
+            margin-top: 20px;
+        }
+
+        .archive-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
         .archive-placeholder,
         .archive-locked-notice {
             background: #fff;
@@ -1401,6 +1422,9 @@ exports.init = init;
                 flex-direction: column;
                 align-items: stretch;
             }
+            .archive-iframe-wrapper {
+                height: 550px;
+            }
         }
     </style>
 </head>
@@ -1408,8 +1432,6 @@ exports.init = init;
 
     <!-- ============================================================
          SELETTORE DI MODALITÀ — sempre visibile, sempre in cima.
-         È la risposta a "dove sono?": Live o Archivio, non c'è una
-         terza opzione e non sono mai visibili insieme.
          ============================================================ -->
     <div class="top-bar">
         <div class="brand">🛠️ Sales Analytics Vault</div>
@@ -1600,12 +1622,12 @@ exports.init = init;
                     <div class="title-badge">Archivio 📁</div>
                     <h1>Report <span class="highlight-pink">Storici</span></h1>
                     <p class="subtitle">
-                        Snapshot mensili: Analisi clienti, prodotti, competitors & azioni implementate.
+                        Snapshot mensili consolidati: Analisi clienti, prodotti, competitors & azioni implementate.
                     </p>
                 </header>
 
                 <div class="archive-layout">
-                    <!-- Albero anno/mese: generato da JS, una sola fonte di verità (ARCHIVE_YEARS + MONTHS) -->
+                    <!-- Albero anno/mese generato da JS -->
                     <aside class="archive-sidebar">
                         <div class="archive-sidebar-title">📅 Periodi disponibili</div>
                         <div class="archive-tree" id="archive-tree"></div>
@@ -1629,18 +1651,6 @@ exports.init = init;
     <script>
         /* ============================================================
            1) CONFIGURAZIONE ARCHIVIO
-           ------------------------------------------------------------
-           ARCHIVE_YEARS: aggiungere qui un nuovo anno quando inizia
-           (es. [2027, 2026]) — la sidebar si genera da sola, niente
-           markup HTML da duplicare a mano.
-
-           archiveManifest: la fonte di verità su QUALI mesi sono stati
-           davvero cristallizzati e hanno file reali da linkare.
-           È pensata per essere scritta dalla pipeline n8n a fine mese
-           (un append, non una riscrittura): se un mese non è qui dentro,
-           in UI appare "bloccato" invece di generare un link rotto.
-           Formato chiave: "ANNO-abbr_mese", valore: data di
-           cristallizzazione mostrata all'utente.
            ============================================================ */
         const ARCHIVE_YEARS = [2026];
 
@@ -1667,18 +1677,6 @@ exports.init = init;
             "2026-apr": { archivedOn: "01/05/2026" },
             "2026-mag": { archivedOn: "01/06/2026" },
         };
-
-        const reportsMetadata = [
-            { categoryGroup: "vendite", categoryType: null, category: "Sales & Product", title: "Analisi Prodotti", desc: "Andamento commerciale, trend di acquisto hardware e accessori Magicmotorsport.", tag: "Hardware / Accessori", tagClass: "badge-prodotti", filePrefix: "report-prodotti" },
-            { categoryGroup: "vendite", categoryType: null, category: "Software Suite", title: "Analisi StageX", desc: "Andamento vendite: licenze, acquisto coins e recurring.", tag: "StageX", tagClass: "badge-stagex", filePrefix: "report-stagex" },
-            { categoryGroup: "clienti", categoryType: "clienti-finali", category: "Support & CRM", title: "Anagrafica Helpdesk", desc: "Anagrafiche HD, profilazione degli utenti finali.", tag: "Helpdesk CRM", tagClass: "badge-helpdesk", filePrefix: "report-helpdesk" },
-            { categoryGroup: "clienti", categoryType: "clienti-finali", category: "Retention", title: "Abbonamenti", desc: "Analisi degli abbonamenti in scadenza mese per mese, tassi di rinnovo e stato di recupero.", tag: "Abbonamenti", tagClass: "badge-abbonamenti", filePrefix: "report-abbonamenti" },
-            { categoryGroup: "clienti", categoryType: "clienti-finali", category: "E-commerce", title: "Carrelli Abbandonati", desc: "Tracciamento delle transazioni e-commerce non concluse ed efficacia dei flussi di recupero.", tag: "E-commerce", tagClass: "badge-carrelli", filePrefix: "report-carrelli" },
-            { categoryGroup: "clienti", categoryType: "distributori", category: "B2B Channels", title: "Analisi Liste", desc: "Valutazione delle liste partner, classificazione per tier e andamento delle vendite indirette.", tag: "B2B Liste", tagClass: "badge-distributori", filePrefix: "report-liste" },
-            { categoryGroup: "clienti", categoryType: "distributori", category: "Logistics", title: "Analisi Magazzini", desc: "Giacenze presso i distributori, pianificazione della logistica e rotazione dello stock HW/SW.", tag: "Stock / Magazzino", tagClass: "badge-distributori", filePrefix: "report-magazzini" },
-            { categoryGroup: "competitors", categoryType: null, category: "Intelligence", title: "Weekly Report", desc: "Sintesi giornaliera dei competitors Flex, nuovi protocolli e novità.", tag: "Weekly Intelligence", tagClass: "badge-competitors", filePrefix: "competitors-updates" },
-            { categoryGroup: "competitors", categoryType: null, category: "Coverage comparison", title: "Analisi Protocolli", desc: "Mappatura tecnica e comparazione della copertura dei protocolli di lettura e scrittura ECU/TCU.", tag: "Protocolli OBD/Bench", tagClass: "badge-competitors", filePrefix: "report-protocolli" },
-        ];
 
         /* ============================================================
            2) SELETTORE DI MODALITÀ (Live ↔ Archivio)
@@ -1778,7 +1776,6 @@ exports.init = init;
            ============================================================ */
         const archiveTree = document.getElementById("archive-tree");
         const archiveContent = document.getElementById("archive-content");
-        let activeArchiveFilter = "all";
 
         function buildArchiveTree() {
             archiveTree.innerHTML = "";
@@ -1788,7 +1785,7 @@ exports.init = init;
 
                 const yearToggle = document.createElement("div");
                 yearToggle.className = "tree-year";
-yearToggle.innerHTML = "<span>📅 " + year + "</span><span class='chevron'>▼</span>";
+                yearToggle.innerHTML = "<span>📅 " + year + "</span><span class='chevron'>▼</span>";
                 const monthsWrapper = document.createElement("div");
                 monthsWrapper.className = "tree-months";
 
@@ -1841,104 +1838,23 @@ yearToggle.innerHTML = "<span>📅 " + year + "</span><span class='chevron'>▼<
                 "</div>";
         }
 
+        // Funzione per mostrare il file HTML consolidato mensile (es. 2026-gen.html) dentro il pannello
         function renderArchiveMonth(year, month) {
             const key = year + "-" + month.abbr;
             const manifestEntry = archiveManifest[key];
             const archivedOn = manifestEntry ? manifestEntry.archivedOn : "";
-            activeArchiveFilter = "all";
+            
+            // Definisce il nome dell'HTML mensile da richiamare
+            const filename = year + "-" + month.abbr + ".html";
 
             archiveContent.innerHTML =
                 '<div class="archive-header-block">' +
                 '<h2 class="archive-period-title">' + month.name + " " + year + "</h2>" +
                 '<p class="archive-snapshot-note">📁 Snapshot cristallizzato il ' + archivedOn + " — i dati non vengono più aggiornati per questo periodo.</p>" +
                 "</div>" +
-                '<div class="filter-pills" id="archive-filter-pills" style="justify-content: flex-start; margin-bottom: 30px;">' +
-                '<button class="pill active" data-filter="all">Mostra Tutti</button>' +
-                '<button class="pill" data-filter="vendite">Analisi Vendita</button>' +
-                '<button class="pill" data-filter="clienti-finali">Clienti Finali</button>' +
-                '<button class="pill" data-filter="distributori">Distributori</button>' +
-                '<button class="pill" data-filter="competitors">Competitors</button>' +
-                "</div>" +
-                '<div id="archive-grid-wrapper"></div>';
-
-            document.querySelectorAll("#archive-filter-pills .pill").forEach((btn) => {
-                btn.addEventListener("click", () => {
-                    document.querySelectorAll("#archive-filter-pills .pill").forEach((b) => b.classList.remove("active"));
-                    btn.classList.add("active");
-                    activeArchiveFilter = btn.getAttribute("data-filter");
-                    renderArchiveGrid(year, month);
-                });
-            });
-
-            renderArchiveGrid(year, month);
-        }
-
-        function renderArchiveGrid(year, month) {
-            const wrapper = document.getElementById("archive-grid-wrapper");
-            wrapper.innerHTML = "";
-
-            const groups = [
-                { key: "vendite", title: "Analisi di Vendita", titleClass: "vendite" },
-                { key: "clienti-finali", title: "Clienti Finali", titleClass: "clienti", isSub: true, parentGroup: "clienti" },
-                { key: "distributori", title: "Distributori", titleClass: "clienti", isSub: true, parentGroup: "clienti" },
-                { key: "competitors", title: "Analisi Competitors", titleClass: "competitors" },
-            ];
-
-            let renderedAny = false;
-
-            groups.forEach((group) => {
-                const items = reportsMetadata.filter((rep) => {
-                    if (group.parentGroup) {
-                        return rep.categoryGroup === group.parentGroup && rep.categoryType === group.key;
-                    }
-                    return rep.categoryGroup === group.key;
-                });
-
-                if (items.length === 0) return;
-                if (activeArchiveFilter !== "all" && activeArchiveFilter !== group.key) return;
-
-                renderedAny = true;
-
-                const sectionEl = document.createElement("div");
-                sectionEl.className = "section-wrapper";
-
-                const headerHTML = group.isSub
-                    ? '<div class="sub-category-tag">' + group.title + "</div>"
-                    : '<div class="section-header"><span class="section-title ' + group.titleClass + '">' + group.title + "</span></div>";
-
-                const cardsHTML = items
-                    .map((rep) => {
-                        const filename = rep.filePrefix + "-" + month.abbr + "-" + year + ".html";
-                        return (
-                            '<a href="' + filename + '" target="_blank" class="report-card">' +
-                            '<div class="card-top">' +
-                            '<div class="card-category">' + rep.category + "</div>" +
-                            '<h3 class="card-title">' + rep.title + "</h3>" +
-                            '<p class="card-description">' + rep.desc + "</p>" +
-                            "</div>" +
-                            '<div class="card-bottom">' +
-                            '<div class="card-tags">' +
-                            '<span class="card-tag ' + rep.tagClass + '">' + rep.tag + "</span>" +
-                            '<span class="card-tag badge-snapshot">📁 ' + month.name + " " + year + "</span>" +
-                            "</div>" +
-                            '<div class="arrow-icon">➔</div>' +
-                            "</div>" +
-                            "</a>"
-                        );
-                    })
-                    .join("");
-
-                sectionEl.innerHTML = headerHTML + '<div class="grid-layout" style="margin-top: 15px;">' + cardsHTML + "</div>";
-                wrapper.appendChild(sectionEl);
-            });
-
-            if (!renderedAny) {
-                wrapper.innerHTML =
-                    '<div class="archive-placeholder">' +
-                    '<span class="big-emoji">🔍</span>' +
-                    "<p>Nessun report archiviato corrisponde a questo filtro per " + month.name + " " + year + ".</p>" +
-                    "</div>";
-            }
+                '<div class="archive-iframe-wrapper">' +
+                '<iframe class="archive-iframe" src="' + filename + '" title="Report ' + month.name + ' ' + year + '"></iframe>' +
+                '</div>';
         }
 
         buildArchiveTree();
