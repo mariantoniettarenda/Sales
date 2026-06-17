@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Mensile Consolidato - Marzo 2026</title>
+    
+    <!-- Google Fonts per stile Neobrutalista -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-page: #FFFCEB;          /* Crema chiaro */
+            --dark: #19191D;             /* Nero profondo per bordi e scritte */
+            --pink: #FF678B;             /* Rosa evidenziatore */
+            --yellow: #FFF48D;           /* Giallo limone */
+            --lime: #8FF977;             /* Verde lime */
+            --cyan: #70FAFD;             /* Turchese */
+            
+            --card-shadow: 6px 6px 0px var(--dark);
+            --btn-shadow: 4px 4px 0px var(--dark);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-syne: "Syne", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--dark);
+            padding: 24px;
+            line-height: 1.5;
+        }
+
+        /* Container principale */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Report */
+        .report-header {
+            background: #ffffff;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .report-title h1 {
+            font-family: var(--font-syne);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .report-title p {
+            font-size: 0.95rem;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .badge-period {
+            background-color: var(--pink);
+            font-family: var(--font-syne);
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 8px 16px;
+            border: 3px solid var(--dark);
+            border-radius: 999px;
+            box-shadow: 3px 3px 0px var(--dark);
+            text-transform: uppercase;
+        }
+
+        /* Navigazione dei Report */
+        .nav-tabs-wrapper {
+            margin-bottom: 32px;
+            border-bottom: 3px solid var(--dark);
+            padding-bottom: 12px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            list-style: none;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tab-btn {
+            background-color: #ffffff;
+            border: 3px solid var(--dark);
+            font-family: var(--font-syne);
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--btn-shadow);
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--dark);
+        }
+
+        .tab-btn.active {
+            background-color: var(--yellow);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--dark);
+        }
+
+        /* Area contenuti */
+        .report-section {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .report-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* KPI Quick Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: #ffffff;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            text-align: left;
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(25, 25, 29, 0.6);
+            margin-bottom: 6px;
+        }
+
+        .kpi-value {
+            font-family: var(--font-syne);
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .kpi-sub {
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .kpi-card.highlight-cyan { background-color: var(--cyan); }
+        .kpi-card.highlight-yellow { background-color: var(--yellow); }
+        .kpi-card.highlight-lime { background-color: var(--lime); }
+        .kpi-card.highlight-pink { background-color: var(--pink); }
+
+        /* Report Main Grid / Layout */
+        .grid-sections {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        @media (min-width: 900px) {
+            .grid-sections {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .span-full {
+                grid-column: span 2;
+            }
+        }
+
+        /* Box Sezione Standard */
+        .section-box {
+            background: #ffffff;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-header-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--dark);
+            padding-bottom: 12px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-family: var(--font-syne);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .section-badge {
+            font-family: var(--font-syne);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--dark);
+            text-transform: uppercase;
+            box-shadow: 2px 2px 0px var(--dark);
+        }
+
+        /* Tabelle Dati */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            background: #ffffff;
+            margin-top: 8px;
+            box-shadow: 4px 4px 0px var(--dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: var(--yellow);
+            font-family: var(--font-syne);
+            font-weight: 800;
+            border-bottom: 3px solid var(--dark);
+            padding: 12px;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 2px solid var(--dark);
+            font-weight: 600;
+            color: var(--dark);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Tag di classificazione prodotti */
+        .prod-tag {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1.5px solid var(--dark);
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        .tag-exit { background-color: var(--pink); }
+        .tag-stop { background-color: var(--yellow); }
+        .tag-protect { background-color: var(--cyan); }
+        .tag-boost { background-color: var(--lime); }
+
+        /* Note evidenziate in stile */
+        .insight-note {
+            background-color: #ffffff;
+            border: 2px dashed var(--dark);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Liste e Testi */
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 24px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .bullet-list li::before {
+            content: "➔";
+            position: absolute;
+            left: 0;
+            color: var(--pink);
+            font-weight: 800;
+        }
+
+        .text-block {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: rgba(25, 25, 29, 0.9);
+        }
+
+        /* Griglia Feedback / Citazioni */
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .feedback-box {
+            background: #ffffff;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            box-shadow: 4px 4px 0px var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .feedback-box-title {
+            font-family: var(--font-syne);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--dark);
+            padding-bottom: 4px;
+        }
+
+        .feedback-quote {
+            font-style: italic;
+            font-size: 0.88rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Timeline / Steps N8N */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            padding-left: 24px;
+            border-left: 3px solid var(--dark);
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        .timeline-item {
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -33px;
+            top: 4px;
+            width: 14px;
+            height: 14px;
+            background: var(--lime);
+            border: 3px solid var(--dark);
+            border-radius: 50%;
+            box-shadow: 2px 2px 0px var(--dark);
+        }
+
+        .timeline-date {
+            font-family: var(--font-syne);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--pink);
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .timeline-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(25, 25, 29, 0.8);
+            line-height: 1.4;
+        }
+
+        /* Selettore Flussi N8N */
+        .flow-selector-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-bottom: 3px solid var(--dark);
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+
+        .flow-btn {
+            background-color: #ffffff;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            font-family: var(--font-syne);
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px var(--dark);
+            transition: all 0.1s ease;
+        }
+
+        .flow-btn:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px var(--dark);
+        }
+
+        .flow-btn.active {
+            background-color: var(--lime);
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--dark);
+        }
+
+        /* Pannelli dei flussi di lavoro */
+        .flow-panel {
+            display: none;
+            animation: flowFadeIn 0.3s ease-in-out;
+        }
+
+        .flow-panel.active {
+            display: block;
+        }
+
+        @keyframes flowFadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- HEADER DEL REPORT -->
+        <header class="report-header">
+            <div class="report-title">
+                <h1>Report Mensile Consolidato</h1>
+                <p>Analisi performance vendite, andamenti della rete distributiva e integrazioni di flussi</p>
+            </div>
+            <div class="badge-period">MARZO 2026</div>
+        </header>
+
+        <!-- KPI QUICK GRID (Macro Sintesi) -->
+        <div class="kpi-grid">
+            <div class="kpi-card highlight-cyan">
+                <div class="kpi-label">Fatturato HW Flex YTD</div>
+                <div class="kpi-value">€797.6K</div>
+                <div class="kpi-sub" style="color: #9B2C2C; font-weight: 700;">-11.8% YoY (vs €892.0K)</div>
+            </div>
+
+            <div class="kpi-card highlight-lime">
+                <div class="kpi-label">Fatturato StageX YTD</div>
+                <div class="kpi-value">€696.0K</div>
+                <div class="kpi-sub" style="color: #15803D; font-weight: 700;">+41.46% YoY (vs €577.6K)</div>
+            </div>
+
+            <div class="kpi-card highlight-pink">
+                <div class="kpi-label">Fatturato IXI Hardware</div>
+                <div class="kpi-value">€10.1K</div>
+                <div class="kpi-sub" style="color: #9B2C2C; font-weight: 700;">-44.0% YoY (vs €18.0K)</div>
+            </div>
+
+            <div class="kpi-card highlight-yellow">
+                <div class="kpi-label">Recupero Carrelli</div>
+                <div class="kpi-value">7% </div>
+                <div class="kpi-sub">426K vs 32K</div>
+            </div>
+        </div>
+
+        <!-- NAVIGAZIONE REPORT TAB -->
+        <div class="nav-tabs-wrapper">
+            <ul class="nav-tabs">
+                <li><button class="tab-btn active" onclick="switchTab('tab-carrelli', this)">1. Carrelli & Feedback</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-proprietario', this)">2. Hardware Proprietario (FLEX / IXI)</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-terze-parti', this)">3. Prodotti Terzi (Silca / Xhorse)</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-stagex-automazioni', this)">4. StageX & Nuovi Progetti</button></li>
+            </ul>
+        </div>
+
+        <!-- ================= TAB 1: CARRELLI & FEEDBACK ================= -->
+        <section id="tab-carrelli" class="report-section active">
+            <div class="grid-sections">
+                
+                <!-- Highlights del mese -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <h2 class="section-title">Highlights Marzo: Focus Rinnovi</h2>
+                        <span class="section-badge" style="background-color: var(--pink);">Sintesi</span>
+                    </div>
+
+                    <p class="text-block">
+                        Il mese di Marzo evidenzia una forte concentrazione di contatti focalizzati sulla gestione delle scadenze e sulla fidelizzazione dei clienti esistenti, portando alla luce alcune inefficienze e barriere commerciali:
+                    </p>
+
+                    <ul class="bullet-list">
+                        <li><strong>Sensibilità al Prezzo:</strong> Notevole resistenza sul costo dei rinnovi e delle subscription. Molti clienti richiedono riduzioni o rimandano in attesa di promozioni stagionali.</li>
+                        <li><strong>Accessibilità Informazioni:</strong> Numerose richieste base sul pricing indicano che i costi di rinnovo e di upgrade non sono immediati o chiaramente reperibili online.</li>
+                        <li><strong>Processi Amministrativi Manuali:</strong> Un consistente volume di utenti pronti a pagare richiede interventi manuali per proforma, metodi alternativi (Revolut, bonifici) o verifiche di ricezione.</li>
+                        <li><strong>Percezione del Valore (ROI):</strong> Primi segnali di contestazione del canone in caso di scarso utilizzo del dispositivo o assenza di protocolli desiderati.</li>
+                    </ul>
+                </div>
+
+                <!-- Voce del Cliente (Feedback) -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <h2 class="section-title">Feedback Estrapolati</h2>
+                        <span class="section-badge" style="background-color: var(--cyan);">Voce del Cliente</span>
+                    </div>
+
+                    <p class="text-block">
+                        Esempi di obiezioni e richieste dirette registrate durante l'analisi dei contatti:
+                    </p>
+
+                    <div class="feedback-grid">
+                        <div class="feedback-box">
+                            <div class="feedback-box-title" style="color: var(--pink);">Subscription & ROI</div>
+                            <p class="feedback-quote">“ Why should I pay if there is no solution available? / I use this tool very little, now it’s too expensive ”</p>
+                        </div>
+                        <div class="feedback-box">
+                            <div class="feedback-box-title" style="color: var(--cyan);">Richiesta Flessibilità</div>
+                            <p class="feedback-quote">“ Can I change master supplier? / Can you renew without extra fees if I upgrade? ”</p>
+                        </div>
+                        <div class="feedback-box">
+                            <div class="feedback-box-title" style="color: var(--lime);">Chiarezza Listini</div>
+                            <p class="feedback-quote">“ What’s the price? / How much to upgrade to master? / If I upgrade, do I get benefits? ”</p>
+                        </div>
+                        <div class="feedback-box">
+                            <div class="feedback-box-title" style="color: var(--yellow);">Richieste Sconti</div>
+                            <p class="feedback-quote">“ Can you do me a special price? / Business isn’t great at the moment, I will wait for a promo ”</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: HARDWARE PROPRIETARIO ================= -->
+        <section id="tab-proprietario" class="report-section">
+            <div class="grid-sections">
+
+                <!-- Analisi FLEX Portfolio -->
+                <div class="section-box span-full">
+                    <div class="section-header-block">
+                        <h2 class="section-title">Portafoglio Hardware FLEX</h2>
+                        <span class="section-badge" style="background-color: var(--lime);">FLEX</span>
+                    </div>
+                    
+                    <p class="text-block">
+                        Il fatturato generale della famiglia FLEX registrato YTD mostra una contrazione dell'<strong>11.8%</strong>. Di seguito la riclassificazione strategica degli articoli chiave analizzati nel mese:
+                    </p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%;">SKU</th>
+                                    <th style="width: 25%;">Descrizione</th>
+                                    <th style="width: 12%;">Stato</th>
+                                    <th style="width: 15%;">Stock / Copertura</th>
+                                    <th style="width: 33%;">Rilievo & Suggerimento Operativo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>FLK31B</strong></td>
+                                    <td>Kit Flex Toolcase patches</td>
+                                    <td><span class="prod-tag tag-exit">Exit</span></td>
+                                    <td>326 pezzi (Fermo 2024)</td>
+                                    <td>Merchandising fermo a stock (valore ~1.000€). Suggerimento: rimuovere dall'e-commerce e usarlo come omaggio per i prossimi ordini.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>FLX2.72</strong></td>
+                                    <td>BootROM cable Cummins CM2350B</td>
+                                    <td><span class="prod-tag tag-stop">Stop</span></td>
+                                    <td>Giacenza sicura / Costo €16.80</td>
+                                    <td>Errore prezzo fatturazione (€10.00 invece del listino corretto), vendita in perdita (-68% di margine). Allineare il prezzo e inserire a catalogo SHOP per sbloccare lo stock.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>FLK02.02</strong></td>
+                                    <td>FLEX Hardware Kit</td>
+                                    <td><span class="prod-tag tag-protect">Protect</span></td>
+                                    <td>Giacenza scarsa (1.3 mesi)</td>
+                                    <td>Sell-through elevato (70.5%). Prezzo medio di vendita sceso da 691€ a 665€; monitorare per preservare marginalità sul forte venduto.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>FLX8.33</strong></td>
+                                    <td>FLEX Accessories Kit</td>
+                                    <td><span class="prod-tag tag-protect">Protect</span></td>
+                                    <td>49 pz (Copertura 0.6 mesi)</td>
+                                    <td>Rotazione ad alta velocità (~80 pezzi/mese). Prezzo medio sceso a 101€ (vs 114€ nel 2025). Rischio stockout imminente.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>FLK35 / FLK12</strong></td>
+                                    <td>Cabling kit / MAGBench Mini</td>
+                                    <td><span class="prod-tag tag-boost">Boost</span></td>
+                                    <td>Ottima marginalità</td>
+                                    <td>Articoli sani ma con volumi in contrazione. Da sfruttare come fulcro per bundle promozionali con cavi in overstock.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Analisi Brand IXI -->
+                <div class="section-box span-full">
+                    <div class="section-header-block">
+                        <h2 class="section-title">Brand IXI (Analisi Andamento)</h2>
+                        <span class="section-badge" style="background-color: var(--pink);">IXI</span>
+                    </div>
+
+                    <p class="text-block">
+                        Il brand IXI registra una netta contrazione del fatturato hardware pari al <strong>-44%</strong> rispetto allo scorso anno. Il forecast 2026 proietta una chiusura in flessione del <strong>-18%</strong> (pari a circa 67K totali).
+                    </p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Versione</th>
+                                    <th>Performance Fatturato</th>
+                                    <th>Andamento Prezzo Medio (ARPU)</th>
+                                    <th>Rilievo Operativo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>IXI01.001</strong></td>
+                                    <td>IXI Restricted</td>
+                                    <td style="color: #9B2C2C; font-weight: 700;">-20% YoY</td>
+                                    <td>In aumento (132€ vs 104€)</td>
+                                    <td>Il prezzo medio di vendita aumenta ma i volumi generati scendono.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IXI01.002</strong></td>
+                                    <td>IXI Unlimited</td>
+                                    <td style="color: #9B2C2C; font-weight: 700;">-68% YoY</td>
+                                    <td>In aumento (295€ vs 202€)</td>
+                                    <td>Forte frenata nei volumi complessivi di vendita.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="insight-note">
+                        <strong>💡 Strategie di recupero basate sui picchi storici (Settembre 2024 - 47K):</strong>
+                        <ul class="bullet-list" style="margin-top: 8px;">
+                            <li><strong>Focus Distribuzione:</strong> Replicare l'attività con top distributor (es. partner MK3 che ha generato 22K di fatturato).</li>
+                            <li><strong>Contatto Direzionale:</strong> Intercettare i top spender storici (es. <em>info@automotivenl.nl</em> che ha acquistato lotti da 10 pezzi con sconto 20%) per raccogliere feedback.</li>
+                            <li><strong>Marketing Check:</strong> Verificare con il team di comunicazione le campagne attive a Settembre 2024 per valutarne la riproposizione o l'adattamento.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: PRODOTTI TERZE PARTI ================= -->
+        <section id="tab-terze-parti" class="report-section">
+            <div class="grid-sections">
+
+                <!-- Analisi Xhorse / VVDI -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <h2 class="section-title">Prodotti Xhorse / VVDI</h2>
+                        <span class="section-badge" style="background-color: var(--cyan);">VVDI</span>
+                    </div>
+
+                    <p class="text-block">
+                        Analisi qualitativa su un campione di <strong>303 SKU</strong>. Sono state integrate le correzioni tecniche del team relative alle reali configurazioni vendute:
+                    </p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Stato</th>
+                                    <th>Giacenza / Rilievo</th>
+                                    <th>Azione Suggerita</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>XDKP00EN</strong><br><span style="font-size:0.75rem; font-weight:500;">(Key Tool Plus Pad)</span></td>
+                                    <td><span class="prod-tag tag-exit">Exit</span></td>
+                                    <td>Zero movimenti su codice base. Valore stock: 22.085€</td>
+                                    <td><strong>Nota Correttiva:</strong> Il prodotto viene venduto unicamente come Advanced (<strong>-ADV</strong>) o Professional (<strong>-PRO</strong>). Integrare l'analisi congiunta di questi due SKU per riscontrare i dati reali.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>XDMLB0GL</strong><br><span style="font-size:0.75rem; font-weight:500;">(MLB Tool)</span></td>
+                                    <td><span class="prod-tag tag-stop">Stop</span></td>
+                                    <td>Rotazione lenta (21 pezzi a stock)</td>
+                                    <td>Al ritmo attuale del 2026 (0.3 pz/mese), occorrono 63 mesi per lo smaltimento dello stock. Prezzo crollato del 62% per sconti compensativi.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>XDMB11EN</strong><br><span style="font-size:0.75rem; font-weight:500;">(ELV Emulator)</span></td>
+                                    <td><span class="prod-tag tag-protect">Protect</span></td>
+                                    <td>Best seller (Margine 43%)</td>
+                                    <td><strong>Stato:</strong> Già ordinati a fine dicembre 2025. Stock in arrivo a giorni per evitare rotture.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>XNHO00EN</strong><br><span style="font-size:0.75rem; font-weight:500;">(Key Model)</span></td>
+                                    <td><span class="prod-tag tag-exit">Exit</span></td>
+                                    <td>Fuori produzione</td>
+                                    <td>Sostituito ufficialmente con il nuovo SKU <strong>XNHO20EN</strong>, già disponibile in giacenza con 30 pezzi.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="insight-note" style="margin-top: 10px;">
+                        <strong>💡 Azione Promozionale Adattatori:</strong> Si propone di strutturare una promozione congiunta per svuotare i codici a bassa rotazione (<em>XD8ASKGL, XDMB12EN, XDMLB0GL</em>), supportata da un video tecnico dedicato per spiegarne le applicazioni.
+                    </div>
+                </div>
+
+                <!-- Analisi Silca -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <h2 class="section-title">Prodotti Silca</h2>
+                        <span class="section-badge" style="background-color: var(--pink);">Silca</span>
+                    </div>
+
+                    <p class="text-block">
+                        Analisi condotta su un campione di <strong>178 SKU</strong>. Rilevati capitali immobilizzati significativi su referenze prive di movimentazione recente:
+                    </p>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Stato</th>
+                                    <th>Capitale Bloccato</th>
+                                    <th>Dettaglio & Rotazione</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>D7A7047ZB</strong><br><span style="font-size: 0.75rem; font-weight:500;">(RW5 Cloud)</span></td>
+                                    <td><span class="prod-tag tag-exit">Exit</span></td>
+                                    <td style="color:#9B2C2C;">€5.796</td>
+                                    <td>6 unità ferme in magazzino senza alcuna vendita registrata dal 2025. Prodotto "fantasma".</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>D755120AD</strong><br><span style="font-size: 0.75rem; font-weight:500;">(Smart Programmer)</span></td>
+                                    <td><span class="prod-tag tag-exit">Exit</span></td>
+                                    <td style="color:#9B2C2C;">€4.196</td>
+                                    <td>5 unità ferme a scaffale senza vendite dal 2025. Capitale immobilizzato improduttivo.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>D755649AD</strong><br><span style="font-size: 0.75rem; font-weight:500;">(Renault Bypass)</span></td>
+                                    <td><span class="prod-tag tag-stop">Stop</span></td>
+                                    <td>€1.550 (13 pezzi)</td>
+                                    <td>Marginalità in declino (4.9% rispetto allo storico 14.5%). Vendite dimezzate. Suggerimento: declassare a "su ordinazione".</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>HU100R02</strong><br><span style="font-size: 0.75rem; font-weight:500;">(Remote Opel)</span></td>
+                                    <td><span class="prod-tag tag-stop">Stop</span></td>
+                                    <td>Margine Negativo</td>
+                                    <td>Rotazione medio-alta (Sell-Through 30%), ma prezzo medio crollato da €47 a €31 (sotto il costo di €32.31). Genera volume senza profitto (-1.7%).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="text-block" style="font-weight: 700;">
+                        💡 Nota Operativa: Si raccomanda di valutare la svendita in blocco o la creazione di bundle commerciali per i prodotti Silca fermi dal 2025.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: STAGEX & AUTOMAZIONI ================= -->
+        <section id="tab-stagex-automazioni" class="report-section">
+            <div class="grid-sections">
+
+                <!-- Analisi StageX -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <h2 class="section-title">StageX Performance & Forecasting</h2>
+                        <span class="section-badge" style="background-color: var(--lime);">StageX</span>
+                    </div>
+
+                    <p class="text-block">
+                        Il brand StageX evidenzia una crescita del <strong>+41.46%</strong> rispetto al periodo precedente. A Febbraio 2026 è stato raggiunto il <strong>record storico assoluto di €288K</strong> su base interamente Baseline (senza promozioni attive), provando la solidità del nuovo listino prezzi.
+                    </p>
+
+                    <ul class="bullet-list">
+                        <li><strong>ARPU & Canali:</strong> Il prezzo medio ponderato delle licenze (1-12 mesi) si è assestato a €142 (rispetto a €165 YoY). L'Helpdesk veicola saldamente l'86% dei volumi complessivi.</li>
+                        <li><strong>Licenza Plus 1 Mese (STX0.2):</strong> Con un prezzo medio stabile a €100.72 nei primi 3 mesi, si stima un fatturato annuo atteso per questo singolo SKU di €1.38M (pari al 50% dell'intero brand previsto a 2.48M).</li>
+                        <li><strong>Fidelizzazione e Turnover:</strong> Registrato l'ingresso netto di 1.240 nuovi clienti mensili. Parallelamente, 179 utenti alto-spendenti sono stati convertiti con successo a licenze Plus/Adv di lunga durata (3, 6, 12 mesi).</li>
+                    </ul>
+
+                    <div class="insight-note">
+                        <strong>🔄 Effetto Sostituzione Positiva:</strong> La velocità d'ingresso dei nuovi clienti mensili compensa e supera la migrazione dei clienti storici verso i piani annuali ad alta fidelizzazione.
+                    </div>
+                </div>
+
+                <!-- Nuove Automazioni ed Inizio Progetti -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <h2 class="section-title">Nuove Iniziative & Automazioni</h2>
+                        <span class="section-badge" style="background-color: var(--pink);">In Sviluppo</span>
+                    </div>
+
+                    <p class="text-block">
+                        Nel corso del mese sono state avviate e strutturate nuove attività di tracciamento automatico dei flussi di lavoro:
+                    </p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Marzo 2026</div>
+                            <div class="timeline-title">Analisi Protocolli via Kibana</div>
+                            <div class="timeline-desc">Avvio del monitoraggio dei dati d'uso dei clienti sui singoli protocolli per identificare i trend di utilizzo effettivi e orientare le azioni di marketing sul ROI.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Marzo 2026</div>
+                            <div class="timeline-title">Weekly Competitors Tracker</div>
+                            <div class="timeline-desc">Progettazione del flusso automatizzato di scraping e analisi delle release-note e dei distributori dei competitor, strutturato per inviare report sistematici a Dario.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Script per la gestione interattiva dei tab del report -->
+    <script>
+        function switchTab(tabId, btnElement) {
+            // Rimuovi la classe active da tutti i bottoni principali
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Rimuovi la classe active da tutte le sezioni
+            document.querySelectorAll('.report-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Attiva il bottone e la sezione corrispondente
+            btnElement.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
