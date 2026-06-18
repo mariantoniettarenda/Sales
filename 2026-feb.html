@@ -532,7 +532,7 @@
                 </ul>
 
                 <div class="insight-note">
-                    <strong>💡 Sintesi strategica:</strong> Ottimizzare la visibilità delle restrizioni geografiche in fase di navigazione pre-checkout per ridurre l'abbandono forzato e chiarire lo schema dei prezzi degli upgrade.
+                    <strong>💡 Azioni strategiche:</strong> Il feedback di Silca è stato giarto a Marketing per verificare l'eliminazione della possibilità di acquisto fuori Italia. Valutata anche opzione di integrare nello shop l'acquisto "Upgrade".
                 </div>
             </div>
 
@@ -602,8 +602,7 @@
 
                 <!-- Selettore dei Flussi -->
                 <div class="flow-selector-group">
-                    <button class="flow-btn active" onclick="switchFlow('flow-leads-ecommerce', this)">Lead E-commerce</button>
-                    <button class="flow-btn" onclick="switchFlow('flow-finance-hd', this)">Finance Helpdesk</button>
+                    <button class="flow-btn active" onclick="switchFlow('flow-leads-ecommerce', this)">Carrelli Abbandonati - Flusso Autonomo</button>
                 </div>
 
                 <!-- FLUSSO: LEAD E-COMMERCE (Nuovo) -->
@@ -665,30 +664,6 @@
                                     <a href="https://docs.google.com/spreadsheets/d/1YU3FmPrzympNekR-UZu6QtD3pNqKklk6xA0r_5wGG2I/edit?gid=459544110#gid=459544110" target="_blank" style="font-size:0.75rem; color: var(--dark); background: var(--lime); padding: 4px 8px; border: 1px solid var(--dark); border-radius: 4px; text-decoration: none; font-weight: 700;">Link Sheet Andrea M</a>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- FLUSSO: FINANCE HELPDESK -->
-                <div id="flow-finance-hd" class="flow-panel">
-                    <p class="text-block" style="margin-bottom: 20px;">
-                        <strong>Contesto:</strong> Gestione contatti in stato ERROR o NEW provenienti dalla piattaforma Helpdesk per transazioni di rinnovo non andate a buon fine.
-                    </p>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-date">Trigger Giornaliero</div>
-                            <div class="timeline-title">Fornitura Input (Ore 10:00)</div>
-                            <div class="timeline-desc">Ricezione file da Helpdesk contenente i fallimenti di pagamento, con avvio automatico del flusso.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-date">Step 1 — Filtro</div>
-                            <div class="timeline-title">Deduplica Conversione</div>
-                            <div class="timeline-desc">Esclusione automatica di chi ha concluso l'acquisto nei tentativi immediatamente successivi.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-date">Step 2 — Output</div>
-                            <div class="timeline-title">Scrittura Fogli Centrali & Regionali</div>
-                            <div class="timeline-desc">Smistamento geografico e aggiornamento del Looker Studio per tracciare le performance operative di sede e consorelle.</div>
                         </div>
                     </div>
                 </div>
