@@ -1,5 +1,3 @@
---- START OF FILE Paste June 17, 2026 - 2:41PM ---
-
 <!DOCTYPE html>
 <html class="staticrypt-html">
     <head>
@@ -326,6 +324,20 @@
             <div class="staticrypt-spinner"></div>
         </div>
 
+        <!--
+            NOTA ARCHITETTURALE (per chi mantiene questo file):
+            Questa pagina usa StatiCrypt per cifrare l'intero contenuto del portale.
+            I report collegati (report-*.html, competitors-updates.html, gli snapshot
+            mensili dell'archivio come 2026-giu.html, ecc.) DEVONO essere a loro volta
+            cifrati con StatiCrypt usando la STESSA password e lo STESSO salt di questa
+            pagina (salt attuale: vedi staticryptSaltUniqueVariableName più sotto).
+            StatiCrypt salva la password hashata in localStorage quando "Ricordami" è
+            attivo: dato che tutte le pagine vivono sullo stesso dominio GitHub Pages,
+            una volta sbloccata questa pagina, qualunque altra pagina cifrata con la
+            stessa password si sblocca da sola, senza richiedere di nuovo la password.
+            Se i file dei report NON vengono cifrati, restano leggibili da chiunque
+            conosca l'URL diretto, a prescindere da questa schermata.
+        -->
         <div id="staticrypt_content" class="staticrypt-content hidden">
             <div class="staticrypt-page">
                 <div class="staticrypt-form">
@@ -337,7 +349,7 @@
                     </div>
 
                     <p class="staticrypt-title">Sales Portal</p>
-                    <p class="staticrypt-subtitle">Report e analisi vendite</p>
+                    <p class="staticrypt-subtitle">Report e analisi vendite — la stessa password sblocca anche tutti i report collegati</p>
 
                     <!-- Data dell'ultimo aggiornamento -->
                     <p class="staticrypt-update-info">Hub Riservato</p>
@@ -373,8 +385,8 @@
                         </div>
 
                         <label id="staticrypt-remember-label" class="staticrypt-remember hidden">
-                            <input id="staticrypt-remember" type="checkbox" name="remember" />
-                            Ricordami su questo dispositivo
+                            <input id="staticrypt-remember" type="checkbox" name="remember" checked />
+                            Ricordami su questo dispositivo (sblocca anche tutti i report collegati)
                         </label>
 
                         <input type="submit" class="staticrypt-decrypt-button" value="Entra nell'Archivio" />
