@@ -4,17 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Competitive Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font ispirati allo stile editoriale e moderno di Sowieso Wero -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --bg: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #f1f5f9;
-            --accent-green: #10b981;
+            /* Palette colori sofisticata e scura ispirata a Sowieso */
+            --bg: #0b0b0b;
+            --card-bg: #121212;
+            --card-hover: #161616;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-light: rgba(255, 255, 255, 0.04);
+            
+            /* Tipografia */
+            --text-main: #f5f5f7;
+            --text-muted: #8e8e93;
+            --text-dark: #636366;
+            
+            /* Accenti cromatici minimali per i Tier */
+            --accent-tier1: #ff453a;
+            --accent-tier2: #ff9f0a;
+            --accent-tier3: #ffd60a;
+            --accent-network: #30d158;
+            --accent-mms: #0a84ff;
+            --accent-gold: #c5a880; /* Tono metallico champagne */
         }
 
         * {
@@ -24,221 +36,306 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
-            line-height: 1.6;
-            padding: 40px 20px;
+            line-height: 1.7;
+            padding: 80px 24px;
+            letter-spacing: -0.01em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Sfondo con pattern a griglia finissima (stile agenzia creativa) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+            background-size: 100px 100px;
+            z-index: -1;
+            pointer-events: none;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
         }
 
+        /* Header in stile editoriale */
         header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 24px;
-            margin-bottom: 40px;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 32px;
+            margin-bottom: 60px;
         }
 
         header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 !important;
-            border: none !important;
-            padding: 0 !important;
-            background: none !important;
-            text-transform: none !important;
-            letter-spacing: normal !important;
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 500;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
         }
 
         .date-badge {
-            background-color: #e2e8f0;
-            color: #334155;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 13px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px;
             font-weight: 600;
-            text-transform: capitalize;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-gold);
+            border: 1px solid rgba(197, 168, 128, 0.3);
+            padding: 6px 16px;
+            border-radius: 100px;
+            background: transparent;
         }
 
         .content-wrapper {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f1f5f9;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
         }
 
-        /* Box Highlights della Settimana */
+        /* Box Highlights della Settimana - Trasformato in sezione Hero */
         .content-wrapper > h2.highlights-title {
-            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-            color: #ffffff;
-            padding: 20px 24px;
-            border-radius: 12px 12px 0 0;
-            margin: -40px -40px 0 -40px;
-            font-size: 18px;
-            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--text-main);
+            background: none;
+            padding: 0 0 20px 0;
+            margin: 0 0 24px 0;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .content-wrapper > h2.highlights-title + ul {
-            background: #f8fafc;
-            padding: 24px 32px;
-            border-left: 1px solid #e2e8f0;
-            border-right: 1px solid #e2e8f0;
-            border-bottom: 1px solid #e2e8f0;
-            border-radius: 0 0 12px 12px;
-            margin: 0 -40px 40px -40px;
+            background: var(--card-bg);
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin: 0 0 60px 0;
         }
 
         .content-wrapper > h2.highlights-title + ul li {
-            font-size: 14.5px;
-            line-height: 1.6;
-            margin-bottom: 12px;
-            color: #334155;
-            padding-left: 20px;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            padding-left: 24px;
+        }
+
+        .content-wrapper > h2.highlights-title + ul li:last-child {
+            margin-bottom: 0;
         }
 
         .content-wrapper > h2.highlights-title + ul li::before {
-            color: var(--primary-light);
-            left: 2px;
+            content: "—";
+            color: var(--accent-gold);
+            font-weight: 300;
+            font-size: 14px;
+            left: 0;
+            top: 0;
         }
 
-        /* Sezioni dei Tier */
+        /* Linee divisorie di design minimali */
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--border-light);
+            margin: 60px 0;
+        }
+
+        /* Badge Introduttivi dei Tier */
         .content-wrapper h1 {
-            font-size: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
-            padding: 6px 14px;
-            border-radius: 20px;
+            letter-spacing: 0.2em;
+            padding: 8px 18px;
+            border-radius: 4px;
             display: inline-flex;
             align-items: center;
-            margin-top: 40px;
-            margin-bottom: 20px;
+            margin-top: 60px;
+            margin-bottom: 32px;
+            border: 1px solid transparent;
         }
 
-        .section-tier1 { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
-        .section-tier2 { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
-        .section-tier3 { background: #fefce8; color: #a16207; border: 1px solid #fef9c3; }
-        .section-network { background: #f0fdf4; color: #166534; border: 1px solid #dcfce7; width: calc(100% + 80px); margin-left: -40px; margin-right: -40px; border-radius: 0 !important; padding: 12px 40px !important; display: flex !important; }
-        .section-mms { background: #f0f9ff; color: #075985; border: 1px solid #e0f2fe; width: calc(100% + 80px); margin-left: -40px; margin-right: -40px; border-radius: 0 !important; padding: 12px 40px !important; display: flex !important; }
+        .section-tier1 { 
+            background: rgba(255, 69, 58, 0.08); 
+            color: var(--accent-tier1); 
+            border-color: rgba(255, 69, 58, 0.2); 
+        }
+        
+        .section-tier2 { 
+            background: rgba(255, 159, 10, 0.08); 
+            color: var(--accent-tier2); 
+            border-color: rgba(255, 159, 10, 0.2); 
+        }
+        
+        .section-tier3 { 
+            background: rgba(255, 214, 10, 0.08); 
+            color: var(--accent-tier3); 
+            border-color: rgba(255, 214, 10, 0.2); 
+        }
+        
+        .section-network { 
+            background: rgba(48, 209, 88, 0.08) !important; 
+            color: var(--accent-network) !important; 
+            border: 1px solid rgba(48, 209, 88, 0.2) !important; 
+            width: auto !important; 
+            margin-left: 0 !important; 
+            margin-right: 0 !important; 
+            border-radius: 4px !important; 
+            padding: 8px 18px !important; 
+            display: inline-flex !important; 
+        }
+        
+        .section-mms { 
+            background: rgba(10, 132, 255, 0.08) !important; 
+            color: var(--accent-mms) !important; 
+            border: 1px solid rgba(10, 132, 255, 0.2) !important; 
+            width: auto !important; 
+            margin-left: 0 !important; 
+            margin-right: 0 !important; 
+            border-radius: 4px !important; 
+            padding: 8px 18px !important; 
+            display: inline-flex !important; 
+        }
 
-        /* Nomi Competitor */
+        /* Titoli dei Competitor */
         .competitor-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #0f172a;
-            margin-top: 30px;
-            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-top: 40px;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 16px;
         }
 
         .competitor-title::before {
             content: "";
             display: inline-block;
-            width: 4px;
-            height: 18px;
-            background-color: var(--primary-light);
-            border-radius: 2px;
+            width: 32px;
+            height: 1px;
+            background-color: var(--accent-gold);
+            border-radius: 0;
         }
 
         /* Sotto-categorie del Report (Protocolli, Distributori, ecc.) */
         .content-wrapper h3 {
-            font-size: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.15em;
             color: var(--text-muted);
-            margin-top: 20px;
-            margin-bottom: 8px;
+            margin-top: 32px;
+            margin-bottom: 12px;
             font-weight: 600;
         }
 
         .content-wrapper h3 + ul {
-            margin-bottom: 20px;
-            background-color: #fafbfc;
-            padding: 16px 20px 16px 30px;
+            margin-bottom: 32px;
+            background-color: var(--card-bg);
+            padding: 30px;
             border-radius: 8px;
-            border: 1px solid #f1f5f9;
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s ease, background-color 0.3s ease;
         }
 
-        /* Liste Generiche */
+        .content-wrapper h3 + ul:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background-color: var(--card-hover);
+        }
+
+        /* Liste delle Categorie */
         ul {
             list-style-type: none;
         }
 
         li {
             position: relative;
-            padding-left: 18px;
-            margin-bottom: 10px;
+            padding-left: 20px;
+            margin-bottom: 12px;
             font-size: 14px;
-            color: #334155;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        li:last-child {
+            margin-bottom: 0;
         }
 
         li::before {
             content: "•";
-            color: #cbd5e1;
-            font-weight: bold;
-            font-size: 18px;
+            color: var(--text-dark);
+            font-weight: normal;
+            font-size: 14px;
             position: absolute;
             left: 0;
-            top: -2px;
+            top: 0px;
         }
 
         .content-wrapper h3 + ul li::before {
-            color: var(--primary-light);
+            color: var(--accent-gold);
+        }
+
+        /* Enfasi sul testo importante */
+        strong {
+            font-weight: 600;
+            color: var(--text-main);
         }
 
         p {
-            margin-bottom: 15px;
-            color: #334155;
-            font-size: 14.5px;
-        }
-
-        strong {
-            font-weight: 600;
-            color: #0f172a;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.7;
         }
 
         /* Adattabilità Mobile (Responsive) */
         @media (max-width: 768px) {
             body {
-                padding: 20px 10px;
-            }
-            .content-wrapper {
-                padding: 24px;
+                padding: 40px 16px;
             }
             header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
+                gap: 16px;
+                margin-bottom: 40px;
             }
-            .content-wrapper > h2.highlights-title,
-            .content-wrapper > h2.highlights-title + ul {
-                margin-left: -24px;
-                margin-right: -24px;
+            header h1 {
+                font-size: 28px;
             }
             .content-wrapper > h2.highlights-title {
-                margin-top: -24px;
+                font-size: 22px;
             }
-            .section-network, .section-mms {
-                width: calc(100% + 48px);
-                margin-left: -24px;
-                margin-right: -24px;
-                padding: 12px 24px !important;
+            .content-wrapper > h2.highlights-title + ul {
+                padding: 24px;
+                margin-bottom: 40px;
+            }
+            .competitor-title {
+                font-size: 26px;
+            }
+            .content-wrapper h3 + ul {
+                padding: 20px;
             }
         }
     </style>
@@ -346,7 +443,7 @@
 <li><strong>Upgrade Kit Truck Explorer</strong>: Possibilità di upgrade dei kit Truck Explorer a prezzi vantaggiosi.</li>
 <li><strong>Nuove Funzioni Software</strong>: Sblocco nuove funzioni per Mercedes, Scania, Iveco Bus, Volvo.</li>
 <li><strong>Interfaccia VEI V8</strong>: Presentazione della nuova interfaccia VEI V8 con nuove funzionalità e software.</li>
-<li><strong>Fiere</strong>: Elenco delle fiere internazionali a cui AutoVei parteciperà.</li>
+<li><strong>Fiere</strong>: Elenco delle fiere internazionali a cui AutoVei partecerà.</li>
 </ul>
 <hr />
 <h1 id="tier3broadcompetitors">🟡 TIER 3 — Broad Competitors</h1>
