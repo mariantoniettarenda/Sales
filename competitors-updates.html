@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Competitive Intelligence</title>
-    <!-- Font ispirati allo stile editoriale e moderno di Sowieso Wero -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <!-- Font moderni e geometrici ad alto impatto (Syne & Outfit) ispirati allo stile Sowieso Wero -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Palette colori sofisticata e scura ispirata a Sowieso */
-            --bg: #0b0b0b;
-            --card-bg: #121212;
-            --card-hover: #161616;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-light: rgba(255, 255, 255, 0.04);
+            /* Palette colori ufficiale Sowieso Wero (Pastello Satura) */
+            --bg-main: #FCFCF9;       /* Sfondo caldo panna */
+            --text-dark: #0B0B0B;     /* Nero antracite per testi e bordi */
+            --text-muted: #3D3D3D;    /* Grigio scuro per i testi descrittivi */
             
-            /* Tipografia */
-            --text-main: #f5f5f7;
-            --text-muted: #8e8e93;
-            --text-dark: #636366;
+            --color-yellow: #FFF48D;  /* Giallo Wero primario */
+            --color-pink: #FF768A;    /* Rosa Wero */
+            --color-salmon: #FE908A;  /* Salmone Wero */
+            --color-green: #8FF977;   /* Verde Wero */
+            --color-cyan: #70FAFD;    /* Cyan Wero */
+
+            /* Varianti soft per sfondi card, garantendo leggibilità ottimale */
+            --color-yellow-soft: #FFFDF0;
+            --color-pink-soft: #FFF1F3;
+            --color-salmon-soft: #FFF2F1;
+            --color-green-soft: #F4FFE6;
+            --color-cyan-soft: #F0FDFF;
             
-            /* Accenti cromatici minimali per i Tier */
-            --accent-tier1: #ff453a;
-            --accent-tier2: #ff9f0a;
-            --accent-tier3: #ffd60a;
-            --accent-network: #30d158;
-            --accent-mms: #0a84ff;
-            --accent-gold: #c5a880; /* Tono metallico champagne */
+            --border-width: 3px;
         }
 
         * {
@@ -36,17 +36,15 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.7;
-            padding: 80px 24px;
-            letter-spacing: -0.01em;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 0;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Sfondo con pattern a griglia finissima (stile agenzia creativa) */
+        /* Sottile griglia decorativa di background */
         body::before {
             content: "";
             position: fixed;
@@ -55,226 +53,282 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
-            background-size: 100px 100px;
+                linear-gradient(rgba(11, 11, 11, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(11, 11, 11, 0.015) 1px, transparent 1px);
+            background-size: 60px 60px;
             z-index: -1;
             pointer-events: none;
         }
 
+        /* Container principale */
         .container {
-            max-width: 960px;
+            max-width: 1040px;
             margin: 0 auto;
+            padding: 0 24px 100px 24px;
         }
 
-        /* Header in stile editoriale */
+        /* Header in stile campagna Sowieso */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 32px;
-            margin-bottom: 60px;
+            padding: 80px 0 40px 0;
+            text-align: center;
+        }
+
+        .brand-eyebrow {
+            font-family: 'Syne', sans-serif;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--text-dark);
+            background: var(--color-yellow);
+            display: inline-block;
+            padding: 6px 16px;
+            border: var(--border-width) solid var(--text-dark);
+            border-radius: 100px;
+            box-shadow: 3px 3px 0px var(--text-dark);
+            margin-bottom: 24px;
         }
 
         header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            font-weight: 500;
-            color: var(--text-main);
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 800;
+            line-height: 1.1;
             letter-spacing: -0.02em;
-            line-height: 1.2;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .header-meta {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-muted);
         }
 
         .date-badge {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--accent-gold);
-            border: 1px solid rgba(197, 168, 128, 0.3);
-            padding: 6px 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: underline;
+            text-decoration-color: var(--color-pink);
+            text-decoration-thickness: 3px;
+        }
+
+        /* Barra di navigazione Toggle interattiva */
+        .nav-wrapper {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+
+        .nav-toggles {
+            display: flex;
+            background: #ffffff;
+            border: var(--border-width) solid var(--text-dark);
             border-radius: 100px;
-            background: transparent;
+            padding: 6px;
+            box-shadow: 6px 6px 0px var(--text-dark);
+            gap: 4px;
+            max-width: 100%;
+            overflow-x: auto;
         }
 
-        .content-wrapper {
-            background: transparent;
-            padding: 0;
-            border-radius: 0;
-            box-shadow: none;
-            border: none;
+        .nav-toggles::-webkit-scrollbar {
+            display: none;
         }
 
-        /* Box Highlights della Settimana - Trasformato in sezione Hero */
-        .content-wrapper > h2.highlights-title {
-            font-family: 'Playfair Display', serif;
+        .nav-btn {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            color: var(--text-dark);
+            padding: 10px 20px;
+            border-radius: 100px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(11, 11, 11, 0.05);
+        }
+
+        .nav-btn.active {
+            background-color: var(--color-pink);
+            color: #ffffff;
+            box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sezioni di Contenuto */
+        .section-container {
+            scroll-margin-top: 120px;
+            margin-bottom: 80px;
+        }
+
+        /* Intestazioni dei Tier come Banner di Transizione */
+        .tier-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .tier-badge {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(14px, 2.5vw, 18px);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 24px;
+            border-radius: 16px;
+            border: var(--border-width) solid var(--text-dark);
+            display: inline-block;
+            box-shadow: 4px 4px 0px var(--text-dark);
+        }
+
+        .tier-1-badge { background-color: var(--color-pink); color: #ffffff; }
+        .tier-2-badge { background-color: var(--color-salmon); color: var(--text-dark); }
+        .tier-3-badge { background-color: var(--color-yellow); color: var(--text-dark); }
+        .tier-network-badge { background-color: var(--color-green); color: var(--text-dark); }
+        .tier-mms-badge { background-color: var(--color-cyan); color: var(--text-dark); }
+
+        /* Griglia delle Card Competitor */
+        .competitors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .grid-2-col {
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        }
+
+        @media(max-width: 768px) {
+            .grid-2-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Stile Card - Ispirato ai contenitori modulari Sowieso */
+        .competitor-card {
+            border: var(--border-width) solid var(--text-dark);
+            border-radius: 24px;
+            padding: 32px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .competitor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 10px 10px 0px var(--text-dark) !important;
+        }
+
+        /* Colori dinamici delle card con ombre piatte */
+        .card-yellow {
+            background-color: var(--color-yellow-soft);
+            box-shadow: 6px 6px 0px var(--text-dark);
+        }
+        .card-pink {
+            background-color: var(--color-pink-soft);
+            box-shadow: 6px 6px 0px var(--text-dark);
+        }
+        .card-salmon {
+            background-color: var(--color-salmon-soft);
+            box-shadow: 6px 6px 0px var(--text-dark);
+        }
+        .card-cyan {
+            background-color: var(--color-cyan-soft);
+            box-shadow: 6px 6px 0px var(--text-dark);
+        }
+        .card-green {
+            background-color: var(--color-green-soft);
+            box-shadow: 6px 6px 0px var(--text-dark);
+        }
+        .card-neutral {
+            background-color: #FFFFFF;
+            box-shadow: 6px 6px 0px var(--text-dark);
+        }
+
+        /* Hero Highlights Card */
+        .hero-card {
+            background: linear-gradient(135deg, var(--color-pink-soft) 0%, var(--color-yellow-soft) 100%);
+            border: var(--border-width) solid var(--text-dark);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: 10px 10px 0px var(--text-dark);
+            margin-bottom: 60px;
+        }
+
+        .hero-card h2 {
+            font-family: 'Syne', sans-serif;
             font-size: 28px;
-            font-weight: 500;
-            color: var(--text-main);
-            background: none;
-            padding: 0 0 20px 0;
-            margin: 0 0 24px 0;
-            border-bottom: 1px solid var(--border-color);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .content-wrapper > h2.highlights-title + ul {
-            background: var(--card-bg);
-            padding: 40px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            margin: 0 0 60px 0;
+        .hero-card ul li::before {
+            background-color: var(--color-pink);
         }
 
-        .content-wrapper > h2.highlights-title + ul li {
-            font-size: 15px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-            color: var(--text-main);
-            padding-left: 24px;
+        /* Elementi Testuali Interni */
+        .competitor-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 28px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(11, 11, 11, 0.1);
         }
 
-        .content-wrapper > h2.highlights-title + ul li:last-child {
+        .sub-section {
+            margin-bottom: 28px;
+        }
+
+        .sub-section:last-child {
             margin-bottom: 0;
         }
 
-        .content-wrapper > h2.highlights-title + ul li::before {
-            content: "—";
-            color: var(--accent-gold);
-            font-weight: 300;
-            font-size: 14px;
-            left: 0;
-            top: 0;
-        }
-
-        /* Linee divisorie di design minimali */
-        hr {
-            border: 0;
-            height: 1px;
-            background: var(--border-light);
-            margin: 60px 0;
-        }
-
-        /* Badge Introduttivi dei Tier */
-        .content-wrapper h1 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            padding: 8px 18px;
-            border-radius: 4px;
-            display: inline-flex;
-            align-items: center;
-            margin-top: 60px;
-            margin-bottom: 32px;
-            border: 1px solid transparent;
-        }
-
-        .section-tier1 { 
-            background: rgba(255, 69, 58, 0.08); 
-            color: var(--accent-tier1); 
-            border-color: rgba(255, 69, 58, 0.2); 
-        }
-        
-        .section-tier2 { 
-            background: rgba(255, 159, 10, 0.08); 
-            color: var(--accent-tier2); 
-            border-color: rgba(255, 159, 10, 0.2); 
-        }
-        
-        .section-tier3 { 
-            background: rgba(255, 214, 10, 0.08); 
-            color: var(--accent-tier3); 
-            border-color: rgba(255, 214, 10, 0.2); 
-        }
-        
-        .section-network { 
-            background: rgba(48, 209, 88, 0.08) !important; 
-            color: var(--accent-network) !important; 
-            border: 1px solid rgba(48, 209, 88, 0.2) !important; 
-            width: auto !important; 
-            margin-left: 0 !important; 
-            margin-right: 0 !important; 
-            border-radius: 4px !important; 
-            padding: 8px 18px !important; 
-            display: inline-flex !important; 
-        }
-        
-        .section-mms { 
-            background: rgba(10, 132, 255, 0.08) !important; 
-            color: var(--accent-mms) !important; 
-            border: 1px solid rgba(10, 132, 255, 0.2) !important; 
-            width: auto !important; 
-            margin-left: 0 !important; 
-            margin-right: 0 !important; 
-            border-radius: 4px !important; 
-            padding: 8px 18px !important; 
-            display: inline-flex !important; 
-        }
-
-        /* Titoli dei Competitor */
-        .competitor-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            font-weight: 500;
-            color: var(--text-main);
-            margin-top: 40px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .competitor-title::before {
-            content: "";
+        /* Badge di Sotto-Categoria (Highlighter Pills) */
+        .tag-label {
             display: inline-block;
-            width: 32px;
-            height: 1px;
-            background-color: var(--accent-gold);
-            border-radius: 0;
-        }
-
-        /* Sotto-categorie del Report (Protocolli, Distributori, ecc.) */
-        .content-wrapper h3 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 11px;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--text-muted);
-            margin-top: 32px;
-            margin-bottom: 12px;
-            font-weight: 600;
+            letter-spacing: 0.1em;
+            padding: 6px 14px;
+            border-radius: 100px;
+            border: 2px solid var(--text-dark);
+            margin-bottom: 16px;
+            box-shadow: 2px 2px 0px var(--text-dark);
         }
 
-        .content-wrapper h3 + ul {
-            margin-bottom: 32px;
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            transition: border-color 0.3s ease, background-color 0.3s ease;
-        }
+        .label-yellow { background-color: var(--color-yellow); color: var(--text-dark); }
+        .label-pink { background-color: var(--color-pink); color: #ffffff; }
+        .label-salmon { background-color: var(--color-salmon); color: var(--text-dark); }
+        .label-cyan { background-color: var(--color-cyan); color: var(--text-dark); }
+        .label-green { background-color: var(--color-green); color: var(--text-dark); }
+        .label-neutral { background-color: var(--text-dark); color: #ffffff; }
 
-        .content-wrapper h3 + ul:hover {
-            border-color: rgba(255, 255, 255, 0.15);
-            background-color: var(--card-hover);
-        }
-
-        /* Liste delle Categorie */
+        /* Liste formattate a mano */
         ul {
             list-style-type: none;
         }
 
         li {
             position: relative;
-            padding-left: 20px;
-            margin-bottom: 12px;
-            font-size: 14px;
+            padding-left: 28px;
+            margin-bottom: 16px;
+            font-size: 15px;
             color: var(--text-muted);
             line-height: 1.6;
         }
@@ -283,192 +337,420 @@
             margin-bottom: 0;
         }
 
+        /* Bullet iconici quadrati stile UI Wero */
         li::before {
-            content: "•";
-            color: var(--text-dark);
-            font-weight: normal;
-            font-size: 14px;
+            content: "";
             position: absolute;
             left: 0;
-            top: 0px;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-dark);
+            border-radius: 2px;
+            border: 1px solid var(--text-dark);
         }
 
-        .content-wrapper h3 + ul li::before {
-            color: var(--accent-gold);
-        }
-
-        /* Enfasi sul testo importante */
+        /* Effetto Evidenziatore sui testi importanti */
         strong {
-            font-weight: 600;
-            color: var(--text-main);
+            font-weight: 700;
+            color: var(--text-dark);
+            padding: 1px 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
         }
+
+        .card-yellow strong { background-color: rgba(255, 118, 138, 0.15); }
+        .card-pink strong { background-color: rgba(255, 244, 141, 0.35); }
+        .card-salmon strong { background-color: rgba(112, 250, 253, 0.25); }
+        .card-cyan strong { background-color: rgba(255, 244, 141, 0.35); }
+        .card-green strong { background-color: rgba(255, 118, 138, 0.15); }
+        .card-neutral strong { background-color: rgba(255, 244, 141, 0.35); }
+        .hero-card strong { background-color: rgba(112, 250, 253, 0.3); }
 
         p {
-            margin-bottom: 20px;
             color: var(--text-muted);
             font-size: 15px;
-            line-height: 1.7;
+            line-height: 1.6;
         }
 
-        /* Adattabilità Mobile (Responsive) */
+        .neutral-note {
+            font-style: italic;
+            color: #6E6E6E;
+            margin-top: 10px;
+        }
+
+        /* Sezione Partnership stile diagramma flussi commerciali */
+        .network-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .flow-item {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 2px solid var(--text-dark);
+            padding: 16px 20px;
+            border-radius: 16px;
+            font-size: 15px;
+            box-shadow: 4px 4px 0px var(--text-dark);
+        }
+
+        .flow-item .arrow {
+            margin: 0 16px;
+            color: var(--color-pink);
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        /* Scrollbar personalizzata stile minimal Wero */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-dark);
+            border: 3px solid var(--bg-main);
+            border-radius: 100px;
+        }
+
+        /* Adattabilità Mobile (Responsive Layout) */
         @media (max-width: 768px) {
             body {
-                padding: 40px 16px;
+                padding: 0;
+            }
+            .container {
+                padding: 0 16px 60px 16px;
             }
             header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-                margin-bottom: 40px;
+                padding: 48px 0 24px 0;
+            }
+            .brand-eyebrow {
+                font-size: 10px;
+                padding: 4px 12px;
             }
             header h1 {
-                font-size: 28px;
+                font-size: 32px;
             }
-            .content-wrapper > h2.highlights-title {
-                font-size: 22px;
+            .nav-wrapper {
+                top: 10px;
+                margin-bottom: 40px;
             }
-            .content-wrapper > h2.highlights-title + ul {
+            .hero-card {
                 padding: 24px;
                 margin-bottom: 40px;
             }
-            .competitor-title {
-                font-size: 26px;
+            .hero-card h2 {
+                font-size: 22px;
             }
-            .content-wrapper h3 + ul {
-                padding: 20px;
+            .competitor-card {
+                padding: 24px;
+            }
+            .competitors-grid {
+                gap: 24px;
+            }
+            .flow-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                padding: 16px;
+            }
+            .flow-item .arrow {
+                margin: 0;
+                transform: rotate(90deg);
             }
         }
     </style>
 </head>
 <body>
+
     <div class="container">
+        
+        <!-- Header con impostazione grafica editoriale "Sowieso" -->
         <header>
-            <h1>🔍 Dashboard Intelligence Competitiva</h1>
-            <div class="date-badge">giovedì 18 giugno 2026</div>
+            <div class="brand-eyebrow">Sowieso. Sempre un passo avanti.</div>
+            <h1>Dashboard Intelligence<br>Competitiva</h1>
+            <div class="header-meta">
+                Calibrazione ed Elettronica Automotive / Aggiornamento del <span class="date-badge">giovedì 18 giugno 2026</span>
+            </div>
         </header>
-        <div class="content-wrapper">
-            <h2 id="highlightsdellasettimana">🔍 Highlights della Settimana</h2>
-<ul>
-<li>AutoTuner ha ampliato la sua copertura per veicoli Honda/Acura e Subaru tramite protocollo OBD, aggiungendo anche supporto per BMW Siemens MSS5x.</li>
-<li>Dimsport ha lanciato il Rapid XTE Compact per trattori di piccola e media cilindrata e ha introdotto nuovi protocolli per moto e veicoli agricoli.</li>
-<li>Alientech ha aggiunto nuovi protocolli OBD e BENCH per veicoli pesanti Isuzu e per moto Husqvarna/KTM, oltre a un protocollo OBD/BENCH per Honda Gold Wing.</li>
-<li>DFB Technology ha rilasciato nuove soluzioni BENCH per centraline BMW Siemens e Continental, ampliando le opzioni per i modelli MSD e MSV.</li>
-<li>FG Technology ha annunciato nuovi servizi di sblocco per centraline Bosch (MG1CS024, MG1CS201, MD1CP007, MD1CS014, MD1CP017, MD1CE101) e protocolli OBD per MG1CS011 e EDC17C83.</li>
-<li>Magicmotorsport ha promosso offerte speciali a giugno e ha evidenziato le funzionalità duali del suo strumento Flex.</li>
-</ul>
-<hr />
-<h1 id="tier1corecompetitors">🔴 TIER 1 — Core Competitors</h1>
-<h2 id="autotuner">AutoTuner</h2>
-<h3 id="nuoviprotocollirelease">Nuovi Protocolli / Release</h3>
-<ul>
-<li><strong>Honda & Acura (Keihin)</strong>: Supporto via 100% OBD per una vasta gamma di veicoli Honda e Acura equipaggiati con centraline Keihin SH7058, SH72543, TC1782, e TC275. Include modelli VTEC, Turbo, Hybrid e V6. Tempi di lettura/scrittura ridotti e correzione checksum.</li>
-<li><strong>Subaru Denso & Hitachi</strong>: Supporto via 100% OBD per numerosi modelli Subaru (2006-2022) con motori Boxer, equipaggiati con centraline Denso e Hitachi (SH705x / SH7254x). Lettura/scrittura rapida e correzione checksum.</li>
-<li><strong>BMW Siemens MSS5x</strong>: Supporto via 100% OBD per le centraline MSS52, MSS54, e MSS54HP, utilizzate su modelli BMW M3, Z4, M5, e Z8 degli anni 2000. Lettura/scrittura rapida e correzione checksum.</li>
-<li><strong>Ferrari Bosch MG1CS039</strong>: Supporto in modalità Bench (previo sblocco Mail-in) per centraline Bosch MG1CS039 su modelli Ferrari V12 e PHEV/V8.</li>
-</ul>
-<h3 id="nuovidistributori">Nuovi Distributori</h3>
-<ul>
-<li><strong>BSR Svenska AB</strong>: Ufficiale rivenditore in Svezia (Växjö).</li>
-</ul>
-<h3 id="altro">Altro</h3>
-<ul>
-<li><strong>MyFlasher 2.6.0</strong>: Aggiornamento dell'app mobile per lo strumento "The One", con miglioramenti nella gestione permessi, visualizzazione stati file, stabilità WiFi e persistenza login.</li>
-</ul>
-<hr />
-<h2 id="alientech">Alientech</h2>
-<h3 id="nuoviprotocollirelease-1">Nuovi Protocolli / Release</h3>
-<ul>
-<li><strong>Isuzu Transtron 6XK1 e 4JXX</strong>: Nuovi protocolli OBD e BENCH per veicoli pesanti Isuzu (dal 2006), con supporto per motori diesel 3.0, 5.2, 7.8, 15.6 e 15.7.</li>
-<li><strong>Husqvarna e KTM Keihin A6264103100</strong>: Nuovo protocollo OBD per centraline Keihin su moto Husqvarna e KTM (dal 2025) con motori 690cc, 693cc e 1390cc. Supporto anche per Powergate.</li>
-<li><strong>Honda Keihin 38770-MKC</strong>: Nuovi protocolli OBD e BENCH per centraline Keihin su Honda Gold Wing (dal 2018) con motori 1800cc.</li>
-</ul>
-<h3 id="nuovidistributori-1">Nuovi Distributori</h3>
-<ul>
-<li><strong>Autotronic</strong>: Ufficiale dealer a Skopje, Macedonia del Nord.</li>
-<li><strong>Auto Electronic Service ELT</strong>: Ufficiale dealer a Ruma, Serbia.</li>
-</ul>
-<h3 id="altro-1">Altro</h3>
-<ul>
-<li><strong>Powergate</strong>: Promozione del servizio di tuning remoto tramite Powergate per offrire servizi di ricalibrazione a distanza.</li>
-</ul>
-<hr />
-<h2 id="dimsport">Dimsport</h2>
-<h3 id="nuoviprotocollirelease-2">Nuovi Protocolli / Release</h3>
-<ul>
-<li><strong>Rapid XTE Compact</strong>: Nuova soluzione piggyback per trattori compatti di piccola e media cilindrata, con installazione semplificata e setup ottimizzato per il lavoro sul campo.</li>
-<li><strong>Continental SID212 (Ford)</strong>: Nuovo protocollo OBDII per centraline Continental SID212 installate su veicoli Ford.</li>
-<li><strong>Bosch MSE9.0 (CFMOTO)</strong>: Supporto per nuove centraline Bosch MSE9.0 su modelli CFMOTO tramite RACE.</li>
-<li><strong>LIDEC ECU2-HD</strong>: Nuova applicazione esclusiva per OHW (Off-Highway) tramite RACE.</li>
-<li><strong>Bosch EDC17C76 (BMW Diesel)</strong>: Supporto tramite ProTune per centraline Bosch EDC17C76 su motori Diesel BMW.</li>
-<li><strong>KTM 690 Enduro R (2026)</strong>: Aggiornamenti per Rapid Bike Racing2 per la KTM 690 Enduro R 2026.</li>
-<li><strong>BMW M5 G90</strong>: Soluzioni tramite Rapid PRO per la BMW M5 G90.</li>
-<li><strong>Bosch EDC17C79</strong>: Nuovo supporto tramite ProTune per centraline Bosch EDC17C79.</li>
-<li><strong>Ford F-150</strong>: Nuova applicazione Rapid FR Compact2 per migliorare la risposta dell'acceleratore sui Ford F-150 (2024).</li>
-<li><strong>Honda NC750X</strong>: Soluzioni con Rapid Bike Smart2 per la Honda NC750X.</li>
-<li><strong>CFMOTO 800MT-X</strong>: Soluzioni con Rapid Bike Smart2 per CFMOTO 800MT-X.</li>
-</ul>
-<h3 id="altro-2">Altro</h3>
-<ul>
-<li><strong>Dimsport Manufacturing Dyno Bike</strong>: Presentazione del banco prova per moto, progettato per misurare potenza, coppia e parametri motore.</li>
-<li><strong>Espansione Globale</strong>: Rievocazione storica dell'espansione globale di Dimsport dagli inizi degli anni 2000.</li>
-</ul>
-<hr />
-<h1 id="tier2specializedplayers">🟠 TIER 2 — Specialized Players</h1>
-<h2 id="fgtechnology">FG Technology</h2>
-<h3 id="nuoviprotocollirelease-3">Nuovi Protocolli / Release</h3>
-<ul>
-<li><strong>Bosch MG1CS024 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MG1CS024 MY2021 su BMW, Mini e Toyota (motori 2.0L-3.0L Gasoline E6d).</li>
-<li><strong>Bosch MG1CS201 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MG1CS201 MY2021 su BMW, Mini e Toyota (motori Gasoline E6d).</li>
-<li><strong>Bosch EDC17C83 MY2021</strong>: Nuovi protocolli Bench e Bootmode per centraline Bosch EDC17C83 MY2021 su ISUZU (motori 1.9/3.0 TD E6d).</li>
-<li><strong>Bosch MG1CS011</strong>: Nuovo protocollo OBD per centraline Bosch MG1CS011 su Audi, Seat, Cupra, Skoda, Volkswagen (motori 1.0/1.5 TFSI). Supporto per lettura/scrittura virtuale.</li>
-<li><strong>Bosch MD1CP007 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MD1CP007 MY2021 su Land Rover (motori 3.0D MHEV).</li>
-<li><strong>Bosch MD1CS014 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MD1CS014 MY2021 su Volkswagen e Audi (motori 3.0 TDI E6d-E6e).</li>
-<li><strong>Bosch MD1CP017 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MD1CP017 MY2021 su Land Rover e Jaguar (motori 2.0D MHEV).</li>
-<li><strong>Bosch MD1CE101 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MD1CE101 MY2021 su veicoli FPT Stage V (camion, trattori, veicoli pesanti, marine).</li>
-</ul>
-<hr />
-<h2 id="dfbtechnology">DFB Technology</h2>
-<h3 id="nuoviprotocollirelease-4">Nuovi Protocolli / Release</h3>
-<ul>
-<li><strong>BMW Siemens e Continental MSD/MSV</strong>: Nuove soluzioni BENCH MODE per le centraline BMW Siemens e Continental MSD80, MSD81, MSD85, MSD87, MSV80, MSV90. Le centraline erano già supportate in OBD e BOOT, ora anche in BENCH tramite PINOUT. Operazioni disponibili: Lettura/Scrittura Micro+EEPROM, Recovery, Checksum.</li>
-</ul>
-<hr />
-<h2 id="autovei">AutoVei</h2>
-<h3 id="altro-3">Altro</h3>
-<ul>
-<li><strong>Nuovi Kit Truck Explorer</strong>: Lancio di 2 nuovi kit Truck Explorer per specialisti del cambio, con offerta a tempo limitato.</li>
-<li><strong>Offerte Giugno/Luglio</strong>: Sconti esclusivi e regali bonus per prodotti selezionati dal 15 Giugno al 15 Luglio.</li>
-<li><strong>Aggiornamenti Software</strong>: Nuove funzioni per MAN, DAF, Scania, Mercedes, VOLVO e TraXon.</li>
-<li><strong>Aggiornamenti Software</strong>: Nuove funzioni per Mercedes VRDU, V-class, UNIMOG TCM, DAF, Scania e Solaris.</li>
-<li><strong>Upgrade Kit Truck Explorer</strong>: Possibilità di upgrade dei kit Truck Explorer a prezzi vantaggiosi.</li>
-<li><strong>Nuove Funzioni Software</strong>: Sblocco nuove funzioni per Mercedes, Scania, Iveco Bus, Volvo.</li>
-<li><strong>Interfaccia VEI V8</strong>: Presentazione della nuova interfaccia VEI V8 con nuove funzionalità e software.</li>
-<li><strong>Fiere</strong>: Elenco delle fiere internazionali a cui AutoVei partecerà.</li>
-</ul>
-<hr />
-<h1 id="tier3broadcompetitors">🟡 TIER 3 — Broad Competitors</h1>
-<h3 id="notadimercato">Nota di Mercato</h3>
-<p>HP Tuners, COBB Tuning, EZ Lynk, CMD Flash, Bflash, EFI Live non hanno mostrato aggiornamenti significativi o annunci specifici nei dati forniti questa settimana. Il mercato dei "Broad Competitors" sembra essere in una fase di consolidamento o di minore attività promozionale visibile sui canali monitorati.</p>
-<hr />
-<h1 id="espansioneretecommercialedistributoriepartnership">🤝 ESPANSIONE RETE COMMERCIALE (Distributori e Partnership)</h1>
-<ul>
-<li><strong>AutoTuner</strong> -&gt; BSR Svenska AB (Svezia).</li>
-<li><strong>Alientech</strong> -&gt; Autotronic (Macedonia del Nord).</li>
-<li><strong>Alientech</strong> -&gt; Auto Electronic Service ELT (Serbia).
-<em>Nessuna nuova acquisizione di distributori rilevata questa settimana dai canali social e web per gli altri competitor.</em></li>
-</ul>
-<hr />
-<h1 id="magicmotorsportattivitinternasocialnews">🔵 MAGICMOTORSPORT — Attività Interna (Social &amp; News)</h1>
-<h3 id="nuoviprotocollireleasemms">Nuovi Protocolli / Release MMS</h3>
-<p><em>Nessuna nuova release di protocolli o aggiornamenti software specifici per strumenti di ricalibrazione menzionata nei post.</em></p>
-<h3 id="eventienewsmms">Eventi e News MMS</h3>
-<ul>
-<li><strong>Dynomag June Deals</strong>: Offerta speciale con sconti fino al 20% sui prodotti Dynomag, valida fino al 29 Giugno.</li>
-<li><strong>June Boon</strong>: Promozione speciale con prezzi e offerte dedicate per il mese di Giugno.</li>
-<li><strong>Flex - 2 Tools in 1</strong>: Promozione delle funzionalità duali dello strumento Flex, che combina Memory Programmer e Breakbox (FlexBox) per operazioni di bench work e troubleshooting.</li>
-<li><strong>Progetto Noble M400</strong>: Collaborazione con TC Engineering &amp; Bulldozer Racing per la gestione elettronica, calibrazione su DynoMag, sensoristica, alimentazione, sovralimentazione, sospensioni e geometrie di una Noble M400, con focus sul miglioramento della guidabilità e coinvolgimento del pilota.</li>
-</ul>
+
+        <!-- Navigazione rapida ispirata ai toggle Consumer/Merchant di Wero -->
+        <div class="nav-wrapper">
+            <nav class="nav-toggles">
+                <a href="#highlights" class="nav-btn active">Highlights</a>
+                <a href="#tier1" class="nav-btn">Tier 1</a>
+                <a href="#tier2" class="nav-btn">Tier 2</a>
+                <a href="#tier3" class="nav-btn">Tier 3</a>
+                <a href="#partnership" class="nav-btn">Partnership</a>
+                <a href="#mms" class="nav-btn">Magicmotorsport</a>
+            </nav>
         </div>
+
+        <!-- Sezione 1: Highlights della Settimana (Hero Banner) -->
+        <section id="highlights" class="section-container">
+            <div class="hero-card">
+                <h2>🔍 Highlights della Settimana</h2>
+                <ul>
+                    <li><strong>AutoTuner</strong> ha ampliato la sua copertura per veicoli Honda/Acura e Subaru tramite protocollo OBD, aggiungendo anche supporto per BMW Siemens MSS5x.</li>
+                    <li><strong>Dimsport</strong> ha lanciato il Rapid XTE Compact per trattori di piccola e media cilindrata e ha introdotto nuovi protocolli per moto e veicoli agricoli.</li>
+                    <li><strong>Alientech</strong> ha aggiunto nuovi protocolli OBD e BENCH per veicoli pesanti Isuzu e per moto Husqvarna/KTM, oltre a un protocollo OBD/BENCH per Honda Gold Wing.</li>
+                    <li><strong>DFB Technology</strong> ha rilasciato nuove soluzioni BENCH per centraline BMW Siemens e Continental, ampliando le opzioni per i modelli MSD e MSV.</li>
+                    <li><strong>FG Technology</strong> ha annunciato nuovi servizi di sblocco per centraline Bosch (MG1CS024, MG1CS201, MD1CP007, MD1CS014, MD1CP017, MD1CE101) e protocolli OBD per MG1CS011 e EDC17C83.</li>
+                    <li><strong>Magicmotorsport</strong> ha promosso offerte speciali a giugno e ha evidenziato le funzionalità duali del suo strumento Flex.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Sezione 2: Tier 1 — Core Competitors -->
+        <section id="tier1" class="section-container">
+            <div class="tier-header">
+                <span class="tier-badge tier-1-badge">🔴 TIER 1 — Core Competitors</span>
+            </div>
+            
+            <div class="competitors-grid">
+                
+                <!-- Card AutoTuner -->
+                <div class="competitor-card card-yellow">
+                    <h2 class="competitor-name">AutoTuner</h2>
+                    
+                    <div class="sub-section">
+                        <span class="tag-label label-yellow">Nuovi Protocolli / Release</span>
+                        <ul>
+                            <li><strong>Honda & Acura (Keihin)</strong>: Supporto via 100% OBD per una vasta gamma di veicoli Honda e Acura equipaggiati con centraline Keihin SH7058, SH72543, TC1782, e TC275. Include modelli VTEC, Turbo, Hybrid e V6. Tempi di lettura/scrittura ridotti e correzione checksum.</li>
+                            <li><strong>Subaru Denso & Hitachi</strong>: Supporto via 100% OBD per numerosi modelli Subaru (2006-2022) con motori Boxer, equipaggiati con centraline Denso e Hitachi (SH705x / SH7254x). Lettura/scrittura rapida e correzione checksum.</li>
+                            <li><strong>BMW Siemens MSS5x</strong>: Supporto via 100% OBD per le centraline MSS52, MSS54, e MSS54HP, utilizzate su modelli BMW M3, Z4, M5, e Z8 degli anni 2000. Lettura/scrittura rapida e correzione checksum.</li>
+                            <li><strong>Ferrari Bosch MG1CS039</strong>: Supporto in modalità Bench (previo sblocco Mail-in) per centraline Bosch MG1CS039 su modelli Ferrari V12 e PHEV/V8.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <span class="tag-label label-yellow">Nuovi Distributori</span>
+                        <ul>
+                            <li><strong>BSR Svenska AB</strong>: Ufficiale rivenditore in Svezia (Växjö).</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <span class="tag-label label-yellow">Altro</span>
+                        <ul>
+                            <li><strong>MyFlasher 2.6.0</strong>: Aggiornamento dell'app mobile per lo strumento "The One", con miglioramenti nella gestione permessi, visualizzazione stati file, stabilità WiFi e persistenza login.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card Alientech -->
+                <div class="competitor-card card-pink">
+                    <h2 class="competitor-name">Alientech</h2>
+                    
+                    <div class="sub-section">
+                        <span class="tag-label label-pink">Nuovi Protocolli / Release</span>
+                        <ul>
+                            <li><strong>Isuzu Transtron 6XK1 e 4JXX</strong>: Nuovi protocolli OBD e BENCH per veicoli pesanti Isuzu (dal 2006), con supporto per motori diesel 3.0, 5.2, 7.8, 15.6 e 15.7.</li>
+                            <li><strong>Husqvarna e KTM Keihin A6264103100</strong>: Nuovo protocollo OBD per centraline Keihin su moto Husqvarna e KTM (dal 2025) con motori 690cc, 693cc e 1390cc. Supporto anche per Powergate.</li>
+                            <li><strong>Honda Keihin 38770-MKC</strong>: Nuovi protocolli OBD e BENCH per centraline Keihin su Honda Gold Wing (dal 2018) con motori 1800cc.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <span class="tag-label label-pink">Nuovi Distributori</span>
+                        <ul>
+                            <li><strong>Autotronic</strong>: Ufficiale dealer a Skopje, Macedonia del Nord.</li>
+                            <li><strong>Auto Electronic Service ELT</strong>: Ufficiale dealer a Ruma, Serbia.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <span class="tag-label label-pink">Altro</span>
+                        <ul>
+                            <li><strong>Powergate</strong>: Promozione del servizio di tuning remoto tramite Powergate per offrire servizi di ricalibrazione a distanza.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card Dimsport -->
+                <div class="competitor-card card-cyan">
+                    <h2 class="competitor-name">Dimsport</h2>
+                    
+                    <div class="sub-section">
+                        <span class="tag-label label-cyan">Nuovi Protocolli / Release</span>
+                        <ul>
+                            <li><strong>Rapid XTE Compact</strong>: Nuova soluzione piggyback per trattori compatti di piccola e media cilindrata, con installazione semplificata e setup ottimizzato per il lavoro sul campo.</li>
+                            <li><strong>Continental SID212 (Ford)</strong>: Nuovo protocollo OBDII per centraline Continental SID212 installate su veicoli Ford.</li>
+                            <li><strong>Bosch MSE9.0 (CFMOTO)</strong>: Supporto per nuove centraline Bosch MSE9.0 su modelli CFMOTO tramite RACE.</li>
+                            <li><strong>LIDEC ECU2-HD</strong>: Nuova applicazione esclusiva per OHW (Off-Highway) tramite RACE.</li>
+                            <li><strong>Bosch EDC17C76 (BMW Diesel)</strong>: Supporto tramite ProTune per centraline Bosch EDC17C76 su motori Diesel BMW.</li>
+                            <li><strong>KTM 690 Enduro R (2026)</strong>: Aggiornamenti per Rapid Bike Racing2 per la KTM 690 Enduro R 2026.</li>
+                            <li><strong>BMW M5 G90</strong>: Soluzioni tramite Rapid PRO per la BMW M5 G90.</li>
+                            <li><strong>Bosch EDC17C79</strong>: Nuovo supporto tramite ProTune per centraline Bosch EDC17C79.</li>
+                            <li><strong>Ford F-150</strong>: Nuova applicazione Rapid FR Compact2 per migliorare la risposta dell'acceleratore sui Ford F-150 (2024).</li>
+                            <li><strong>Honda NC750X</strong>: Soluzioni con Rapid Bike Smart2 per la Honda NC750X.</li>
+                            <li><strong>CFMOTO 800MT-X</strong>: Soluzioni con Rapid Bike Smart2 per CFMOTO 800MT-X.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sub-section">
+                        <span class="tag-label label-cyan">Altro</span>
+                        <ul>
+                            <li><strong>Dimsport Manufacturing Dyno Bike</strong>: Presentazione del banco prova per moto, progettato per misurare potenza, coppia e parametri motore.</li>
+                            <li><strong>Espansione Globale</strong>: Rievocazione storica dell'espansione globale di Dimsport dagli inizi degli anni 2000.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sezione 3: Tier 2 — Specialized Players -->
+        <section id="tier2" class="section-container">
+            <div class="tier-header">
+                <span class="tier-badge tier-2-badge">🟠 TIER 2 — Specialized Players</span>
+            </div>
+            
+            <div class="competitors-grid">
+                
+                <!-- Card FG Technology -->
+                <div class="competitor-card card-salmon">
+                    <h2 class="competitor-name">FG Technology</h2>
+                    <div class="sub-section">
+                        <span class="tag-label label-salmon">Nuovi Protocolli / Release</span>
+                        <ul>
+                            <li><strong>Bosch MG1CS024 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MG1CS024 MY2021 su BMW, Mini e Toyota (motori 2.0L-3.0L Gasoline E6d).</li>
+                            <li><strong>Bosch MG1CS201 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MG1CS201 MY2021 su BMW, Mini e Toyota (motori Gasoline E6d).</li>
+                            <li><strong>Bosch EDC17C83 MY2021</strong>: Nuovi protocolli Bench e Bootmode per centraline Bosch EDC17C83 MY2021 su ISUZU (motori 1.9/3.0 TD E6d).</li>
+                            <li><strong>Bosch MG1CS011</strong>: Nuovo protocollo OBD per centraline Bosch MG1CS011 su Audi, Seat, Cupra, Skoda, Volkswagen (motori 1.0/1.5 TFSI). Supporto per lettura/scrittura virtuale.</li>
+                            <li><strong>Bosch MD1CP007 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MD1CP007 MY2021 su Land Rover (motori 3.0D MHEV).</li>
+                            <li><strong>Bosch MD1CS014 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MD1CS014 MY2021 su Volkswagen e Audi (motori 3.0 TDI E6d-E6e).</li>
+                            <li><strong>Bosch MD1CP017 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MD1CP017 MY2021 su Land Rover e Jaguar (motori 2.0D MHEV).</li>
+                            <li><strong>Bosch MD1CE101 MY2021</strong>: Nuovo servizio di sblocco in modalità Bench per centraline Bosch MD1CE101 MY2021 su veicoli FPT Stage V (camion, trattori, veicoli pesanti, marine).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card DFB Technology -->
+                <div class="competitor-card card-salmon">
+                    <h2 class="competitor-name">DFB Technology</h2>
+                    <div class="sub-section">
+                        <span class="tag-label label-salmon">Nuovi Protocolli / Release</span>
+                        <ul>
+                            <li><strong>BMW Siemens e Continental MSD/MSV</strong>: Nuove soluzioni BENCH MODE per le centraline BMW Siemens e Continental MSD80, MSD81, MSD85, MSD87, MSV80, MSV90. Le centraline erano già supportate in OBD e BOOT, ora anche in BENCH tramite PINOUT. Operazioni disponibili: Lettura/Scrittura Micro+EEPROM, Recovery, Checksum.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card AutoVei -->
+                <div class="competitor-card card-salmon">
+                    <h2 class="competitor-name">AutoVei</h2>
+                    <div class="sub-section">
+                        <span class="tag-label label-salmon">Altro</span>
+                        <ul>
+                            <li><strong>Nuovi Kit Truck Explorer</strong>: Lancio di 2 nuovi kit Truck Explorer per specialisti del cambio, con offerta a tempo limitato.</li>
+                            <li><strong>Offerte Giugno/Luglio</strong>: Sconti esclusivi e regali bonus per prodotti selezionati dal 15 Giugno al 15 Luglio.</li>
+                            <li><strong>Aggiornamenti Software</strong>: Nuove funzioni per MAN, DAF, Scania, Mercedes, VOLVO e TraXon.</li>
+                            <li><strong>Aggiornamenti Software</strong>: Nuove funzioni per Mercedes VRDU, V-class, UNIMOG TCM, DAF, Scania e Solaris.</li>
+                            <li><strong>Upgrade Kit Truck Explorer</strong>: Possibilità di upgrade dei kit Truck Explorer a prezzi vantaggiosi.</li>
+                            <li><strong>Nuove Funzioni Software</strong>: Sblocco nuove funzioni per Mercedes, Scania, Iveco Bus, Volvo.</li>
+                            <li><strong>Interfaccia VEI V8</strong>: Presentazione della nuova interfaccia VEI V8 con nuove funzionalità e software.</li>
+                            <li><strong>Fiere</strong>: Elenco delle fiere internazionali a cui AutoVei partecerà.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sezione 4: Tier 3 — Broad Competitors -->
+        <section id="tier3" class="section-container">
+            <div class="tier-header">
+                <span class="tier-badge tier-3-badge">🟡 TIER 3 — Broad Competitors</span>
+            </div>
+            
+            <div class="competitor-card card-yellow">
+                <h2 class="competitor-name">Nota di Mercato</h2>
+                <p><strong>HP Tuners, COBB Tuning, EZ Lynk, CMD Flash, Bflash, EFI Live</strong> non hanno mostrato aggiornamenti significativi o annunci specifici nei dati forniti questa settimana. Il mercato dei "Broad Competitors" sembra essere in una fase di consolidamento o di minore attività promozionale visibile sui canali monitorati.</p>
+            </div>
+        </section>
+
+        <!-- Sezione 5: Espansione Rete Commerciale -->
+        <section id="partnership" class="section-container">
+            <div class="tier-header">
+                <span class="tier-badge tier-network-badge">🤝 ESPANSIONE RETE COMMERCIALE</span>
+            </div>
+            
+            <div class="competitor-card card-green">
+                <h2 class="competitor-name">Nuove Partnership & Distributori</h2>
+                <div class="network-flow">
+                    <div class="flow-item">
+                        <strong>AutoTuner</strong> <span class="arrow">➔</span> BSR Svenska AB (Svezia)
+                    </div>
+                    <div class="flow-item">
+                        <strong>Alientech</strong> <span class="arrow">➔</span> Autotronic (Macedonia del Nord)
+                    </div>
+                    <div class="flow-item">
+                        <strong>Alientech</strong> <span class="arrow">➔</span> Auto Electronic Service ELT (Serbia)
+                    </div>
+                </div>
+                <p class="neutral-note">Nessuna nuova acquisizione di distributori rilevata questa settimana dai canali social e web per gli altri competitor.</p>
+            </div>
+        </section>
+
+        <!-- Sezione 6: MAGICMOTORSPORT (Internal Dashboard View) -->
+        <section id="mms" class="section-container">
+            <div class="tier-header">
+                <span class="tier-badge tier-mms-badge">🔵 MAGICMOTORSPORT</span>
+            </div>
+            
+            <div class="competitors-grid grid-2-col">
+                
+                <div class="competitor-card card-cyan">
+                    <h2 class="competitor-name">Nuovi Protocolli / Release MMS</h2>
+                    <p class="neutral-note">Nessuna nuova release di protocolli o aggiornamenti software specifici per strumenti di ricalibrazione menzionata nei post.</p>
+                </div>
+
+                <div class="competitor-card card-cyan">
+                    <h2 class="competitor-name">Eventi e News MMS</h2>
+                    <ul>
+                        <li><strong>Dynomag June Deals</strong>: Offerta speciale con sconti fino al 20% sui prodotti Dynomag, valida fino al 29 Giugno.</li>
+                        <li><strong>June Boon</strong>: Promozione speciale con prezzi e offerte dedicate per il mese di Giugno.</li>
+                        <li><strong>Flex - 2 Tools in 1</strong>: Promozione delle funzionalità duali dello strumento Flex, che combina Memory Programmer e Breakbox (FlexBox) per operazioni di bench work e troubleshooting.</li>
+                        <li><strong>Progetto Noble M400</strong>: Collaborazione con TC Engineering & Bulldozer Racing per la gestione elettronica, calibrazione su DynoMag, sensoristica, alimentazione, sovralimentazione, sospensioni e geometrie di una Noble M400, con focus sul miglioramento della guidabilità e coinvolgimento del pilota.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
     </div>
+
+    <!-- Script JavaScript per gestione attiva dei pulsanti navigazione al click -->
+    <script>
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Opzionale: Tracciamento attivo dello scroll per aggiornare l'active button
+        window.addEventListener('scroll', () => {
+            let fromTop = window.scrollY + 140;
+            document.querySelectorAll('.nav-btn').forEach(link => {
+                let section = document.querySelector(link.hash);
+                if (
+                    section.offsetTop <= fromTop &&
+                    section.offsetTop + section.offsetHeight > fromTop
+                ) {
+                    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
