@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Report Localizzazione Dyno — Magicmotorsport 2026</title>
+
+<!-- Google Fonts per un look audace e asimmetrico -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* --- PALETTE GIOCOSA (Sowieso Wero Style) — identica al resto del progetto --- */
+  :root {
+    --bg: #FFFCEB;
+    --card: #ffffff;
+    --dark: #19191D;
+    --border: #19191D;
+    --navy: #19191D;
+    --text: #19191D;
+    --muted: rgba(25, 25, 29, 0.7);
+
+    --pink: #FF678B;
+    --yellow: #FFF48D;
+    --lime: #8FF977;
+    --cyan: #70FAFD;
+    --purple-soft: #c9b2ff;
+    --amber-soft: #ff9d76;
+
+    --blue: #2563eb;
+    --purple: #7c3aed;
+    --cyan-dark: #0891b2;
+    --green: #059669;
+    --amber: #d97706;
+    --red: #dc2626;
+
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --card-shadow: 6px 6px 0px #19191D;
+    --card-shadow-hover: 10px 10px 0px #19191D;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 60px;
+  }
+
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 40px 24px; }
+
+  /* ─ HEADER ─ */
+  .header {
+    background: var(--lime);
+    border: 3px solid var(--dark);
+    border-radius: var(--radius-xl);
+    padding: 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: var(--cyan);
+    border: 3px solid var(--dark);
+    z-index: 0;
+  }
+
+  .header-eyebrow {
+    position: relative; z-index: 1; margin: 0 0 6px;
+    font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--dark);
+  }
+
+  .header h1 {
+    position: relative; z-index: 1; margin: 0;
+    font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+    color: var(--dark); letter-spacing: -0.5px;
+  }
+
+  .header h1 span {
+    background: var(--yellow); color: var(--dark); padding: 2px 10px;
+    border-radius: var(--radius-sm); border: 2px solid var(--dark);
+    display: inline-block; transform: rotate(-1.5deg);
+  }
+
+  .badge {
+    display: inline-block; background: var(--yellow); color: var(--dark);
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 800;
+    letter-spacing: 0.5px; text-transform: uppercase; padding: 6px 12px;
+    border-radius: 30px; border: 2px solid var(--dark);
+    box-shadow: 2px 2px 0px var(--dark); margin-bottom: 6px;
+  }
+
+  .badge-new { background: var(--cyan); }
+  .badge-demo { background: #fff; }
+
+  .header-date { position: relative; z-index: 1; margin-top: 6px; font-size: 12px; font-weight: 700; color: var(--dark); }
+  .header-meta { text-align: right; position: relative; z-index: 1; }
+
+  /* ─ SECTION HEADER ─ */
+  .section-hdr { display: flex; align-items: center; gap: 15px; margin: 40px 0 24px; }
+  .section-hdr-line { flex: 1; height: 3px; background: var(--dark); }
+  .section-hdr-label {
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--dark);
+    background: var(--yellow); padding: 6px 16px; border: 3px solid var(--dark);
+    border-radius: 30px; white-space: nowrap; transform: rotate(1deg);
+  }
+
+  /* ─ KPI ─ */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .kpi-card {
+    background: var(--card); border: 3px solid var(--dark); border-radius: var(--radius-xl);
+    padding: 24px; position: relative; overflow: hidden; box-shadow: var(--card-shadow);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+  }
+  .kpi-card:hover { transform: translate(-3px, -3px); box-shadow: var(--card-shadow-hover); }
+  .kpi-icon {
+    font-size: 26px; margin-bottom: 12px; display: inline-flex; align-items: center; justify-content: center;
+    width: 50px; height: 50px; border: 2px solid var(--dark); border-radius: 50%; background: var(--bg);
+  }
+  .kpi-title { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--dark); margin-bottom: 6px; }
+  .kpi-val { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; line-height: 1.1; color: var(--dark) !important; }
+  .kpi-sub { margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--muted); }
+
+  /* ─ GRID ─ */
+  .g2 { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 24px; margin-bottom: 24px; }
+  .geq { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .g1 { margin-bottom: 24px; }
+
+  /* ─ CARDS ─ */
+  .card { background: var(--card); border: 3px solid var(--dark); border-radius: var(--radius-xl); padding: 28px; box-shadow: var(--card-shadow); }
+  .card-hdr { border-bottom: 3px solid var(--dark); padding-bottom: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .card-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--dark) !important; }
+  .card-sub { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600; text-transform: none; color: var(--muted); margin-left: 5px; }
+  .card-num { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 800; background: var(--bg); border: 2px solid var(--dark); padding: 4px 10px; border-radius: 30px; }
+
+  .chart-wrap { position: relative; height: 220px; }
+
+  /* ─ TABLES ─ */
+  .dt { width: 100%; border-collapse: collapse; }
+  .dt th { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--dark); padding: 10px 8px 10px 0; text-align: left; border-bottom: 3px solid var(--dark); }
+  .dt-row { border-bottom: 2px solid rgba(25, 25, 29, 0.08); transition: background 0.15s ease; }
+  .dt-row:hover { background: #FFFDF4; }
+  .dt-row:last-child { border-bottom: none; }
+  .dt-rank { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 12px; color: var(--muted); padding: 12px 8px 12px 0; width: 24px; vertical-align: middle; }
+  .dt-area { padding: 12px 12px 12px 0; font-size: 13px; font-weight: 800; color: var(--dark); vertical-align: middle; }
+  .dt-center { padding: 12px 8px; font-size: 13px; font-weight: 700; color: var(--dark); text-align: center; vertical-align: middle; }
+  .dt-cell { padding: 12px 8px 12px 0; font-size: 13px; font-weight: 600; color: var(--dark); vertical-align: middle; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: var(--radius-sm); border: 2px solid var(--dark); box-shadow: 2px 2px 0px var(--dark); white-space: nowrap; }
+
+  /* ─ MAPPA ─ */
+  .map-card-wrap { position: relative; }
+  .world-map-svg { width: 100%; height: 520px; display: block; }
+  .blob-label { font-family: 'Syne', sans-serif; font-weight: 800; }
+  .dyno-marker { cursor: pointer; transition: transform 0.2s ease; transform-box: fill-box; transform-origin: center; }
+  .dyno-marker:hover { transform: scale(1.45); }
+
+  .map-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 18px; padding-top: 16px; border-top: 3px solid var(--dark); }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--dark); }
+  .legend-dot { width: 14px; height: 14px; border-radius: 50%; border: 2.5px solid var(--dark); flex-shrink: 0; }
+  .legend-hint { margin-left: auto; font-size: 11px; font-weight: 600; color: var(--muted); }
+
+  /* ─ FOOTER ─ */
+  .footer { margin-top: 40px; padding: 24px 32px; background: var(--cyan); border: 3px solid var(--dark); border-radius: var(--radius-xl); display: flex; justify-content: space-between; align-items: center; color: var(--dark); box-shadow: var(--card-shadow); flex-wrap: wrap; gap: 14px; }
+  .footer-brand { margin: 0; font-family: 'Syne', sans-serif; font-weight: 800; color: var(--dark); text-transform: uppercase; font-size: 14px; }
+  .footer-sub { margin-top: 4px; font-size: 12px; font-weight: 600; }
+  .footer-code { font-family: 'Syne', sans-serif; font-weight: 800; background: #ffffff; border: 2px solid var(--dark); padding: 6px 12px; border-radius: var(--radius-sm); }
+
+  /* ─ RESPONSIVE ─ */
+  @media(max-width:1100px){
+    .g2, .geq { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .world-map-svg { height: 420px; }
+  }
+  @media(max-width:640px){
+    .kpi-row { grid-template-columns: 1fr; }
+    .header { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .header-meta { text-align: left; }
+    .world-map-svg { height: 360px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header class="header">
+  <div>
+    <p class="header-eyebrow">Magicmotorsport · Global Hardware Network</p>
+    <h1>Localizzazione <span>Vendita Dyno</span></h1>
+  </div>
+  <div class="header-meta">
+    <span class="badge">Report Globale</span>&nbsp;<span class="badge badge-new">v1.0</span>&nbsp;<span class="badge badge-demo">Dati Demo</span>
+    <p class="header-date">18/06/2026 · Anno 2026</p>
+  </div>
+</header>
+
+<!-- KPI STRIP -->
+<section class="kpi-row">
+  <div class="kpi-card">
+    <div class="kpi-icon">🛠️</div>
+    <p class="kpi-title">Dyno Installati Totali</p>
+    <p class="kpi-val">21</p>
+    <p class="kpi-sub">Distribuiti in <strong>19 paesi</strong></p>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="color:var(--green)">✅</div>
+    <p class="kpi-title">Dyno Attivi</p>
+    <p class="kpi-val" style="color:var(--green)">17</p>
+    <p class="kpi-sub"><strong>81%</strong> del parco operativo</p>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon">🌍</div>
+    <p class="kpi-title">Continenti Coperti</p>
+    <p class="kpi-val">6</p>
+    <p class="kpi-sub">Presenza realmente globale</p>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="color:var(--purple)">💶</div>
+    <p class="kpi-title">Valore Parco Installato</p>
+    <p class="kpi-val" style="color:var(--purple)">€ 815.000</p>
+    <p class="kpi-sub">Stima a listino interno HW</p>
+  </div>
+</section>
+
+<!-- PANORAMICA GLOBALE -->
+<div class="section-hdr"><div class="section-hdr-line"></div><span class="section-hdr-label">Panoramica Globale</span><div class="section-hdr-line"></div></div>
+
+<div class="g1">
+  <div class="card map-card-wrap">
+    <div class="card-hdr"><h2 class="card-title">Mappa Installazioni <span class="card-sub">— Vista schematica per area, non in scala cartografica</span></h2><span class="card-num">01/04</span></div>
+
+    <svg class="world-map-svg" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mappa schematica delle installazioni Dyno nel mondo">
+      <!-- BLOB CONTINENTI -->
+      <path d="M90,55 C160,30 265,40 295,105 C325,165 295,215 245,235 C195,255 130,245 95,205 C58,165 50,90 90,55 Z" fill="var(--lime)" stroke="var(--dark)" stroke-width="4"/>
+      <path d="M165,275 C220,260 272,285 282,345 C295,405 265,460 212,478 C160,495 128,452 128,400 C128,348 128,288 165,275 Z" fill="var(--yellow)" stroke="var(--dark)" stroke-width="4"/>
+      <path d="M450,55 C505,38 565,45 595,85 C618,118 605,158 562,172 C520,186 468,180 442,143 C420,112 418,75 450,55 Z" fill="var(--cyan)" stroke="var(--dark)" stroke-width="4"/>
+      <path d="M460,200 C522,188 582,205 602,260 C622,318 602,388 555,422 C505,458 448,428 433,366 C418,305 418,228 460,200 Z" fill="var(--pink)" stroke="var(--dark)" stroke-width="4"/>
+      <path d="M615,65 C685,32 785,42 855,92 C905,130 895,192 845,222 C785,258 705,253 655,212 C615,182 583,102 615,65 Z" fill="var(--purple-soft)" stroke="var(--dark)" stroke-width="4"/>
+      <path d="M800,350 C852,330 915,345 938,388 C958,422 938,458 892,468 C845,478 798,452 788,410 C780,385 778,365 800,350 Z" fill="var(--amber-soft)" stroke="var(--dark)" stroke-width="4"/>
+
+      <!-- LABEL AREE -->
+      <text x="195" y="20" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">NORD AMERICA · 3</text>
+      <text x="205" y="503" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">SUD AMERICA · 1</text>
+      <text x="515" y="20" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">EUROPA · 12</text>
+      <text x="515" y="503" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">AFRICA · 1</text>
+      <text x="745" y="20" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">ASIA · 3</text>
+      <text x="863" y="503" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">OCEANIA · 1</text>
+
+      <!-- MARKER EUROPA -->
+      <circle class="dyno-marker" cx="468" cy="158" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Palermo, IT — Sicily Tuning Center (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="458" cy="105" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Milano, IT — MotorLab Milano (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="548" cy="88" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Varsavia, PL — PowerHouse Polska (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="440" cy="128" r="8" fill="var(--yellow)" stroke="var(--dark)" stroke-width="2.5"><title>Madrid, ES — Iberica Race Garage (In Manutenzione)</title></circle>
+      <circle class="dyno-marker" cx="435" cy="148" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Lisbona, PT — DiagTec Plus (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="505" cy="95" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Monaco, DE — Bavaria Performance (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="468" cy="112" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Lyon, FR — Rhône Tuning Pro (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="450" cy="72" r="8" fill="var(--pink)" stroke="var(--dark)" stroke-width="2.5"><title>Manchester, GB — Northern Dyno Hub (Offline)</title></circle>
+      <circle class="dyno-marker" cx="478" cy="78" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Rotterdam, NL — DutchFlex Garage (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="568" cy="108" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Bucarest, RO — Carpathian Motors (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="545" cy="130" r="8" fill="var(--yellow)" stroke="var(--dark)" stroke-width="2.5"><title>Belgrado, RS — Balkan Tuning Center (In Manutenzione)</title></circle>
+      <circle class="dyno-marker" cx="590" cy="145" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Istanbul, TR — Bosphorus Performance (Attivo)</title></circle>
+
+      <!-- MARKER NORD AMERICA -->
+      <circle class="dyno-marker" cx="235" cy="200" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Miami, US — Sunshine Dyno Garage (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="105" cy="140" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Los Angeles, US — West Coast Tuning Lab (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="150" cy="220" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Città del Messico, MX — Azteca Performance (Attivo)</title></circle>
+
+      <!-- MARKER SUD AMERICA -->
+      <circle class="dyno-marker" cx="220" cy="390" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>San Paolo, BR — Brasil Tuning House (Attivo)</title></circle>
+
+      <!-- MARKER ASIA -->
+      <circle class="dyno-marker" cx="830" cy="175" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Shenzhen, CN — Sinoy Tech Center (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="650" cy="150" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Dubai, AE — Emirates Keys Dyno Hub (Attivo)</title></circle>
+      <circle class="dyno-marker" cx="865" cy="115" r="8" fill="var(--yellow)" stroke="var(--dark)" stroke-width="2.5"><title>Osaka, JP — Noma Performance Lab (In Manutenzione)</title></circle>
+
+      <!-- MARKER AFRICA -->
+      <circle class="dyno-marker" cx="520" cy="375" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Johannesburg, ZA — African Power Garage (Attivo)</title></circle>
+
+      <!-- MARKER OCEANIA -->
+      <circle class="dyno-marker" cx="885" cy="415" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Sydney, AU — Outback Dyno Center (Attivo)</title></circle>
+    </svg>
+
+    <div class="map-legend">
+      <span class="legend-item"><span class="legend-dot" style="background:var(--lime)"></span>Attivo (17)</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--yellow)"></span>In Manutenzione (3)</span>
+      <span class="legend-item"><span class="legend-dot" style="background:var(--pink)"></span>Offline (1)</span>
+      <span class="legend-hint">Passa il mouse su un marker per i dettagli dell'installazione</span>
+    </div>
+  </div>
+</div>
+
+<!-- ANALISI PER AREA & STATO -->
+<div class="section-hdr"><div class="section-hdr-line"></div><span class="section-hdr-label">Analisi per Area & Stato</span><div class="section-hdr-line"></div></div>
+
+<div class="geq">
+  <div class="card">
+    <div class="card-hdr"><h2 class="card-title">Distribuzione per Continente</h2><span class="card-num">02/04</span></div>
+    <div class="chart-wrap"><canvas id="continentChart" role="img" aria-label="Numero di Dyno installati per continente"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr"><h2 class="card-title">Stato Installazioni</h2><span class="card-num">03/04</span></div>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center">
+      <div style="position:relative;width:140px;height:140px;flex-shrink:0"><canvas id="statusChart" width="140" height="140" role="img" aria-label="Distribuzione dello stato delle installazioni"></canvas></div>
+      <table class="dt"><thead><tr><th>Stato</th><th style="text-align:right">Q.tà</th><th style="text-align:right">%</th></tr></thead>
+      <tbody>
+        <tr class="dt-row"><td style="padding:10px 8px 10px 0"><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--lime);border:2px solid var(--dark);flex-shrink:0"></span><span style="font-size:12px;font-weight:700;color:var(--dark)">Attivo</span></span></td><td class="dt-center" style="text-align:right">17</td><td class="dt-center" style="text-align:right">81%</td></tr>
+        <tr class="dt-row"><td style="padding:10px 8px 10px 0"><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--yellow);border:2px solid var(--dark);flex-shrink:0"></span><span style="font-size:12px;font-weight:700;color:var(--dark)">In Manutenzione</span></span></td><td class="dt-center" style="text-align:right">3</td><td class="dt-center" style="text-align:right">14%</td></tr>
+        <tr class="dt-row"><td style="padding:10px 8px 10px 0"><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:var(--pink);border:2px solid var(--dark);flex-shrink:0"></span><span style="font-size:12px;font-weight:700;color:var(--dark)">Offline</span></span></td><td class="dt-center" style="text-align:right">1</td><td class="dt-center" style="text-align:right">5%</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- DETTAGLIO INSTALLAZIONI -->
+<div class="section-hdr"><div class="section-hdr-line"></div><span class="section-hdr-label">Dettaglio Installazioni</span><div class="section-hdr-line"></div></div>
+
+<div class="g1">
+  <div class="card">
+    <div class="card-hdr"><h2 class="card-title">Elenco Dyno <span class="card-sub">— Tutte le installazioni monitorate</span></h2><span class="card-num">04/04</span></div>
+    <table class="dt"><thead><tr>
+      <th style="width:24px">#</th><th>Paese</th><th>Città</th><th>Cliente</th><th>Modello</th><th>Area</th><th>Stato</th><th style="text-align:right">Installazione</th>
+    </tr></thead><tbody>
+      <tr class="dt-row"><td class="dt-rank">01</td><td class="dt-area">🇮🇹 IT</td><td class="dt-cell">Palermo</td><td class="dt-cell">Sicily Tuning Center</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">12/03/2024</td></tr>
+      <tr class="dt-row"><td class="dt-rank">02</td><td class="dt-area">🇮🇹 IT</td><td class="dt-cell">Milano</td><td class="dt-cell">MotorLab Milano</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">22/07/2023</td></tr>
+      <tr class="dt-row"><td class="dt-rank">03</td><td class="dt-area">🇵🇱 PL</td><td class="dt-cell">Varsavia</td><td class="dt-cell">PowerHouse Polska</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">03/01/2025</td></tr>
+      <tr class="dt-row"><td class="dt-rank">04</td><td class="dt-area">🇪🇸 ES</td><td class="dt-cell">Madrid</td><td class="dt-cell">Iberica Race Garage</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--yellow)">Manutenzione</span></td><td class="dt-val" style="text-align:right">15/09/2022</td></tr>
+      <tr class="dt-row"><td class="dt-rank">05</td><td class="dt-area">🇵🇹 PT</td><td class="dt-cell">Lisbona</td><td class="dt-cell">DiagTec Plus</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">28/11/2024</td></tr>
+      <tr class="dt-row"><td class="dt-rank">06</td><td class="dt-area">🇩🇪 DE</td><td class="dt-cell">Monaco</td><td class="dt-cell">Bavaria Performance</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">09/05/2023</td></tr>
+      <tr class="dt-row"><td class="dt-rank">07</td><td class="dt-area">🇫🇷 FR</td><td class="dt-cell">Lyon</td><td class="dt-cell">Rhône Tuning Pro</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">14/02/2025</td></tr>
+      <tr class="dt-row"><td class="dt-rank">08</td><td class="dt-area">🌐 GB</td><td class="dt-cell">Manchester</td><td class="dt-cell">Northern Dyno Hub</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--pink)">Offline</span></td><td class="dt-val" style="text-align:right">30/06/2021</td></tr>
+      <tr class="dt-row"><td class="dt-rank">09</td><td class="dt-area">🇳🇱 NL</td><td class="dt-cell">Rotterdam</td><td class="dt-cell">DutchFlex Garage</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">19/04/2024</td></tr>
+      <tr class="dt-row"><td class="dt-rank">10</td><td class="dt-area">🇷🇴 RO</td><td class="dt-cell">Bucarest</td><td class="dt-cell">Carpathian Motors</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">07/10/2023</td></tr>
+      <tr class="dt-row"><td class="dt-rank">11</td><td class="dt-area">🌐 RS</td><td class="dt-cell">Belgrado</td><td class="dt-cell">Balkan Tuning Center</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--yellow)">Manutenzione</span></td><td class="dt-val" style="text-align:right">25/08/2022</td></tr>
+      <tr class="dt-row"><td class="dt-rank">12</td><td class="dt-area">🇹🇷 TR</td><td class="dt-cell">Istanbul</td><td class="dt-cell">Bosphorus Performance</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--cyan)">Europa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">11/01/2024</td></tr>
+      <tr class="dt-row"><td class="dt-rank">13</td><td class="dt-area">🇺🇸 US</td><td class="dt-cell">Miami</td><td class="dt-cell">Sunshine Dyno Garage</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--lime)">Nord America</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">16/03/2024</td></tr>
+      <tr class="dt-row"><td class="dt-rank">14</td><td class="dt-area">🇺🇸 US</td><td class="dt-cell">Los Angeles</td><td class="dt-cell">West Coast Tuning Lab</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--lime)">Nord America</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">02/09/2023</td></tr>
+      <tr class="dt-row"><td class="dt-rank">15</td><td class="dt-area">🇲🇽 MX</td><td class="dt-cell">Città del Messico</td><td class="dt-cell">Azteca Performance</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--lime)">Nord America</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">21/05/2025</td></tr>
+      <tr class="dt-row"><td class="dt-rank">16</td><td class="dt-area">🇧🇷 BR</td><td class="dt-cell">San Paolo</td><td class="dt-cell">Brasil Tuning House</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--yellow)">Sud America</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">13/12/2023</td></tr>
+      <tr class="dt-row"><td class="dt-rank">17</td><td class="dt-area">🇨🇳 CN</td><td class="dt-cell">Shenzhen</td><td class="dt-cell">Sinoy Tech Center</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--purple-soft)">Asia</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">04/07/2024</td></tr>
+      <tr class="dt-row"><td class="dt-rank">18</td><td class="dt-area">🇦🇪 AE</td><td class="dt-cell">Dubai</td><td class="dt-cell">Emirates Keys Dyno Hub</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--purple-soft)">Asia</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">17/02/2025</td></tr>
+      <tr class="dt-row"><td class="dt-rank">19</td><td class="dt-area">🇯🇵 JP</td><td class="dt-cell">Osaka</td><td class="dt-cell">Noma Performance Lab</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--purple-soft)">Asia</span></td><td><span class="tag" style="background:var(--yellow)">Manutenzione</span></td><td class="dt-val" style="text-align:right">29/10/2022</td></tr>
+      <tr class="dt-row"><td class="dt-rank">20</td><td class="dt-area">🇿🇦 ZA</td><td class="dt-cell">Johannesburg</td><td class="dt-cell">African Power Garage</td><td class="dt-cell">2WD-2000</td><td><span class="tag" style="background:var(--pink)">Africa</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">08/06/2024</td></tr>
+      <tr class="dt-row"><td class="dt-rank">21</td><td class="dt-area">🇦🇺 AU</td><td class="dt-cell">Sydney</td><td class="dt-cell">Outback Dyno Center</td><td class="dt-cell">4WD AWD-2500</td><td><span class="tag" style="background:var(--amber-soft)">Oceania</span></td><td><span class="tag" style="background:var(--lime)">Attivo</span></td><td class="dt-val" style="text-align:right">23/01/2024</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div>
+    <p class="footer-brand">MAGICMOTORSPORT</p>
+    <p class="footer-sub">Report localizzazione Dyno · Dati dimostrativi · Giugno 2026</p>
+  </div>
+  <div class="footer-code">DYNO_MAP_2026_v1</div>
+</footer>
+
+</div><!-- /wrap -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function(){
+  const dark = '#19191D';
+
+  // ── DISTRIBUZIONE PER CONTINENTE ──
+  new Chart(document.getElementById('continentChart').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:["Europa","Nord America","Asia","Sud America","Africa","Oceania"],
+      datasets:[{
+        label:'Dyno installati',
+        data:[12,3,3,1,1,1],
+        backgroundColor:['#70FAFD','#8FF977','#c9b2ff','#FFF48D','#FF678B','#ff9d76'],
+        borderColor: dark, borderWidth:3, borderRadius:6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:dark,titleColor:'#fff',bodyColor:'#cbd5e1'}},
+      scales:{
+        x:{grid:{display:false},ticks:{color:dark,font:{size:10,weight:'700'}}},
+        y:{grid:{color:'rgba(0,0,0,0.04)'},ticks:{color:dark,font:{size:10},stepSize:2}}
+      }
+    }
+  });
+
+  // ── STATO INSTALLAZIONI ──
+  new Chart(document.getElementById('statusChart').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:["Attivo","In Manutenzione","Offline"],
+      datasets:[{data:[17,3,1],backgroundColor:['#8FF977','#FFF48D','#FF678B'],borderWidth:3,borderColor:dark,hoverOffset:6}]
+    },
+    options:{responsive:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{backgroundColor:dark,titleColor:'#fff',bodyColor:'#cbd5e1'}}}
+  });
+})();
+</script>
+</body>
+</html>
