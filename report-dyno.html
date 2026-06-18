@@ -10,6 +10,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
+<!-- Leaflet CSS per la mappa geografica interattiva -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
 <style>
   /* --- PALETTE GIOCOSA (Sowieso Wero Style) — identica al resto del progetto --- */
   :root {
@@ -167,12 +170,77 @@
   .dt-cell { padding: 12px 8px 12px 0; font-size: 13px; font-weight: 600; color: var(--dark); vertical-align: middle; }
   .tag { display: inline-block; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: var(--radius-sm); border: 2px solid var(--dark); box-shadow: 2px 2px 0px var(--dark); white-space: nowrap; }
 
-  /* ─ MAPPA ─ */
+  /* ─ MAPPA INTERATTIVA (LEAFLET CUSTOMIZATION) ─ */
   .map-card-wrap { position: relative; }
-  .world-map-svg { width: 100%; height: 520px; display: block; }
-  .blob-label { font-family: 'Syne', sans-serif; font-weight: 800; }
-  .dyno-marker { cursor: pointer; transition: transform 0.2s ease; transform-box: fill-box; transform-origin: center; }
-  .dyno-marker:hover { transform: scale(1.45); }
+  #world-map-leaflet {
+    width: 100%;
+    height: 520px;
+    display: block;
+    border: 3px solid var(--dark);
+    border-radius: var(--radius-lg);
+    z-index: 1;
+  }
+  
+  /* Stile Custom dei Marker sulla Mappa */
+  .custom-map-marker {
+    border: 2.5px solid var(--dark) !important;
+    border-radius: 50% !important;
+    box-shadow: 2px 2px 0px var(--dark);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+  }
+  .custom-map-marker:hover {
+    transform: scale(1.3) !important;
+    z-index: 9999 !important;
+  }
+
+  /* Stile Popup di Leaflet coerente con il Brand */
+  .leaflet-popup-content-wrapper {
+    background: var(--bg) !important;
+    border: 3px solid var(--dark) !important;
+    border-radius: var(--radius-md) !important;
+    box-shadow: 4px 4px 0px var(--dark) !important;
+    color: var(--dark) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    padding: 2px !important;
+  }
+  .leaflet-popup-tip {
+    background: var(--dark) !important;
+  }
+  .popup-body {
+    padding: 6px;
+  }
+  .popup-hdr {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--dark);
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .popup-row {
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .popup-row strong {
+    font-weight: 800;
+  }
+
+  /* Attribuzioni Leaflet coerenti */
+  .leaflet-control-attribution {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 9px !important;
+    background: rgba(255, 252, 235, 0.85) !important;
+    border-left: 2px solid var(--dark) !important;
+    border-top: 2px solid var(--dark) !important;
+    color: var(--dark) !important;
+  }
 
   .map-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 18px; padding-top: 16px; border-top: 3px solid var(--dark); }
   .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--dark); }
@@ -189,13 +257,13 @@
   @media(max-width:1100px){
     .g2, .geq { grid-template-columns: 1fr; }
     .kpi-row { grid-template-columns: repeat(2, 1fr); }
-    .world-map-svg { height: 420px; }
+    #world-map-leaflet { height: 420px; }
   }
   @media(max-width:640px){
     .kpi-row { grid-template-columns: 1fr; }
     .header { flex-direction: column; align-items: flex-start; gap: 14px; }
     .header-meta { text-align: left; }
-    .world-map-svg { height: 360px; }
+    #world-map-leaflet { height: 360px; }
   }
 </style>
 </head>
@@ -247,64 +315,19 @@
 
 <div class="g1">
   <div class="card map-card-wrap">
-    <div class="card-hdr"><h2 class="card-title">Mappa Installazioni <span class="card-sub">— Vista schematica per area, non in scala cartografica</span></h2><span class="card-num">01/04</span></div>
+    <div class="card-hdr">
+      <h2 class="card-title">Mappa Installazioni <span class="card-sub">— Mappa interattiva globale basata su dati geografici reali</span></h2>
+      <span class="card-num">01/04</span>
+    </div>
 
-    <svg class="world-map-svg" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mappa schematica delle installazioni Dyno nel mondo">
-      <!-- BLOB CONTINENTI -->
-      <path d="M90,55 C160,30 265,40 295,105 C325,165 295,215 245,235 C195,255 130,245 95,205 C58,165 50,90 90,55 Z" fill="var(--lime)" stroke="var(--dark)" stroke-width="4"/>
-      <path d="M165,275 C220,260 272,285 282,345 C295,405 265,460 212,478 C160,495 128,452 128,400 C128,348 128,288 165,275 Z" fill="var(--yellow)" stroke="var(--dark)" stroke-width="4"/>
-      <path d="M450,55 C505,38 565,45 595,85 C618,118 605,158 562,172 C520,186 468,180 442,143 C420,112 418,75 450,55 Z" fill="var(--cyan)" stroke="var(--dark)" stroke-width="4"/>
-      <path d="M460,200 C522,188 582,205 602,260 C622,318 602,388 555,422 C505,458 448,428 433,366 C418,305 418,228 460,200 Z" fill="var(--pink)" stroke="var(--dark)" stroke-width="4"/>
-      <path d="M615,65 C685,32 785,42 855,92 C905,130 895,192 845,222 C785,258 705,253 655,212 C615,182 583,102 615,65 Z" fill="var(--purple-soft)" stroke="var(--dark)" stroke-width="4"/>
-      <path d="M800,350 C852,330 915,345 938,388 C958,422 938,458 892,468 C845,478 798,452 788,410 C780,385 778,365 800,350 Z" fill="var(--amber-soft)" stroke="var(--dark)" stroke-width="4"/>
-
-      <!-- LABEL AREE -->
-      <text x="195" y="20" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">NORD AMERICA · 3</text>
-      <text x="205" y="503" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">SUD AMERICA · 1</text>
-      <text x="515" y="20" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">EUROPA · 12</text>
-      <text x="515" y="503" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">AFRICA · 1</text>
-      <text x="745" y="20" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">ASIA · 3</text>
-      <text x="863" y="503" text-anchor="middle" class="blob-label" font-size="13" fill="var(--dark)">OCEANIA · 1</text>
-
-      <!-- MARKER EUROPA -->
-      <circle class="dyno-marker" cx="468" cy="158" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Palermo, IT — Sicily Tuning Center (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="458" cy="105" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Milano, IT — MotorLab Milano (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="548" cy="88" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Varsavia, PL — PowerHouse Polska (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="440" cy="128" r="8" fill="var(--yellow)" stroke="var(--dark)" stroke-width="2.5"><title>Madrid, ES — Iberica Race Garage (In Manutenzione)</title></circle>
-      <circle class="dyno-marker" cx="435" cy="148" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Lisbona, PT — DiagTec Plus (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="505" cy="95" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Monaco, DE — Bavaria Performance (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="468" cy="112" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Lyon, FR — Rhône Tuning Pro (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="450" cy="72" r="8" fill="var(--pink)" stroke="var(--dark)" stroke-width="2.5"><title>Manchester, GB — Northern Dyno Hub (Offline)</title></circle>
-      <circle class="dyno-marker" cx="478" cy="78" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Rotterdam, NL — DutchFlex Garage (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="568" cy="108" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Bucarest, RO — Carpathian Motors (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="545" cy="130" r="8" fill="var(--yellow)" stroke="var(--dark)" stroke-width="2.5"><title>Belgrado, RS — Balkan Tuning Center (In Manutenzione)</title></circle>
-      <circle class="dyno-marker" cx="590" cy="145" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Istanbul, TR — Bosphorus Performance (Attivo)</title></circle>
-
-      <!-- MARKER NORD AMERICA -->
-      <circle class="dyno-marker" cx="235" cy="200" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Miami, US — Sunshine Dyno Garage (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="105" cy="140" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Los Angeles, US — West Coast Tuning Lab (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="150" cy="220" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Città del Messico, MX — Azteca Performance (Attivo)</title></circle>
-
-      <!-- MARKER SUD AMERICA -->
-      <circle class="dyno-marker" cx="220" cy="390" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>San Paolo, BR — Brasil Tuning House (Attivo)</title></circle>
-
-      <!-- MARKER ASIA -->
-      <circle class="dyno-marker" cx="830" cy="175" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Shenzhen, CN — Sinoy Tech Center (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="650" cy="150" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Dubai, AE — Emirates Keys Dyno Hub (Attivo)</title></circle>
-      <circle class="dyno-marker" cx="865" cy="115" r="8" fill="var(--yellow)" stroke="var(--dark)" stroke-width="2.5"><title>Osaka, JP — Noma Performance Lab (In Manutenzione)</title></circle>
-
-      <!-- MARKER AFRICA -->
-      <circle class="dyno-marker" cx="520" cy="375" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Johannesburg, ZA — African Power Garage (Attivo)</title></circle>
-
-      <!-- MARKER OCEANIA -->
-      <circle class="dyno-marker" cx="885" cy="415" r="8" fill="var(--lime)" stroke="var(--dark)" stroke-width="2.5"><title>Sydney, AU — Outback Dyno Center (Attivo)</title></circle>
-    </svg>
+    <!-- MAP CONTAINER -->
+    <div id="world-map-leaflet"></div>
 
     <div class="map-legend">
       <span class="legend-item"><span class="legend-dot" style="background:var(--lime)"></span>Attivo (17)</span>
       <span class="legend-item"><span class="legend-dot" style="background:var(--yellow)"></span>In Manutenzione (3)</span>
       <span class="legend-item"><span class="legend-dot" style="background:var(--pink)"></span>Offline (1)</span>
-      <span class="legend-hint">Passa il mouse su un marker per i dettagli dell'installazione</span>
+      <span class="legend-hint">Clicca su un marker per visualizzare i dati del cliente e del modello</span>
     </div>
   </div>
 </div>
@@ -377,9 +400,84 @@
 </div><!-- /wrap -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Leaflet.js per la gestione della mappa interattiva -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 <script>
 (function(){
   const dark = '#19191D';
+
+  // ── ARRAY DELLE DETTAGLIATE INSTALLAZIONI REALI ──
+  const installations = [
+    { coords: [38.1157, 13.3615], city: "Palermo", country: "IT", client: "Sicily Tuning Center", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [45.4642, 9.1900], city: "Milano", country: "IT", client: "MotorLab Milano", model: "2WD-2000", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [52.2297, 21.0122], city: "Varsavia", country: "PL", client: "PowerHouse Polska", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [40.4168, -3.7038], city: "Madrid", country: "ES", client: "Iberica Race Garage", model: "2WD-2000", status: "maintenance", color: "var(--yellow)", statusLabel: "In Manutenzione" },
+    { coords: [38.7223, -9.1393], city: "Lisbona", country: "PT", client: "DiagTec Plus", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [48.1351, 11.5820], city: "Monaco", country: "DE", client: "Bavaria Performance", model: "2WD-2000", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [45.7640, 4.8357], city: "Lyon", country: "FR", client: "Rhône Tuning Pro", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [53.4808, -2.2426], city: "Manchester", country: "GB", client: "Northern Dyno Hub", model: "2WD-2000", status: "offline", color: "var(--pink)", statusLabel: "Offline" },
+    { coords: [51.9244, 4.4777], city: "Rotterdam", country: "NL", client: "DutchFlex Garage", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [44.4268, 26.1025], city: "Bucarest", country: "RO", client: "Carpathian Motors", model: "2WD-2000", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [44.7866, 20.4489], city: "Belgrado", country: "RS", client: "Balkan Tuning Center", model: "4WD AWD-2500", status: "maintenance", color: "var(--yellow)", statusLabel: "In Manutenzione" },
+    { coords: [41.0082, 28.9784], city: "Istanbul", country: "TR", client: "Bosphorus Performance", model: "2WD-2000", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [25.7617, -80.1918], city: "Miami", country: "US", client: "Sunshine Dyno Garage", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [34.0522, -118.2437], city: "Los Angeles", country: "US", client: "West Coast Tuning Lab", model: "2WD-2000", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [19.4326, -99.1332], city: "Città del Messico", country: "MX", client: "Azteca Performance", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [-23.5505, -46.6333], city: "San Paolo", country: "BR", client: "Brasil Tuning House", model: "2WD-2000", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [22.5431, 114.0579], city: "Shenzhen", country: "CN", client: "Sinoy Tech Center", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [25.2048, 55.2708], city: "Dubai", country: "AE", client: "Emirates Keys Dyno Hub", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [34.6937, 135.5023], city: "Osaka", country: "JP", client: "Noma Performance Lab", model: "2WD-2000", status: "maintenance", color: "var(--yellow)", statusLabel: "In Manutenzione" },
+    { coords: [-26.2041, 28.0473], city: "Johannesburg", country: "ZA", client: "African Power Garage", model: "2WD-2000", status: "active", color: "var(--lime)", statusLabel: "Attivo" },
+    { coords: [-33.8688, 151.2093], city: "Sydney", country: "AU", client: "Outback Dyno Center", model: "4WD AWD-2500", status: "active", color: "var(--lime)", statusLabel: "Attivo" }
+  ];
+
+  // ── INIZIALIZZAZIONE DELLA MAPPA REALISTICA ──
+  const map = L.map('world-map-leaflet', {
+    center: [25, 10], 
+    zoom: 2,
+    minZoom: 1.5,
+    maxZoom: 14,
+    scrollWheelZoom: false // Previene lo zoom involontario allo scorrimento della pagina
+  });
+
+  // Caricamento dei Tile in stile realistico/dettagliato ma pulito (Carto Voyager)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 20
+  }).addTo(map);
+
+  // Aggiunta dei marker alla mappa con popup stilizzati
+  installations.forEach(inst => {
+    // Icona personalizzata con CSS basato sui colori del progetto
+    const icon = L.divIcon({
+      className: 'custom-map-marker',
+      html: `<div style="width:100%; height:100%; border-radius:50%; background-color:${inst.color}"></div>`,
+      iconSize: [15, 15],
+      iconAnchor: [7.5, 7.5]
+    });
+
+    const marker = L.marker(inst.coords, { icon: icon }).addTo(map);
+
+    // Contenuto popup personalizzato coerente con il look "Sowieso Wero"
+    const popupContent = `
+      <div class="popup-body">
+        <div class="popup-hdr">
+          <span>${inst.city}, ${inst.country}</span>
+          <span style="background:${inst.color}; font-size: 8px; font-weight: 800; text-transform: uppercase; padding: 2px 5px; border: 1.5px solid var(--dark); border-radius:4px;">${inst.statusLabel}</span>
+        </div>
+        <div class="popup-row">Cliente: <strong>${inst.client}</strong></div>
+        <div class="popup-row">Modello: <strong>${inst.model}</strong></div>
+      </div>
+    `;
+
+    marker.bindPopup(popupContent, {
+      maxWidth: 240,
+      closeButton: false
+    });
+  });
+
 
   // ── DISTRIBUZIONE PER CONTINENTE ──
   new Chart(document.getElementById('continentChart').getContext('2d'),{
