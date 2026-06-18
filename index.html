@@ -966,9 +966,9 @@ exports.init = init;
         }
 
         .container {
-            max-width: 1520px; /* Incrementato per consentire maggiore leggibilità complessiva */
+            max-width: 1750px; /* Larghezza aumentata per ottimizzare la visualizzazione orizzontale */
             margin: 0 auto;
-            width: 100%;
+            width: 95%;
             transition: max-width 0.3s ease;
         }
 
@@ -1236,20 +1236,33 @@ exports.init = init;
         }
 
         /* ============================================================
-           ARCHIVIO — Layout a tre colonne ad alto respiro
+           ARCHIVIO — Layout a tre colonne ottimizzato
            ============================================================ */
         .archive-layout {
             display: grid;
-            grid-template-columns: 260px 1fr 320px; /* Navigazione, Report e Feedback */
+            grid-template-columns: 230px 1fr 310px; /* Ridotte le colonne laterali a favore della colonna centrale */
             gap: 24px;
             align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        /* Focus Mode per massimizzare lo spazio dell'Iframe */
+        .archive-layout.focus-mode {
+            grid-template-columns: 1fr !important;
+        }
+        .archive-layout.focus-mode .archive-sidebar,
+        .archive-layout.focus-mode .feedback-sidebar {
+            display: none !important;
+        }
+        .archive-layout.focus-mode .archive-iframe-wrapper {
+            height: 1200px; /* Altezza maggiorata in Focus Mode per facilitare la lettura */
         }
 
         .archive-sidebar {
             background: #ffffff;
             border: 3px solid var(--dark);
             border-radius: var(--radius-lg);
-            padding: 24px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 18px;
@@ -1363,13 +1376,14 @@ exports.init = init;
         /* Contenitore e Iframe ottimizzato per grandi dimensioni */
         .archive-iframe-wrapper {
             width: 100%;
-            height: 850px; /* Aumentato per ridurre la necessità di barre di scorrimento */
+            height: 1000px; /* Aumentato per ridurre la necessità di scorrimento */
             border: 3px solid var(--dark);
             border-radius: var(--radius-lg);
             box-shadow: var(--card-shadow);
             overflow: hidden;
             background: #ffffff;
             margin-top: 15px;
+            transition: height 0.3s ease;
         }
 
         .archive-iframe {
@@ -1731,6 +1745,13 @@ exports.init = init;
                     <p class="subtitle">
                         Snapshot mensili consolidati: Analisi clienti, prodotti, competitors & azioni implementate.
                     </p>
+                    
+                    <!-- Pulsante interattivo per la Focus Mode -->
+                    <div style="margin-top: -15px; margin-bottom: 25px; display: flex; justify-content: center;">
+                        <button class="pill" id="btn-toggle-focus" style="background-color: var(--cyan); box-shadow: 4px 4px 0px var(--dark);">
+                            🖥️ Vista Espansa (Nascondi Colonne)
+                        </button>
+                    </div>
                 </header>
 
                 <div class="archive-layout">
@@ -1747,7 +1768,7 @@ exports.init = init;
                         </div>
                     </section>
 
-                    <!-- BARRA FEEDBACK DI MARY (Nuova Colonna integrata) -->
+                    <!-- BARRA FEEDBACK DI MARY -->
                     <aside class="feedback-sidebar">
                         <div class="avatar-container">
                             <div class="mary-avatar">
@@ -1884,7 +1905,26 @@ exports.init = init;
         btnModeArchive.addEventListener("click", () => setMode("archive"));
 
         /* ============================================================
-           3) DASHBOARD LIVE — ricerca e filtri (logica invariata)
+           2.1) GESTIONE DELLO SWITCH "FOCUS MODE / VISTA ESPANSA"
+           ============================================================ */
+        const btnToggleFocus = document.getElementById("btn-toggle-focus");
+        const archiveLayout = document.querySelector(".archive-layout");
+        let isFocusMode = false;
+
+        btnToggleFocus.addEventListener("click", () => {
+            isFocusMode = !isFocusMode;
+            archiveLayout.classList.toggle("focus-mode", isFocusMode);
+            if (isFocusMode) {
+                btnToggleFocus.textContent = "📋 Mostra Colonne Laterali";
+                btnToggleFocus.style.backgroundColor = "var(--pink)";
+            } else {
+                btnToggleFocus.textContent = "🖥️ Vista Espansa (Nascondi Colonne)";
+                btnToggleFocus.style.backgroundColor = "var(--cyan)";
+            }
+        });
+
+        /* ============================================================
+           3) DASHBOARD LIVE — ricerca e filtri
            ============================================================ */
         const searchInput = document.getElementById("searchInput");
         const liveFilterButtons = document.querySelectorAll("#live-filter-pills .pill");
@@ -2011,7 +2051,7 @@ exports.init = init;
                 "</div>";
         }
 
-        // Funzione per mostrare il file HTML consolidato mensile (es. 2026-gen.html) dentro il pannello
+        // Funzione per mostrare il file HTML consolidato mensile dentro il pannello
         function renderArchiveMonth(year, month) {
             const key = year + "-" + month.abbr;
             const manifestEntry = archiveManifest[key];
