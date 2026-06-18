@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Mensile Consolidato - Aprile 2026</title>
+    
+    <!-- Google Fonts per stile Neobrutalista -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-page: #FFFCEB;          /* Crema chiaro */
+            --dark: #19191D;             /* Nero profondo per bordi e scritte */
+            --pink: #FF678B;             /* Rosa evidenziatore */
+            --yellow: #FFF48D;           /* Giallo limone */
+            --lime: #8FF977;             /* Verde lime */
+            --cyan: #70FAFD;             /* Turchese */
+            --white: #FFFFFF;
+            
+            --card-shadow: 6px 6px 0px var(--dark);
+            --btn-shadow: 4px 4px 0px var(--dark);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-syne: "Syne", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-page);
+            color: var(--dark);
+            padding: 24px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Container principale */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Report */
+        .report-header {
+            background: var(--white);
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .report-title h1 {
+            font-family: var(--font-syne);
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .report-title p {
+            font-size: 1rem;
+            font-weight: 600;
+            opacity: 0.85;
+        }
+
+        .badge-period {
+            background-color: var(--pink);
+            font-family: var(--font-syne);
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: 3px solid var(--dark);
+            border-radius: 999px;
+            box-shadow: 4px 4px 0px var(--dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Layout Superiore (KPI + Spaccato Canali) */
+        .dashboard-summary-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (min-width: 992px) {
+            .dashboard-summary-wrapper {
+                grid-template-columns: 1.2fr 1fr;
+            }
+        }
+
+        /* KPI Quick Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: var(--white);
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .kpi-label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: rgba(25, 25, 29, 0.7);
+            margin-bottom: 12px;
+        }
+
+        .kpi-value {
+            font-family: var(--font-syne);
+            font-size: 2.2rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .kpi-sub {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: auto;
+            padding-top: 8px;
+            border-top: 2px dashed rgba(25, 25, 29, 0.15);
+        }
+
+        .kpi-card.highlight-cyan { background-color: var(--cyan); }
+        .kpi-card.highlight-yellow { background-color: var(--yellow); }
+        .kpi-card.highlight-lime { background-color: var(--lime); }
+        .kpi-card.highlight-pink { background-color: var(--pink); }
+
+        /* Card Spaccato Canali Recupero */
+        .spaccato-card {
+            background-color: var(--yellow);
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .spaccato-title {
+            font-family: var(--font-syne);
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: rgba(25, 25, 29, 0.8);
+        }
+
+        .spaccato-value {
+            font-family: var(--font-syne);
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .progress-bar-container {
+            display: flex;
+            width: 100%;
+            height: 32px;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background-color: var(--white);
+            box-shadow: 3px 3px 0px var(--dark);
+        }
+
+        .bar-segment {
+            height: 100%;
+            border-right: 3px solid var(--dark);
+            box-sizing: border-box;
+            transition: opacity 0.2s ease;
+        }
+
+        .bar-segment:last-child {
+            border-right: none;
+        }
+
+        /* Calcolo proporzionale sul totale recuperato di 78k */
+        .segment-distr-apr { background-color: var(--pink); width: 73.1%; } /* 57k */
+        .segment-shop-apr { background-color: var(--cyan); width: 14.1%; } /* 11k */
+        .segment-oper-apr { background-color: var(--lime); width: 11.5%; } /* 9k */
+        .segment-hd-apr { background-color: var(--white); width: 1.3%; } /* 600€ */
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            row-gap: 12px;
+            column-gap: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            border: 2px solid var(--dark);
+            margin-right: 10px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .dot-distr { background-color: var(--pink); }
+        .dot-shop { background-color: var(--cyan); }
+        .dot-operatori { background-color: var(--lime); }
+        .dot-hd { background-color: var(--white); }
+
+        /* Navigazione dei Report */
+        .nav-tabs-wrapper {
+            margin-bottom: 32px;
+            border-bottom: 3px solid var(--dark);
+            padding-bottom: 12px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            list-style: none;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+        .tab-btn {
+            background-color: var(--white);
+            border: 3px solid var(--dark);
+            font-family: var(--font-syne);
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--btn-shadow);
+            transition: all 0.1s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--dark);
+        }
+
+        .tab-btn.active {
+            background-color: var(--yellow);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--dark);
+        }
+
+        /* Area contenuti */
+        .report-section {
+            display: none;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .report-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Report Main Grid */
+        .grid-sections {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        @media (min-width: 992px) {
+            .grid-sections {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .span-full {
+                grid-column: span 2;
+            }
+        }
+
+        /* Box Sezione Standard */
+        .section-box {
+            background: var(--white);
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-header-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--dark);
+            padding-bottom: 14px;
+            margin-bottom: 4px;
+            gap: 16px;
+        }
+
+        .section-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .section-title {
+            font-family: var(--font-syne);
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: rgba(25, 25, 29, 0.7);
+        }
+
+        .section-badge {
+            font-family: var(--font-syne);
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            border: 3px solid var(--dark);
+            text-transform: uppercase;
+            box-shadow: 3px 3px 0px var(--dark);
+            white-space: nowrap;
+        }
+
+        /* Tabelle Dati */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            background: var(--white);
+            margin-top: 8px;
+            box-shadow: 4px 4px 0px var(--dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: var(--yellow);
+            font-family: var(--font-syne);
+            font-weight: 800;
+            border-bottom: 3px solid var(--dark);
+            border-right: 2px solid var(--dark);
+            padding: 14px 16px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--dark);
+            border-right: 2px solid var(--dark);
+            font-weight: 600;
+            color: var(--dark);
+            vertical-align: top;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Classi di utilità per tabelle finanziarie */
+        .text-right {
+            text-align: right;
+        }
+        .num-val {
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+        }
+
+        /* Tag di classificazione prodotti */
+        .prod-tag {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--dark);
+            text-transform: uppercase;
+            display: inline-block;
+            box-shadow: 2px 2px 0px var(--dark);
+        }
+        .tag-exit { background-color: var(--pink); }
+        .tag-stop { background-color: var(--yellow); }
+        .tag-protect { background-color: var(--cyan); }
+        .tag-boost { background-color: var(--lime); }
+
+        /* Note evidenziate e avvisi importanti */
+        .insight-note {
+            background-color: var(--white);
+            border: 3px dashed var(--dark);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .alert-box {
+            background-color: var(--pink);
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            box-shadow: 4px 4px 0px var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Link Neobrutalisti */
+        .brutal-link {
+            color: var(--dark);
+            text-decoration: underline;
+            font-weight: 800;
+            transition: all 0.1s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .brutal-link:hover {
+            color: var(--pink);
+            text-shadow: 1px 1px 0px var(--yellow);
+        }
+
+        /* Liste e Testi */
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 28px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.45;
+        }
+
+        .bullet-list li::before {
+            content: "➔";
+            position: absolute;
+            left: 0;
+            color: var(--pink);
+            font-weight: 800;
+        }
+
+        .text-block {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(25, 25, 29, 0.9);
+            line-height: 1.5;
+        }
+
+        /* Griglia Feedback / Citazioni */
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        @media (min-width: 576px) {
+            .feedback-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feedback-box {
+            background: var(--white);
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: 4px 4px 0px var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .feedback-box-title {
+            font-family: var(--font-syne);
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 2px solid var(--dark);
+            padding-bottom: 6px;
+        }
+
+        .feedback-quote {
+            font-style: italic;
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+            padding-left: 28px;
+            border-left: 3px solid var(--dark);
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        .timeline-item {
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -37px;
+            top: 4px;
+            width: 14px;
+            height: 14px;
+            background: var(--lime);
+            border: 3px solid var(--dark);
+            border-radius: 50%;
+            box-shadow: 2px 2px 0px var(--dark);
+        }
+
+        .timeline-date {
+            font-family: var(--font-syne);
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--pink);
+            margin-bottom: 4px;
+            letter-spacing: 0.8px;
+        }
+
+        .timeline-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(25, 25, 29, 0.85);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- HEADER DEL REPORT -->
+        <header class="report-header">
+            <div class="report-title">
+                <h1>Report Mensile Consolidato</h1>
+                <p>Analisi performance vendite, andamenti della rete distributiva e integrazioni di flussi</p>
+            </div>
+            <div class="badge-period">APRILE 2026</div>
+        </header>
+
+        <!-- DASHBOARD SUMMARY AREA (KPI + SPACCATO DI RECUPERO) -->
+        <div class="dashboard-summary-wrapper">
+            
+            <!-- KPI QUICK GRID (Macro Sintesi) -->
+            <div class="kpi-grid">
+                <div class="kpi-card highlight-cyan">
+                    <div>
+                        <div class="kpi-label">Carrelli Abbandonati</div>
+                        <div class="kpi-value">€566.0K</div>
+                    </div>
+                    <div class="kpi-sub" style="color: #9B2C2C;">Valore complessivo rilevato nel mese</div>
+                </div>
+
+                <div class="kpi-card highlight-lime">
+                    <div>
+                        <div class="kpi-label">Somma Recuperata</div>
+                        <div class="kpi-value">€78.0K</div>
+                    </div>
+                    <div class="kpi-sub" style="color: #15803D;">Tasso medio di recupero: 13.8%</div>
+                </div>
+            </div>
+
+            <!-- GRAFICO SPACCATO CANALI RECUPERO -->
+            <div class="spaccato-card">
+                <div class="spaccato-title">Spaccato Canali Recupero</div>
+                <div class="spaccato-value">€78.000</div>
+                
+                <!-- Barra segmentata proporzionale sui dati reali di Aprile -->
+                <div class="progress-bar-container">
+                    <div class="bar-segment segment-distr-apr" title="Distributori: 73.1% (57K)"></div>
+                    <div class="bar-segment segment-shop-apr" title="Shop: 14.1% (11K)"></div>
+                    <div class="bar-segment segment-oper-apr" title="Operatori: 11.5% (9K)"></div>
+                    <div class="bar-segment segment-hd-apr" title="HD: 1.3% (600€)"></div>
+                </div>
+
+                <!-- Legenda dettagliata -->
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <span class="legend-dot dot-distr"></span>
+                        Distributori (57K)
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-shop"></span>
+                        Shop (11K)
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-operatori"></span>
+                        Operatori (9K)
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-hd"></span>
+                        HD (600€)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- NAVIGAZIONE REPORT TAB -->
+        <div class="nav-tabs-wrapper">
+            <ul class="nav-tabs">
+                <li><button class="tab-btn active" onclick="switchTab('tab-carrelli', this)">1. Carrelli &amp; Feedback</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-fiere', this)">2. Analisi Fiere (Kibana)</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-hyperpedal', this)">3. Hyperpedal</button></li>
+                <li><button class="tab-btn" onclick="switchTab('tab-terze-parti', this)">4. Prodotti Terzi (Silca / W18)</button></li>
+            </ul>
+        </div>
+
+        <!-- ================= TAB 1: CARRELLI & FEEDBACK ================= -->
+        <section id="tab-carrelli" class="report-section active">
+            <div class="grid-sections">
+                
+                <!-- Highlights del mese -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <div class="section-header-left">
+                            <h2 class="section-title">Workflow di Recupero &amp; Automazioni</h2>
+                            <p class="section-subtitle">Integrazioni n8n ed efficienza operativa</p>
+                        </div>
+                        <span class="section-badge" style="background-color: var(--pink);">Sintesi</span>
+                    </div>
+
+                    <p class="text-block">
+                        Il mese di Aprile inizia con l'attivazione in produzione dei <strong>flussi di recupero carrelli interamente autonomi tramite n8n</strong> per i reparti <em>Sales, USA, Iberica e China</em>. L'implementazione ha ridotto la necessità di interventi manuali e ha incrementato l'efficienza complessiva.
+                    </p>
+
+                    <div class="insight-note">
+                        <strong>👥 Assegnazione dei contatti commerciali sul territorio:</strong>
+                        <ul class="bullet-list" style="margin-top: 10px;">
+                            <li><strong>Andrea Mormino:</strong> Gestione e contatto clienti per Sales Internazionale.</li>
+                            <li><strong>Rob / Gaetano:</strong> Gestione e contatto per l'Italia e i Prodotti Terze Parti.</li>
+                        </ul>
+                    </div>
+
+                    <div class="alert-box" style="background-color: var(--lime);">
+                        <span style="font-size: 1.4rem;">⚙️</span>
+                        <span><strong>Integrazioni Marketing n8n:</strong> Esteso l'utilizzo delle campagne marketing automatiche anche per i lead Fryon. Attivata l'emissione e l'invio automatizzato di coupon Fryon per gli utenti che acquistano Subscription direttamente dallo SHOP.</span>
+                    </div>
+
+                    <div class="alert-box" style="background-color: var(--cyan);">
+                        <span style="font-size: 1.4rem;">💬</span>
+                        <span><strong>Progetto CCS/Sales (Crisp):</strong> Avviato il progetto per l'estrazione automatica del feedback in CRISP. Tramite la categorizzazione strutturata delle chat, l'obiettivo è individuare tempestivamente i clienti idonei per promozioni e tracciare le necessità emergenti dal mercato.</span>
+                    </div>
+                </div>
+
+                <!-- Voce del Cliente (Feedback) -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <div class="section-header-left">
+                            <h2 class="section-title">Feedback Estrapolati</h2>
+                            <p class="section-subtitle">Analisi qualitativa delle motivazioni d'acquisto</p>
+                        </div>
+                        <span class="section-badge" style="background-color: var(--cyan);">Voce del Cliente</span>
+                    </div>
+
+                    <p class="text-block">
+                        Principali obiezioni e motivazioni di abbandono rilevate durante la fase di contatto diretto dei carrelli:
+                    </p>
+
+                    <div class="feedback-grid" style="grid-template-columns: 1fr;">
+                        <div class="feedback-box">
+                            <div class="feedback-box-title" style="color: var(--pink);">Acquisto tramite altri canali (Alto Impatto)</div>
+                            <p class="text-block" style="font-size: 0.9rem;">
+                                <strong>Dettaglio:</strong> La motivazione più frequente. Gli utenti dichiarano di non aver finalizzato l'ordine online diretto poiché hanno già concluso l'acquisto tramite distributori o rivenditori locali autorizzati (es. ordini conclusi tramite distributore nella Rep. Ceca).
+                            </p>
+                        </div>
+                        <div class="feedback-box">
+                            <div class="feedback-box-title" style="color: var(--cyan);">Spese di spedizione (Rilevante per HW)</div>
+                            <p class="text-block" style="font-size: 0.9rem;">
+                                <strong>Dettaglio:</strong> Vari utenti esprimono un forte interesse per l'acquisto (menzionando esplicitamente il "maxi trolley") ma scelgono di non procedere alla cassa a causa di costi di spedizione percepiti come eccessivi o inaspettati.
+                            </p>
+                        </div>
+                        <div class="feedback-box">
+                            <div class="feedback-box-title" style="color: var(--lime);">Perplessità su Licenze e Servizi</div>
+                            <p class="text-block" style="font-size: 0.9rem;">
+                                <strong>Dettaglio:</strong> Emergono dubbi legati al modello di pricing del software (es. l'utente si domanda se debba pagare singole soluzioni aggiuntive oltre all'abbonamento attivo su StageX Plus). Necessario chiarire cosa include la licenza nel checkout.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: ANALISI FIERE (KIBANA) ================= -->
+        <section id="tab-fiere" class="report-section">
+            <div class="grid-sections">
+
+                <!-- Analisi Fiera Istanbul -->
+                <div class="section-box span-full">
+                    <div class="section-header-block">
+                        <div class="section-header-left">
+                            <h2 class="section-title">Analisi Fiere: Istanbul</h2>
+                            <p class="section-subtitle">Dati estratti via Elastic/Kibana (Ultima settimana, Mercato Turco)</p>
+                        </div>
+                        <span class="section-badge" style="background-color: var(--pink);">Istanbul</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 24px; @media (min-width: 768px) { grid-template-columns: 1fr 1fr; }">
+                        <div>
+                            <h3 class="section-subtitle" style="margin-bottom: 8px; color: var(--dark);">1. Top 10 Protocolli Utilizzati</h3>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Protocollo</th>
+                                            <th class="text-right">Logs Rilevati</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><strong>SIMOS PCR2.1</strong></td><td class="num-val text-right">139</td></tr>
+                                        <tr><td><strong>8F3</strong></td><td class="num-val text-right">121</td></tr>
+                                        <tr><td><strong>9DF</strong></td><td class="num-val text-right">117</td></tr>
+                                        <tr><td><strong>MD1CS003</strong></td><td class="num-val text-right">94</td></tr>
+                                        <tr><td><strong>SID212 - SID212EVO</strong></td><td class="num-val text-right">89</td></tr>
+                                        <tr><td><strong>SID208</strong></td><td class="num-val text-right">88</td></tr>
+                                        <tr><td><strong>EDC16C34</strong></td><td class="num-val text-right">88</td></tr>
+                                        <tr><td><strong>EDC17C74</strong></td><td class="num-val text-right">86</td></tr>
+                                        <tr><td><strong>SID310</strong></td><td class="num-val text-right">75</td></tr>
+                                        <tr><td><strong>DQ200 Dxx</strong></td><td class="num-val text-right">74</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="section-subtitle" style="margin-bottom: 8px; color: var(--dark);">2. Analisi Tipologia di Connessione</h3>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Metodo</th>
+                                            <th class="text-right">Quantità Logs</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td><strong>OBD</strong></td><td class="num-val text-right">1728</td></tr>
+                                        <tr><td><strong>BENCH</strong></td><td class="num-val text-right">1685</td></tr>
+                                        <tr><td><strong>OBD FULL</strong></td><td class="num-val text-right">245</td></tr>
+                                        <tr><td><strong>BOOT</strong></td><td class="num-val text-right">120</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="insight-note" style="margin-top: 16px; background-color: var(--cyan);">
+                                <strong>🎯 Focus Connettività:</strong> La modalità <strong>Bench</strong> ha quasi interamente colmato il gap operativo con la modalità OBD standard sul mercato turco.
+                            </div>
+                            <div class="insight-note" style="margin-top: 12px; background-color: var(--yellow);">
+                                <strong>📦 Focus Prodotti: SKU da Spingere</strong>
+                                <ul class="bullet-list" style="margin-top: 8px;">
+                                    <li><strong>FLX2.42</strong> (Simos PCR2.1 - Audi Seat Skoda VW)</li>
+                                    <li><strong>FLX2.82</strong> (MD1CS003)</li>
+                                    <li><strong>FLX2.49</strong> (EDC17C74)</li>
+                                    <li><strong>FLX2.24</strong> (DQ200)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Osservazioni Commerciali Fiera -->
+                    <div style="margin-top: 16px;">
+                        <h3 class="section-title" style="font-size: 1.3rem; margin-bottom: 12px;">3. Argomenti di Vendita e Trend per i Commerciali</h3>
+                        <div class="feedback-grid">
+                            <div class="feedback-box">
+                                <div class="feedback-box-title" style="color: var(--pink);">Marelli 9DF e 8F3 (Motori 1.3 Multijet)</div>
+                                <p class="text-block" style="font-size: 0.88rem;">
+                                    Queste centraline dominano il mercato turco. L'operatività quasi totale in OBD mostra un flusso standardizzato (rimappature consumi e DPF/EGR).<br>
+                                    <strong>Pitch fiera:</strong> <em>"Supportiamo le centraline Fiat 1.3 Multijet più diffuse con la massima stabilità in OBD per ottimizzare flotte e ridurre i fermi macchina."</em>
+                                </p>
+                            </div>
+                            <div class="feedback-box">
+                                <div class="feedback-box-title" style="color: var(--cyan);">La sfida delle "Locked" (2021+)</div>
+                                <p class="text-block" style="font-size: 0.88rem;">
+                                    L'alta incidenza di EDC17C69 del 2021+ con indicazione "Unlock" conferma che le protezioni Bosch post-2020 richiedono uno sblocco preventivo a banco.<br>
+                                    <strong>Pitch fiera:</strong> <em>"Gestiamo lo sblocco delle protezioni Bosch 2021+ e le nuove architetture MD1/MG1 del Gruppo VAG, BMW e Mercedes in sicurezza."</em>
+                                </p>
+                            </div>
+                            <div class="feedback-box">
+                                <div class="feedback-box-title" style="color: var(--lime);">Specializzazione Ford / Commerciali</div>
+                                <p class="text-block" style="font-size: 0.88rem;">
+                                    Presenza importante di SID208, SID211 e SID212. Alta specializzazione sui veicoli commerciali Ford Transit/Custom.<br>
+                                    <strong>Pitch fiera:</strong> <em>"Lavoriamo in Bench mode sulle complesse centraline SID212. Sblocca il potenziale dei veicoli commerciali Ford senza rinunciare a nessun cliente."</em>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Azioni di Marketing -->
+                    <div class="alert-box" style="background-color: var(--lime); margin-top: 16px;">
+                        <span style="font-size: 1.4rem;">✉️</span>
+                        <div>
+                            <strong>Opportunità Comunicazione:</strong> Rilevati <strong>1.216 clienti attivi</strong> in Turchia che hanno utilizzato FLEX negli ultimi 7 giorni. 
+                            Si suggerisce a <strong>@Daniele Vento</strong> l'invio di una notifica mirata per invitarli a visitare lo stand in fiera.
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 12px; text-align: center;">
+                        <a href="https://docs.google.com/spreadsheets/d/1Oacoj_KJS57g0eBjV-F2gXgPcZh6FtBMfjwNOW9nxEI/edit?gid=952588450#gid=952588450" class="brutal-link" target="_blank">
+                            ➜ Visualizza qui i Dati Grezzi Completi su Google Sheets
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Altre Fiere / Kibana -->
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <div class="section-header-left">
+                            <h2 class="section-title">Fiera Milano (Truck Focus)</h2>
+                            <p class="section-subtitle">Estrazione dati Kibana geografici</p>
+                        </div>
+                        <span class="section-badge" style="background-color: var(--lime);">Milano</span>
+                    </div>
+                    <p class="text-block">
+                        Avviata l'estrazione e l'analisi via Kibana dei clienti di zona che utilizzano attivamente <strong>protocolli TRUCK</strong>. L'obiettivo è mappare le officine attive nel raggio d'azione dell'evento per strutturare inviti e promozioni dedicate ai professionisti del trasporto pesante.
+                    </p>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-header-block">
+                        <div class="section-header-left">
+                            <h2 class="section-title">Eventi Albania &amp; Montenegro</h2>
+                            <p class="section-subtitle">Pianificazione geografica clienti</p>
+                        </div>
+                        <span class="section-badge" style="background-color: var(--yellow);">Balcani</span>
+                    </div>
+                    <p class="text-block">
+                        Estratti i log di utilizzo dei dispositivi FLEX nelle aree dei Balcani. Mappati gli utenti attivi in Albania e Montenegro per inviare un invito ufficiale mirato ai prossimi appuntamenti formativi e di presentazione sul territorio.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: HYPERPEDAL ================= -->
+        <section id="tab-hyperpedal" class="report-section">
+            <div class="grid-sections">
+
+                <!-- Analisi Hyperpedal Inventory -->
+                <div class="section-box span-full">
+                    <div class="section-header-block">
+                        <div class="section-header-left">
+                            <h2 class="section-title">Analisi Prodotto: Hyperpedal</h2>
+                            <p class="section-subtitle">Giacenze, storici di vendita e piano d'azione</p>
+                        </div>
+                        <span class="section-badge" style="background-color: var(--cyan);">Hyperpedal</span>
+                    </div>
+
+                    <p class="text-block">
+                        Dall'analisi delle vendite storiche del modulo Hyperpedal si registrano <strong>21 clienti privati</strong> e <strong>13 distributori</strong> che hanno acquistato i codici negli ultimi anni, con <strong>0 vendite registrate nel corso del 2026</strong>. Circa il 25% dei codici a catalogo non ha mai generato transazioni.
+                    </p>
+
+                    <div class="insight-note" style="background-color: var(--white); border-color: var(--dark);">
+                        <strong>📊 Stato del Magazzino:</strong> Elevata giacenza fisica (<strong>339 pezzi</strong>) a fronte di un capitale bloccato relativamente contenuto (circa <strong>€6.000</strong>). Si propone un piano d'azione a due fasi prima di intervenire sul listino pubblico dello shop:
+                        <ul class="bullet-list" style="margin-top: 10px;">
+                            <li><strong>Settimana 1:</strong> Contatto diretto ai clienti privati che hanno già acquistato cavi o moduli in passato.</li>
+                            <li><strong>Settimana 2:</strong> Proposta di lotti dedicati ai distributori storici.</li>
+                            <li><strong>Opzione Finale (Shop):</strong> Valutazione con Francesco Previti per una campagna promozionale mirata sullo Shop online.</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 8px;">
+                        <h3 class="section-title" style="font-size: 1.3rem; margin-bottom: 12px;">Pacchetti Promozionali Proposti</h3>
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%;">Offerta / Formula</th>
+                                        <th style="width: 20%;">SKU Coinvolti</th>
+                                        <th style="width: 15%;">Giacenza</th>
+                                        <th style="width: 40%;">Meccanica Promo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Clearance &amp; Gift</strong></td>
+                                        <td>26 Codici dedicati</td>
+                                        <td>Alta</td>
+                                        <td>Con l'acquisto di un modulo <strong>KHP01</strong>, il cliente riceve in omaggio 2 cavi a scelta dalla lista "Clearance".</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Cavi Brand ITA, DE, AS</strong></td>
+                                        <td>12 Codici dedicati</td>
+                                        <td>Medio-Alta</td>
+                                        <td>Con l'acquisto del modulo <strong>KHP01</strong>, sconto dal 15% al 20% sul totale per l'acquisto congiunto dei 2 cavi abbinati.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>CHP43 Priority Gift</strong></td>
+                                        <td>CHP43</td>
+                                        <td class="num-val">15 pz <span style="font-size:0.75rem; color:red;">(0 vendite)</span></td>
+                                        <td>Inserito come omaggio prioritario garantito per ogni vendita del modulo KHP01.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 12px; text-align: center;">
+                        <a href="https://docs.google.com/spreadsheets/d/1bHA8OSo3qyeysmggEuAHIAUNSW3Xm7vBGtHk3zxnIqk/edit?gid=196785396#gid=196785396" class="brutal-link" target="_blank">
+                            ➜ Cartella Categorie Cavi &amp; Giacenze su Google Sheets
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: PRODOTTI TERZI (SILCA / W18) ================= -->
+        <section id="tab-terze-parti" class="report-section">
+            <div class="grid-sections">
+
+                <!-- Riepilogo Performance Globale -->
+                <div class="section-box span-full">
+                    <div class="section-header-block">
+                        <div class="section-header-left">
+                            <h2 class="section-title">Brand Terzi: Performance Globale (Settimana 18)</h2>
+                            <p class="section-subtitle">Analisi consolidata su 683 SKU (Autel, Carlabimmo, GYS, Nitro, Silca, VVDI, MBE, ecc.)</p>
+                        </div>
+                        <span class="section-badge" style="background-color: var(--yellow);">W18 REPORT</span>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card highlight-cyan" style="box-shadow: 4px 4px 0px var(--dark);">
+                            <div>
+                                <div class="kpi-label">SKU Analizzati</div>
+                                <div class="kpi-value">683</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card highlight-lime" style="box-shadow: 4px 4px 0px var(--dark);">
+                            <div>
+                                <div class="kpi-label">Fatturato Rilevato</div>
+                                <div class="kpi-value">€203.3K</div>
+                            </div>
+                            <div class="kpi-sub" style="color: #15803D;">+80% rispetto a Q1 2025 🎉</div>
+                        </div>
+                        <div class="kpi-card highlight-yellow" style="box-shadow: 4px 4px 0px var(--dark);">
+                            <div>
+                                <div class="kpi-label">Valore Stock Totale</div>
+                                <div class="kpi-value">€846.5K</div>
+                            </div>
+                        </div>
+                        <div class="kpi-card highlight-pink" style="box-shadow: 4px 4px 0px var(--dark);">
+                            <div>
+                                <div class="kpi-label">Previsionale YoY 2026</div>
+                                <div class="kpi-value">€638.0K</div>
+                            </div>
+                            <div class="kpi-sub" style="color: #9B2C2C;">+53% vs anno precedente (2025)</div>
+                        </div>
+                    </div>
+
+                    <div class="insight-note" style="background-color: var(--white); margin-top: 16px;">
+                        <strong>📌 Nota Bene:</strong> L'analisi esclude al momento il brand <em>Seletron</em>, analizzato separatamente e per il quale è già attivo a sistema un task promozionale specifico.
+                    </div>
+                </div>
+
+                <!-- Riclassificazione per Categoria (BOOST / PROTECT / STOP / EXIT) -->
+                <div class="section-box span-full">
+                    <div class="section-header-block">
+                        <div class="section-header-left">
+                            <h2 class="section-title">Analisi per Categoria Strategica</h2>
+                            <p class="section-subtitle">Classificazione degli articoli in base alle performance di vendita e magazzino</p>
+                        </div>
+                        <span class="section-badge" style="background-color: var(--pink);">Analisi SKU</span>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%;">SKU</th>
+                                    <th style="width: 20%;">Brand / Articolo</th>
+                                    <th style="width: 15%;">Stato</th>
+                                    <th style="width: 15%;">Misure Finanziarie</th>
+                                    <th style="width: 35%;">Diagnosi &amp; Direttiva di Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- BOOST -->
+                                <tr>
+                                    <td><strong>XDMPG0GL</strong></td>
+                                    <td>Xhorse Multi-Prog</td>
+                                    <td><span class="prod-tag tag-boost">BOOST</span></td>
+                                    <td>Fatturato YTD: <strong>€48K</strong></td>
+                                    <td>Ottima performance commerciale con trend di vendita al <strong>+107%</strong>. Proiezione chiusura 2026 stimata a €149K.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GYS101FV</strong></td>
+                                    <td>MagicCHARGER 101 CNT</td>
+                                    <td><span class="prod-tag tag-boost">BOOST</span></td>
+                                    <td>Trend: <strong>+91.6%</strong></td>
+                                    <td>Performance in forte aumento. Consolidare lo stock per evitare improvvise carenze.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SLC-KPT-01</strong></td>
+                                    <td>Smart PRO Silca</td>
+                                    <td><span class="prod-tag tag-boost">BOOST</span></td>
+                                    <td>YTD 2026: <strong>€7K</strong></td>
+                                    <td>Inversione positiva. Il prodotto genera fatturato nel 2026 a fronte di €0 registrati nel biennio 2024-2025.</td>
+                                </tr>
+                                <!-- PROTECT -->
+                                <tr>
+                                    <td><strong>BNZ-003</strong></td>
+                                    <td>Mercedes MBE 3B</td>
+                                    <td><span class="prod-tag tag-protect">PROTECT</span></td>
+                                    <td>Giacenza: <strong>7 pezzi</strong></td>
+                                    <td>Rischio stockout imminente. Vendite medie di 6.4 pz/mese; l'autonomia stimata è inferiore a 30 giorni.</td>
+                                </tr>
+                                <!-- STOP / FIX -->
+                                <tr>
+                                    <td><strong>SIP22R01</strong></td>
+                                    <td>Remote Key Silca</td>
+                                    <td><span class="prod-tag tag-stop">STOP / FIX</span></td>
+                                    <td>Stock: 146 pz (<strong>€4.444</strong>)</td>
+                                    <td>Prezzo crollato del 25%. Registrate solo 2 vendite in tutto il 2026. Rotazione quasi nulla.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SIP22R07</strong></td>
+                                    <td>Remote Key Silca</td>
+                                    <td><span class="prod-tag tag-stop">STOP / FIX</span></td>
+                                    <td>Stock: 87 pz (<strong>€2.700</strong>)</td>
+                                    <td>Stessa dinamica del codice precedente. Valutare svalutazione o bundle.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>XDMLB0GL</strong></td>
+                                    <td>Xhorse MLB Tool</td>
+                                    <td><span class="prod-tag tag-stop">STOP / FIX</span></td>
+                                    <td>Stock: <strong>€2.453</strong></td>
+                                    <td>Forte svalutazione a catalogo con un trend di prezzo negativo pari a <strong>-74%</strong>.</td>
+                                </tr>
+                                <!-- EXIT -->
+                                <tr>
+                                    <td><strong>KHP01</strong></td>
+                                    <td>Seletron HyperPedal</td>
+                                    <td><span class="prod-tag tag-exit">EXIT</span></td>
+                                    <td>Stock: <strong>€15.629</strong></td>
+                                    <td>Dead stock totale con zero vendite nel 2026. Incluso nel piano di promozione dedicato.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>XDPPR0EN</strong></td>
+                                    <td>Xhorse MINI PROG</td>
+                                    <td><span class="prod-tag tag-exit">EXIT</span></td>
+                                    <td>Stock: 37 pz (<strong>€11.685</strong>)</td>
+                                    <td>Capitale bloccato improduttivo da rimuovere o liquidare in lotti.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>XDNPP0EN</strong></td>
+                                    <td>Xhorse Solder-free Adapters</td>
+                                    <td><span class="prod-tag tag-exit">EXIT</span></td>
+                                    <td>Stock: 19 kit (<strong>€10.794</strong>)</td>
+                                    <td>Dead stock ad alto valore. Totale immobilizzato su questi 3 SKU EXIT: <strong>~€38.000</strong>.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Legenda indici del Report -->
+                    <div style="margin-top: 24px;">
+                        <h3 class="section-title" style="font-size: 1.2rem; margin-bottom: 12px;">Definizioni degli Indici di Reportistica</h3>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 16px; @media (min-width: 768px) { grid-template-columns: repeat(2, 1fr); }">
+                            <div class="insight-note" style="font-size: 0.85rem; padding: 14px;">
+                                <strong>• YTD Prev. Full Year:</strong> Fatturato stimato per l'intero anno 2026 per singolo articolo in base al ritmo di vendita attuale.<br>
+                                <strong>• Prev. Restante:</strong> Fatturato mancante per raggiungere la quota di chiusura d'anno stimata.<br>
+                                <strong>• Trend Pacing:</strong> Velocità di vendita rispetto all'anno precedente (es. +100% raddoppio vendite, -50% dimezzate).
+                            </div>
+                            <div class="insight-note" style="font-size: 0.85rem; padding: 14px;">
+                                <strong>• Valore Stock:</strong> Capitale bloccato nel magazzino (giacenza per costo d'acquisto singolo).<br>
+                                <strong>• Copertura '26:</strong> Autonomia residua dello stock in giorni/mesi (se &gt;999 indica stock stabile senza vendite, se &lt;30 indica rischio rottura immediato).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Script per la gestione interattiva dei tab del report -->
+    <script>
+        function switchTab(tabId, btnElement) {
+            // Rimuovi la classe active da tutti i bottoni principali
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Rimuovi la classe active da tutte le sezioni
+            document.querySelectorAll('.report-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Attiva il bottone e la sezione corrispondente
+            btnElement.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
