@@ -42,6 +42,7 @@ FILES=(
   "report-magazzini.html"
   "competitors-updates.html"
   "report-protocolli.html"
+  "report-dyno.html"
 )
 
 # Aggiungi automaticamente tutti gli snapshot mensili dell'archivio già
