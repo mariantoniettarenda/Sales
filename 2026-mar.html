@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
     <style>
+    
         :root {
             --bg-page: #FFFCEB;          /* Crema chiaro */
             --dark: #19191D;             /* Nero profondo per bordi e scritte */
@@ -90,6 +91,148 @@
             text-transform: uppercase;
         }
 
+        /* Layout Superiore (KPI + Spaccato Canali) */
+        .dashboard-summary-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        @media (min-width: 992px) {
+            .dashboard-summary-wrapper {
+                grid-template-columns: 1.2fr 1fr;
+            }
+        }
+
+        /* KPI Quick Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: #ffffff;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            text-align: left;
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(25, 25, 29, 0.6);
+            margin-bottom: 6px;
+        }
+
+        .kpi-value {
+            font-family: var(--font-syne);
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .kpi-sub {
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .kpi-card.highlight-cyan { background-color: var(--cyan); }
+        .kpi-card.highlight-yellow { background-color: var(--yellow); }
+        .kpi-card.highlight-lime { background-color: var(--lime); }
+        .kpi-card.highlight-pink { background-color: var(--pink); }
+
+        /* Card Spaccato Canali Recupero */
+        .spaccato-card {
+            background-color: var(--yellow);
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .spaccato-title {
+            font-family: var(--font-syne);
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(25, 25, 29, 0.7);
+        }
+
+        .spaccato-value {
+            font-family: var(--font-syne);
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .progress-bar-container {
+            display: flex;
+            width: 100%;
+            height: 28px;
+            border: 3px solid var(--dark);
+            border-radius: 999px;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 3px 3px 0px var(--dark);
+        }
+
+        .bar-segment {
+            height: 100%;
+            border-right: 3px solid var(--dark);
+            box-sizing: border-box;
+        }
+
+        .bar-segment:last-child {
+            border-right: none;
+        }
+
+        /* Dimensioni calcolate sul grafico di Marzo */
+        .segment-shop { background-color: var(--pink); width: 36.5%; }
+        .segment-hd { background-color: var(--cyan); width: 12.5%; }
+        .segment-operatori { background-color: var(--lime); width: 49.0%; }
+        .segment-distr { background-color: #ffffff; width: 2.0%; }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            row-gap: 12px;
+            column-gap: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--dark);
+            margin-right: 8px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .dot-shop { background-color: var(--pink); }
+        .dot-hd { background-color: var(--cyan); }
+        .dot-operatori { background-color: var(--lime); }
+        .dot-distr { background-color: #ffffff; }
+
         /* Navigazione dei Report */
         .nav-tabs-wrapper {
             margin-bottom: 32px;
@@ -145,50 +288,6 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* KPI Quick Grid */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-
-        .kpi-card {
-            background: #ffffff;
-            border: 3px solid var(--dark);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            box-shadow: var(--card-shadow);
-            text-align: left;
-        }
-
-        .kpi-label {
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: rgba(25, 25, 29, 0.6);
-            margin-bottom: 6px;
-        }
-
-        .kpi-value {
-            font-family: var(--font-syne);
-            font-size: 1.8rem;
-            font-weight: 800;
-        }
-
-        .kpi-sub {
-            font-size: 0.8rem;
-            font-weight: 600;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        .kpi-card.highlight-cyan { background-color: var(--cyan); }
-        .kpi-card.highlight-yellow { background-color: var(--yellow); }
-        .kpi-card.highlight-lime { background-color: var(--lime); }
-        .kpi-card.highlight-pink { background-color: var(--pink); }
 
         /* Report Main Grid / Layout */
         .grid-sections {
@@ -495,31 +594,58 @@
             <div class="badge-period">MARZO 2026</div>
         </header>
 
-        <!-- KPI QUICK GRID (Macro Sintesi) -->
-        <div class="kpi-grid">
-            <div class="kpi-card highlight-cyan">
-                <div class="kpi-label">Fatturato HW Flex YTD</div>
-                <div class="kpi-value">€797.6K</div>
-                <div class="kpi-sub" style="color: #9B2C2C; font-weight: 700;">-11.8% YoY (vs €892.0K)</div>
+        <!-- DASHBOARD SUMMARY AREA (KPI + SPACCATO DI RECUPERO) -->
+        <div class="dashboard-summary-wrapper">
+            
+            <!-- KPI QUICK GRID (Macro Sintesi) -->
+            <div class="kpi-grid">
+                <div class="kpi-card highlight-cyan">
+                    <div class="kpi-label">Subtotale C. Abbandonati</div>
+                    <div class="kpi-value">427.9K</div>
+                    <div class="kpi-sub" style="color: #9B2C2C; font-weight: 700;">Valore complessivo rilevato nel mese</div>
+                </div>
+
+                <div class="kpi-card highlight-lime">
+                    <div class="kpi-label">somma recuperata</div>
+                    <div class="kpi-value">€32.2K</div>
+                    <div class="kpi-sub" style="color: #15803D; font-weight: 700;">Tasso medio di recupero: 14.2%</div>
+                </div>
             </div>
 
-            <div class="kpi-card highlight-lime">
-                <div class="kpi-label">Fatturato StageX YTD</div>
-                <div class="kpi-value">€696.0K</div>
-                <div class="kpi-sub" style="color: #15803D; font-weight: 700;">+41.46% YoY (vs €577.6K)</div>
+            <!-- GRAFICO SPACCATO CANALI RECUPERO -->
+            <div class="spaccato-card">
+                <div class="spaccato-title">Spaccato Canali Recupero</div>
+                <div class="spaccato-value">€32.265</div>
+                
+                <!-- Barra segmentata proporzionale sui dati reali di Marzo -->
+                <div class="progress-bar-container">
+                    <div class="bar-segment segment-shop" title="Shop: 36.5%"></div>
+                    <div class="bar-segment segment-hd" title="HD: 12.5%"></div>
+                    <div class="bar-segment segment-operatori" title="Operatori: 49.0%"></div>
+                    <div class="bar-segment segment-distr" title="Distr: 2.0%"></div>
+                </div>
+
+                <!-- Legenda dettagliata -->
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <span class="legend-dot dot-shop"></span>
+                        Shop (11.8K)
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-hd"></span>
+                        HD (4.0K)
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-operatori"></span>
+                        Operatori (15.8K)
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-distr"></span>
+                        Distr. (650)
+                    </div>
+                </div>
             </div>
 
-            <div class="kpi-card highlight-pink">
-                <div class="kpi-label">Fatturato IXI Hardware</div>
-                <div class="kpi-value">€10.1K</div>
-                <div class="kpi-sub" style="color: #9B2C2C; font-weight: 700;">-44.0% YoY (vs €18.0K)</div>
-            </div>
-
-            <div class="kpi-card highlight-yellow">
-                <div class="kpi-label">Recupero Carrelli</div>
-                <div class="kpi-value">7% </div>
-                <div class="kpi-sub">426K vs 32K</div>
-            </div>
         </div>
 
         <!-- NAVIGAZIONE REPORT TAB -->
@@ -552,6 +678,7 @@
                         <li><strong>Accessibilità Informazioni:</strong> Numerose richieste base sul pricing indicano che i costi di rinnovo e di upgrade non sono immediati o chiaramente reperibili online.</li>
                         <li><strong>Processi Amministrativi Manuali:</strong> Un consistente volume di utenti pronti a pagare richiede interventi manuali per proforma, metodi alternativi (Revolut, bonifici) o verifiche di ricezione.</li>
                         <li><strong>Percezione del Valore (ROI):</strong> Primi segnali di contestazione del canone in caso di scarso utilizzo del dispositivo o assenza di protocolli desiderati.</li>
+                        <strong> ⚠️ E' la prima volta che l'utente percepisce assenza di protocolli che lo spingono a non rinnovare ⚠️
                     </ul>
                 </div>
 
@@ -597,6 +724,9 @@
                 <div class="section-box span-full">
                     <div class="section-header-block">
                         <h2 class="section-title">Portafoglio Hardware FLEX</h2>
+                        Fatturato in calo per HW, famiglia Flex 
+
+(2026, 797.616€ vs 2025, 892.094€) 
                         <span class="section-badge" style="background-color: var(--lime);">FLEX</span>
                     </div>
                     
@@ -765,7 +895,7 @@
                     </div>
 
                     <div class="insight-note" style="margin-top: 10px;">
-                        <strong>💡 Azione Promozionale Adattatori:</strong> Si propone di strutturare una promozione congiunta per svuotare i codici a bassa rotazione (<em>XD8ASKGL, XDMB12EN, XDMLB0GL</em>), supportata da un video tecnico dedicato per spiegarne le applicazioni.
+                        <strong>💡 Azione Promozionale:</strong> Si propone l'utilizzo del magazzino/rotazione per smaltire prodotti fermi, l'analisi ha aiutato il team a preparare delle promo mirate e raggiungere un picco vendite Mar-Apr 2026 - Silca e Xhorse a +100% vs 2025.
                     </div>
                 </div>
 
