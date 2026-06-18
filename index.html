@@ -1,3 +1,5 @@
+<!-- START OF FILE Paste June 18, 2026 - 10:32AM -->
+
 <!DOCTYPE html>
 <html class="staticrypt-html">
     <head>
@@ -327,16 +329,6 @@
         <!--
             NOTA ARCHITETTURALE (per chi mantiene questo file):
             Questa pagina usa StatiCrypt per cifrare l'intero contenuto del portale.
-            I report collegati (report-*.html, competitors-updates.html, gli snapshot
-            mensili dell'archivio come 2026-giu.html, ecc.) DEVONO essere a loro volta
-            cifrati con StatiCrypt usando la STESSA password e lo STESSO salt di questa
-            pagina (salt attuale: vedi staticryptSaltUniqueVariableName più sotto).
-            StatiCrypt salva la password hashata in localStorage quando "Ricordami" è
-            attivo: dato che tutte le pagine vivono sullo stesso dominio GitHub Pages,
-            una volta sbloccata questa pagina, qualunque altra pagina cifrata con la
-            stessa password si sblocca da sola, senza richiedere di nuovo la password.
-            Se i file dei report NON vengono cifrati, restano leggibili da chiunque
-            conosca l'URL diretto, a prescindere da questa schermata.
         -->
         <div id="staticrypt_content" class="staticrypt-content hidden">
             <div class="staticrypt-page">
@@ -864,8 +856,6 @@ exports.init = init;
 
         /* ============================================================
            TOP BAR — qui vive il selettore di modalità Live / Archivio.
-           È l'unico elemento sempre visibile: serve a far capire subito
-           all'utente in che "stanza" si trova.
            ============================================================ */
         .top-bar {
             position: sticky;
@@ -947,8 +937,7 @@ exports.init = init;
         }
 
         /* ============================================================
-           CONTEXT BAR — riga sottile che spiega cosa si sta guardando,
-           cambia testo via JS in base alla modalità attiva.
+           CONTEXT BAR
            ============================================================ */
         .context-bar {
             border-bottom: 3px solid var(--dark);
@@ -979,9 +968,10 @@ exports.init = init;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1520px; /* Incrementato per consentire maggiore leggibilità complessiva */
             margin: 0 auto;
             width: 100%;
+            transition: max-width 0.3s ease;
         }
 
         header.page-header {
@@ -1247,19 +1237,16 @@ exports.init = init;
         }
 
         /* ============================================================
-           ARCHIVIO — layout interno a due colonne, presente SOLO
-           quando la modalità "archive" è attiva. Non è più una sidebar
-           di pagina permanente: compare ed esce insieme alla vista.
+           ARCHIVIO — Layout a tre colonne ad alto respiro
            ============================================================ */
         .archive-layout {
-            display: flex;
-            gap: 30px;
+            display: grid;
+            grid-template-columns: 260px 1fr 320px; /* Navigazione, Report e Feedback */
+            gap: 24px;
             align-items: flex-start;
         }
 
         .archive-sidebar {
-            width: 300px;
-            flex-shrink: 0;
             background: #ffffff;
             border: 3px solid var(--dark);
             border-radius: var(--radius-lg);
@@ -1354,12 +1341,11 @@ exports.init = init;
         }
 
         .archive-content {
-            flex-grow: 1;
             min-width: 0;
         }
 
         .archive-header-block {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .archive-period-title {
@@ -1375,16 +1361,16 @@ exports.init = init;
             color: rgba(25, 25, 29, 0.65);
         }
 
-        /* Contenitore e Iframe per l'integrazione fluida dei report mensili storici */
+        /* Contenitore e Iframe ottimizzato per grandi dimensioni */
         .archive-iframe-wrapper {
             width: 100%;
-            height: 750px;
+            height: 850px; /* Aumentato per ridurre la necessità di barre di scorrimento */
             border: 3px solid var(--dark);
             border-radius: var(--radius-lg);
             box-shadow: var(--card-shadow);
             overflow: hidden;
             background: #ffffff;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
         .archive-iframe {
@@ -1399,7 +1385,7 @@ exports.init = init;
             background: #fff;
             border: 3px dashed var(--dark);
             border-radius: var(--radius-lg);
-            padding: 50px 30px;
+            padding: 80px 30px;
             text-align: center;
         }
 
@@ -1418,14 +1404,112 @@ exports.init = init;
             display: block;
         }
 
+        /* ============================================================
+           SIDEBAR NUOVA: FEEDBACK DI MARY (Neo-brutalist)
+           ============================================================ */
+        .feedback-sidebar {
+            background: #ffffff;
+            border: 3px solid var(--dark);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 100px;
+        }
+
+        .avatar-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 3px solid var(--dark);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .mary-avatar {
+            width: 64px;
+            height: 64px;
+            background: var(--yellow);
+            border: 3px solid var(--dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 0px var(--dark);
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .mary-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .mary-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .mary-role {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--pink);
+        }
+
+        .feedback-box {
+            background: var(--bg-page);
+            border: 2px solid var(--dark);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            box-shadow: 3px 3px 0px var(--dark);
+        }
+
+        .feedback-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .feedback-text {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            font-weight: 500;
+            color: rgba(25, 25, 29, 0.9);
+            white-space: pre-line; /* Mantiene la formattazione e gli a capo */
+        }
+
+        /* Responsive Layout per schermi piccoli */
+        @media (max-width: 1300px) {
+            .archive-layout {
+                grid-template-columns: 240px 1fr;
+            }
+            .feedback-sidebar {
+                grid-column: span 2;
+                position: relative;
+                top: 0;
+            }
+        }
+
         @media (max-width: 900px) {
             .archive-layout {
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
             .archive-sidebar {
                 width: 100%;
                 position: relative;
                 top: 0;
+            }
+            .feedback-sidebar {
+                grid-column: span 1;
             }
             h1 {
                 font-size: 2.2rem;
@@ -1651,6 +1735,55 @@ exports.init = init;
                             <p>Seleziona un mese dall'elenco a sinistra per consultare i report archiviati di quel periodo.</p>
                         </div>
                     </section>
+
+                    <!-- BARRA FEEDBACK DI MARY (Nuova Colonna integrata) -->
+                    <aside class="feedback-sidebar">
+                        <div class="avatar-container">
+                            <div class="mary-avatar">
+                                <!-- Mary Vector Icon: Blonde Curly Hair, Medium-Large Glasses -->
+                                <svg viewBox="0 0 100 100" width="100%" height="100%">
+                                    <!-- Capelli Ricci Biondi sullo sfondo -->
+                                    <circle cx="35" cy="35" r="18" fill="#FFF48D" stroke="#19191D" stroke-width="3" />
+                                    <circle cx="65" cy="35" r="18" fill="#FFF48D" stroke="#19191D" stroke-width="3" />
+                                    <circle cx="50" cy="30" r="18" fill="#FFF48D" stroke="#19191D" stroke-width="3" />
+                                    <circle cx="28" cy="52" r="15" fill="#FFF48D" stroke="#19191D" stroke-width="3" />
+                                    <circle cx="72" cy="52" r="15" fill="#FFF48D" stroke="#19191D" stroke-width="3" />
+                                    
+                                    <!-- Viso -->
+                                    <circle cx="50" cy="54" r="26" fill="#FFFCEB" stroke="#19191D" stroke-width="3" />
+                                    
+                                    <!-- Boccoli anteriori -->
+                                    <circle cx="36" cy="36" r="9" fill="#FFF48D" stroke="#19191D" stroke-width="3" />
+                                    <circle cx="64" cy="36" r="9" fill="#FFF48D" stroke="#19191D" stroke-width="3" />
+                                    
+                                    <!-- Occhi -->
+                                    <circle cx="38" cy="52" r="3.5" fill="#19191D" />
+                                    <circle cx="62" cy="52" r="3.5" fill="#19191D" />
+                                    
+                                    <!-- Occhiali Neri Medio-Grandi -->
+                                    <rect x="28" y="42" width="20" height="20" rx="5" fill="none" stroke="#19191D" stroke-width="4.5" />
+                                    <rect x="52" y="42" width="20" height="20" rx="5" fill="none" stroke="#19191D" stroke-width="4.5" />
+                                    <line x1="48" y1="52" x2="52" y2="52" stroke="#19191D" stroke-width="4.5" />
+                                    
+                                    <!-- Stanghette occhiali -->
+                                    <path d="M28 48 L20 46" stroke="#19191D" stroke-width="3.5" />
+                                    <path d="M72 48 L80 46" stroke="#19191D" stroke-width="3.5" />
+                                    
+                                    <!-- Sorriso -->
+                                    <path d="M45 68 Q50 73 55 68" stroke="#19191D" stroke-width="3" fill="none" stroke-linecap="round" />
+                                </svg>
+                            </div>
+                            <div class="mary-info">
+                                <span class="mary-name">Mary</span>
+                                <span class="mary-role">Sales Intelligence</span>
+                            </div>
+                        </div>
+
+                        <div class="feedback-box">
+                            <div class="feedback-title">📢 Feedback di Mary sul mese</div>
+                            <div class="feedback-text" id="feedback-text">Seleziona un periodo archiviato per leggerne le osservazioni strategiche.</div>
+                        </div>
+                    </aside>
                 </div>
             </div>
 
@@ -1662,7 +1795,7 @@ exports.init = init;
 
     <script>
         /* ============================================================
-           1) CONFIGURAZIONE ARCHIVIO
+           1) CONFIGURAZIONE ARCHIVIO E FEEDBACK
            ============================================================ */
         const ARCHIVE_YEARS = [2026];
 
@@ -1681,13 +1814,28 @@ exports.init = init;
             { abbr: "dic", name: "Dicembre" },
         ];
 
-        // 👉 n8n: aggiungere qui una riga ad ogni chiusura mensile.
+        // 👉 n8n: aggiungere qui una riga ad ogni chiusura mensile per l'archivio e per il feedback di Mary.
         const archiveManifest = {
-            "2026-gen": { archivedOn: "01/02/2026" },
-            "2026-feb": { archivedOn: "01/03/2026" },
-            "2026-mar": { archivedOn: "01/04/2026" },
-            "2026-apr": { archivedOn: "01/05/2026" },
-            "2026-mag": { archivedOn: "01/06/2026" },
+            "2026-gen": { 
+                archivedOn: "01/02/2026",
+                feedback: "Gennaio ha visto un forte ritorno d'interesse sull'hardware. I distributori europei hanno completato i riassortimenti del Q1.\\n\\nNota: I carrelli abbandonati sono rimasti elevati sul segmento software. Abbiamo predisposto un check automatizzato sul gateway di pagamento."
+            },
+            "2026-feb": { 
+                archivedOn: "01/03/2026",
+                feedback: "A febbraio registriamo una ripresa degli abbonamenti ricorrenti legati alla suite StageX.\\n\\nIl recupero dei carrelli sul mercato USA ha mostrato conversioni eccellenti (+12%) grazie alla nuova campagna email."
+            },
+            "2026-mar": { 
+                archivedOn: "01/04/2026",
+                feedback: "Marzo ha mostrato un incremento netto dei ticket gestiti in anagrafica Helpdesk. Segno che il database clienti attivi sta crescendo costantemente.\\n\\nMagazzini stabili e pronti alle promozioni primaverili."
+            },
+            "2026-apr": { 
+                archivedOn: "01/05/2026",
+                feedback: "Aprile evidenzia una forte crescita sul versante competitors. Il nostro monitoraggio dei protocolli indica che la copertura OBD di Magicmotorsport mantiene un netto vantaggio competitivo sui controller di ultima generazione."
+            },
+            "2026-mag": { 
+                archivedOn: "01/06/2026",
+                feedback: "A maggio l'andamento delle vendite b2b tramite canali indiretti ha sovraperformato le aspettative di budget.\\n\\nMary consiglia: focalizzare l'attenzione dei canali commerciali sul potenziamento dei distributori Tier-2 per consolidare il trend."
+            },
         };
 
         /* ============================================================
@@ -1788,6 +1936,7 @@ exports.init = init;
            ============================================================ */
         const archiveTree = document.getElementById("archive-tree");
         const archiveContent = document.getElementById("archive-content");
+        const feedbackText = document.getElementById("feedback-text");
 
         function buildArchiveTree() {
             archiveTree.innerHTML = "";
@@ -1835,6 +1984,7 @@ exports.init = init;
 
             if (!isAvailable) {
                 renderLockedNotice(month.name, year);
+                feedbackText.textContent = "🔒 In attesa dei dati e dell'archiviazione di questo mese per compilare il feedback.";
                 return;
             }
 
@@ -1855,6 +2005,7 @@ exports.init = init;
             const key = year + "-" + month.abbr;
             const manifestEntry = archiveManifest[key];
             const archivedOn = manifestEntry ? manifestEntry.archivedOn : "";
+            const currentFeedback = manifestEntry ? manifestEntry.feedback : "Nessun feedback registrato per questo periodo.";
             
             // Definisce il nome dell'HTML mensile da richiamare
             const filename = year + "-" + month.abbr + ".html";
@@ -1867,6 +2018,9 @@ exports.init = init;
                 '<div class="archive-iframe-wrapper">' +
                 '<iframe class="archive-iframe" src="' + filename + '" title="Report ' + month.name + ' ' + year + '"></iframe>' +
                 '</div>';
+                
+            // Aggiorna dinamicamente la sidebar di Mary con il feedback salvato
+            feedbackText.textContent = currentFeedback;
         }
 
         buildArchiveTree();
