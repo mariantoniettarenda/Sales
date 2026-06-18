@@ -553,7 +553,7 @@
         <!-- SEZIONI PRINCIPALI DEL TESTO -->
         <div class="grid-sections">
 
-            <!-- 1. SHOP vs Distributori -->
+            <!-- 1. Carrelli Abbandonati - SHOP vs Distributori -->
             <div class="section-box">
                 <div class="section-header-block">
                     <h2 class="section-title">1. SHOP vs Distributori</h2>
@@ -636,7 +636,7 @@
                 </div>
             </div>
 
-            <!-- 4. Analisi Feedback -->
+            <!-- 4. Analisi Feedback del mese -->
             <div class="section-box">
                 <div class="section-header-block">
                     <h2 class="section-title">4. Analisi Feedback</h2>
@@ -644,7 +644,7 @@
                 </div>
 
                 <p class="text-block">
-                    Estratto delle risposte e delle obiezioni sollevate dai lead e clienti non convertiti durante le attività di ricontatto mensili:
+                    Estratto delle risposte e delle obiezioni sollevate dai lead Finance e Carrelli e clienti non convertiti durante le attività di ricontatto mensili:
                 </p>
 
                 <div class="feedback-grid">
@@ -668,6 +668,10 @@
                         <p class="feedback-quote">“ Contatterò direttamente il distributore ”</p>
                     </div>
                 </div>
+                <p class="text-block" style="font-weight: 700;">
+                    💡    Sono sati categorizzati i clienti in cerca di "prezzi inferiori" per contattarli per le prossime promo/offerte. Insieme alla valutazione di nuove piattaforme di pagamento rateale (Klarna).            </p>
+                </div>
+            </div>
             </div>
 
             <!-- 5. Flussi N8N (Interactive Pipeline - Larghezza Intera) -->
@@ -691,14 +695,14 @@
                 <!-- FLUSSO A: FINANCE HELPDESK -->
                 <div id="flow-finance" class="flow-panel active">
                     <p class="text-block" style="margin-bottom: 20px;">
-                        <strong>Contesto:</strong> Automatizza la gestione dei clienti che su Helpdesk hanno tentato di pagare un abbonamento (1 anno o 2+ anni) ma il cui stato è andato in <strong>ERROR</strong> (carta/PayPal) o rimasto in <strong>NEW</strong>.
+                        <strong>Contesto:</strong> Automatizza la gestione dei clienti che su Helpdesk hanno tentato di pagare un abbonamento (1 anno o 2+ anni) ma il cui stato è andato in <strong>ERROR</strong> (carta/PayPal) o rimasto in <strong>NEW</strong>, ovvero il cliente ha visto il prezzo elevato e non ha tentato di pagare.
                     </p>
                     
                     <div class="timeline">
                         <div class="timeline-item">
                             <div class="timeline-date">Step 0 — Trigger Giornaliero</div>
                             <div class="timeline-title">Input Helpdesk (Ore 10:00) & Trigger N8N (Ore 10:05)</div>
-                            <div class="timeline-desc">Estrazione manuale lista giornaliera pagamenti in ERROR o NEW (Salvatore Lapi) con ricezione mail e trigger flusso n8n (Mariantonietta).</div>
+                            <div class="timeline-desc">Estrazione lista giornaliera pagamenti in ERROR o NEW (Salvatore Lapi) con ricezione mail e trigger flusso n8n (Mariantonietta).</div>
                         </div>
                         <div class="timeline-item">
                             <div class="timeline-date">Step 1 — Filtro</div>
@@ -723,7 +727,7 @@
                         <div class="timeline-item">
                             <div class="timeline-date">Step 5 — Analisi</div>
                             <div class="timeline-title">Incrocio Lista Clienti Attivi (FLX1.1-ACTIVE)</div>
-                            <div class="timeline-desc">Sincronizzazione alle ore 09:00 per riscontrare gli effettivi rinnovi avvenuti a seguito dei contatti, registrando il recupero sul file "netto".</div>
+                            <div class="timeline-desc">Sincronizzazione alle ore 09:00 per riscontrare gli effettivi rinnovi avvenuti a seguito del contatto Sales, registrando il recupero sul file "netto".</div>
                         </div>
                     </div>
                 </div>
@@ -731,7 +735,7 @@
                 <!-- FLUSSO B: AUTOMATIC EMAILS LEADS -->
                 <div id="flow-leads" class="flow-panel">
                     <p class="text-block" style="margin-bottom: 20px;">
-                        <strong>Contesto:</strong> Automatizza la gestione e la risposta immediata dei lead provenienti dal team Marketing, ottimizzando il time-to-first-contact.
+                        <strong>Contesto:</strong> Automatizza la gestione e la risposta immediata dei lead provenienti dal team Marketing, ottimizzando il time-to-first-contact. Questo flusso può essere riutilizzato per qualsaisi altra campagna mariekting (spoiler: nei mesi successivi si è utilizzato come base di lavoro).
                     </p>
                     
                     <div class="timeline">
@@ -771,7 +775,7 @@
                 <!-- FLUSSO C: EXPIRING ACCOUNTS CCS -->
                 <div id="flow-expiring" class="flow-panel">
                     <p class="text-block" style="margin-bottom: 20px;">
-                        <strong>Contesto:</strong> Gestione e presidio preventivo dei clienti con abbonamento in scadenza nel mese successivo per agevolare il rinnovo commerciale.
+                        <strong>Contesto:</strong> Gestione e presidio preventivo dei clienti con abbonamento in scadenza nel mese successivo per agevolare il rinnovo commerciale e raccolta feedback su utenti attivi.
                     </p>
                     
                     <div class="timeline">
@@ -803,10 +807,12 @@
                         <div class="timeline-item">
                             <div class="timeline-date">Step 5 — Report finale</div>
                             <div class="timeline-title">Registrazione Rinnovi Netti in Master Data</div>
-                            <div class="timeline-desc">Scrittura finale nello sheet CCS Master dei rinnovi netti riscontrati, garantendo una misurazione delle performance per area.</div>
-                        </div>
+                           <div class="timeline-desc">
+    Scrittura finale nello <a href="https://docs.google.com/spreadsheets/d/1fqxLZQc6BPVgVCmi7Mnh7oDfQ9tUzagVUtNdzT3mZH4/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer">sheet CCS Master</a> dei rinnovi netti riscontrati, garantendo una misurazione delle performance per area.
+</div>
                     </div>
                 </div>
+                
 
             </div>
 
