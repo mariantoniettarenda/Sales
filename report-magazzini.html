@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Strategic Intelligence</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #e30613;
+            --red-soft: rgba(227,6,19,0.08);
+            --dark: #111111;
+            --bg: #f5f4f0;
+            --surface: #ffffff;
+            --border: #e4e2dc;
+            --text: #111111;
+            --muted: #888880;
+            --loyal: #1a7a4a;
+            --loyal-bg: #e8f5ee;
+            --new: #0f5fc4;
+            --new-bg: #e8f0fc;
+            --cur: #7c3aed;
+            --cur-bg: #f0ebff;
+            --radius: 10px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.5; }
+
+        /* LAYOUT */
+        #app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: var(--dark);
+            padding: 28px 0;
+            position: sticky; top: 0; height: 100vh;
+            display: flex; flex-direction: column;
+        }
+        .brand {
+            padding: 0 24px 28px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 20px;
+        }
+        .brand-logo { color: var(--red); font-weight: 700; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+        .brand-title { color: white; font-size: 17px; font-weight: 700; }
+
+        .nav-section-label {
+            padding: 6px 24px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.25);
+            margin-top: 8px;
+        }
+        .nav-item {
+            padding: 10px 24px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.55);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.15s;
+            border-left: 3px solid transparent;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
+        .nav-item.active { background: rgba(255,255,255,0.08); color: white; border-left-color: var(--red); }
+        .nav-item .nav-label { flex: 1; }
+        .nav-badge {
+            background: var(--red);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-family: 'DM Mono', monospace;
+            min-width: 22px;
+            text-align: center;
+        }
+        .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+
+        /* CAT QUICK FILTER at bottom of sidebar */
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .sidebar-footer-label { font-size: 10px; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; font-weight: 600; }
+        .cat-filter-buttons { display: flex; flex-direction: column; gap: 6px; }
+        .cat-btn {
+            padding: 7px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-align: center;
+            border: 1px solid transparent;
+            transition: all 0.15s;
+            color: rgba(255,255,255,0.5);
+            border-color: rgba(255,255,255,0.1);
+        }
+        .cat-btn:hover { color: white; border-color: rgba(255,255,255,0.3); }
+        .cat-btn.active-loyal { background: var(--loyal-bg); color: var(--loyal); border-color: var(--loyal); }
+        .cat-btn.active-cur { background: var(--cur-bg); color: var(--cur); border-color: var(--cur); }
+        .cat-btn.active-new { background: var(--new-bg); color: var(--new); border-color: var(--new); }
+        .cat-btn.active-all { background: rgba(255,255,255,0.12); color: white; border-color: rgba(255,255,255,0.4); }
+
+        /* MAIN */
+        .main { padding: 36px 40px; }
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* PAGE HEADER */
+        .page-header { margin-bottom: 28px; }
+        .page-header h1 { font-size: 22px; font-weight: 700; }
+        .page-header p { color: var(--muted); margin-top: 4px; font-size: 13px; }
+
+        /* STRATEGY CARD - redesigned */
+        .strategy-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+        .strategy-block h3 {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .strategy-block p { font-size: 12.5px; color: var(--text); line-height: 1.55; }
+        .trigger-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--red-soft);
+            color: var(--red);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-family: 'DM Mono', monospace;
+        }
+        .strategy-divider { width: 1px; background: var(--border); }
+
+        /* KPI GRID */
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+        .kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        .kpi-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+        .kpi-val { font-size: 20px; font-weight: 700; margin-top: 8px; font-family: 'DM Mono', monospace; }
+        .kpi-delta { font-size: 11px; margin-top: 4px; }
+
+        /* TABLE */
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .table-header-bar {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .table-header-bar span { font-size: 12px; font-weight: 600; color: var(--muted); }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #fafaf8;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 10px;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            font-weight: 600;
+        }
+        td { padding: 13px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 12.5px; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fafaf8; }
+
+        /* TAGS */
+        .tag { padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tag-loyal { background: var(--loyal-bg); color: var(--loyal); }
+        .tag-new { background: var(--new-bg); color: var(--new); }
+        .tag-cur { background: var(--cur-bg); color: var(--cur); }
+
+        /* ACTION BADGE */
+        .action-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--red-soft);
+            color: var(--red);
+        }
+
+        /* EMPTY STATE */
+        .empty-state { padding: 60px 20px; text-align: center; color: var(--muted); }
+        .empty-state .empty-icon { font-size: 36px; margin-bottom: 12px; }
+        .empty-state p { font-size: 13px; }
+
+        /* UPLOAD SECTION */
+        .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 28px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--surface);
+        }
+        .upload-zone:hover { border-color: var(--red); background: var(--red-soft); }
+        .upload-zone.loaded { border-color: var(--loyal); border-style: solid; background: var(--loyal-bg); }
+        .upload-zone .uz-icon { font-size: 28px; margin-bottom: 10px; }
+        .upload-zone .uz-label { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+        .upload-zone .uz-hint { font-size: 11px; color: var(--muted); }
+        #btn-process {
+            background: var(--dark);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 13px;
+            display: none;
+            font-family: 'DM Sans', sans-serif;
+            letter-spacing: 0.02em;
+            transition: background 0.15s;
+        }
+        #btn-process:hover { background: #333; }
+
+        /* LOADER */
+        .loader {
+            position: fixed; inset: 0;
+            background: rgba(245,244,240,0.92);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .loader-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--red);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader p { font-weight: 600; color: var(--muted); font-size: 13px; }
+
+        /* EXPANDABLE ROWS */
+        .expand-btn {
+            width: 22px; height: 22px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+        .expand-btn:hover { background: var(--red-soft); border-color: var(--red); color: var(--red); }
+        .sku-detail-row { background: #fafaf8; }
+        .sku-detail-row td { padding: 0; }
+        .sku-detail-inner { padding: 8px 14px 14px 58px; display: none; }
+        .sku-detail-inner.open { display: block; }
+        .sku-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+        .sku-chip {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 11px;
+            display: flex; flex-direction: column; gap: 3px;
+            min-width: 160px;
+        }
+        .sku-chip-name { font-weight: 600; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+        .sku-chip-stats { display: flex; gap: 8px; align-items: center; }
+
+        /* ALERT 40K */
+        .alert-40k {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #fff7ed; color: #c2410c;
+            border: 1px solid #fed7aa;
+            border-radius: 6px; padding: 4px 8px;
+            font-size: 11px; font-weight: 700;
+        }
+
+        /* L5 SILENCE */
+        .silence-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: #fef2f2; color: var(--red);
+            border-radius: 6px; padding: 4px 10px;
+            font-size: 11px; font-weight: 700;
+            font-family: 'DM Mono', monospace;
+        }
+
+        /* CONV BAR */
+        .conv-bar-wrap { display: flex; align-items: center; gap: 8px; }
+        .conv-bar { height: 5px; width: 60px; background: var(--border); border-radius: 3px; overflow: hidden; }
+        .conv-bar-fill { height: 100%; border-radius: 3px; background: var(--red); }
+        .conv-bar-fill.good { background: var(--loyal); }
+        .conv-val { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; }
+
+        /* PROGRESS */
+        .progress-wrap { display: flex; align-items: center; gap: 8px; }
+        .progress-bar { height: 5px; width: 80px; background: var(--border); border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 3px; background: var(--cur); }
+
+        /* DISTRIBUTOR NAME */
+        .dist-name { font-weight: 600; font-size: 12.5px; }
+        .dist-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+        /* PERF */
+        .perf-pos { color: var(--loyal); font-weight: 700; font-family: 'DM Mono', monospace; }
+        .perf-neg { color: var(--red); font-weight: 700; font-family: 'DM Mono', monospace; }
+        .mono { font-family: 'DM Mono', monospace; }
+
+        /* ── PRINT STYLES ─────────────────────────── */
+        @media print {
+            @page { size: A4 portrait; margin: 14mm 16mm 12mm 16mm; }
+
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+            body { background: white !important; font-size: 10px; color: #111; font-family: 'DM Sans', sans-serif; }
+
+            /* Hide app chrome */
+            .sidebar, #btn-process, .upload-zone, .upload-grid,
+            .expand-btn, .filter-bar, .table-header-bar,
+            .page-header button, #dash-count, #l1-count, #l2-count,
+            #l3-count, #l4-count, #l5-count,
+            .print-buttons { display: none !important; }
+
+            #app { display: block !important; }
+            .main { padding: 0 !important; }
+
+            /* All sections visible when printing */
+            .section { display: block !important; }
+            .sku-detail-inner { display: block !important; }
+
+            /* Page breaks */
+            .print-page { page-break-before: always; padding-top: 0; }
+            .print-page:first-child { page-break-before: avoid; }
+            .print-page-break { display: none; }
+
+            /* COVER */
+            .print-cover {
+                display: flex !important;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 240mm;
+                page-break-after: always;
+                background: #111111 !important;
+                color: white;
+                padding: 20mm;
+                box-sizing: border-box;
+            }
+
+            /* SECTION HEADERS */
+            .print-sec-header {
+                display: flex !important;
+                align-items: center;
+                gap: 10px;
+                background: #111 !important;
+                color: white !important;
+                padding: 7px 12px;
+                margin-bottom: 12px;
+                margin-top: 4px;
+                font-size: 12px;
+                font-weight: 700;
+                page-break-after: avoid;
+            }
+
+            /* page header */
+            .page-header { margin-bottom: 10px; page-break-after: avoid; }
+            .page-header h1 { font-size: 14px; font-weight: 700; }
+            .page-header p { font-size: 10px; color: #666; margin-top: 2px; }
+
+            /* strategy card — 3 col horizontal */
+            .strategy-card {
+                display: grid !important;
+                grid-template-columns: 1fr 1px 1fr 1px 1fr;
+                gap: 12px;
+                padding: 10px 14px;
+                margin-bottom: 10px;
+                background: #f9f8f5 !important;
+                border: 1px solid #ddd;
+                border-radius: 0;
+                box-shadow: none;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+            .strategy-block h3 { font-size: 9px; margin-bottom: 4px; color: #555; }
+            .strategy-block p { font-size: 9px; line-height: 1.4; }
+            .trigger-pill { font-size: 9px; padding: 3px 7px; margin-bottom: 5px; display: inline-block; }
+            .strategy-divider { background: #ddd; }
+
+            /* KPI grid */
+            .kpi-grid { grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 10px; page-break-inside: avoid; }
+            .kpi-card { padding: 10px 12px; border-radius: 0; box-shadow: none; border: 1px solid #ddd; }
+            .kpi-label { font-size: 8px; }
+            .kpi-val { font-size: 14px; margin-top: 4px; }
+            .kpi-delta { font-size: 9px; margin-top: 2px; }
+
+            /* Tables */
+            .table-wrap { border-radius: 0; box-shadow: none; border: 1px solid #ccc; margin-bottom: 0; }
+            table { width: 100%; border-collapse: collapse; }
+            th { background: #1a1a1a !important; color: white !important; padding: 6px 8px; font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+            td { padding: 5px 8px; font-size: 9px; border-bottom: 1px solid #eee; }
+            tr:last-child td { border-bottom: none; }
+
+            /* Tags */
+            .tag { padding: 2px 6px; font-size: 8px; border: 1px solid currentColor; }
+
+            /* SKU chips in print */
+            .sku-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0 4px; }
+            .sku-chip { border: 1px solid #ddd; padding: 4px 8px; font-size: 8px; min-width: 0; }
+            .sku-chip-name { font-size: 8px; }
+            .conv-bar-wrap { display: none; }
+
+            /* Action badge */
+            .action-badge { font-size: 8px; padding: 2px 6px; }
+
+            /* Progress */
+            .progress-wrap { display: flex; align-items: center; gap: 4px; }
+            .progress-bar { width: 50px; height: 4px; }
+
+            /* dist sub */
+            .dist-sub { font-size: 8px; }
+
+            /* mono */
+            .mono { font-family: monospace; }
+
+            /* footer on every page */
+            .print-footer {
+                display: block !important;
+                position: fixed;
+                bottom: 0; left: 0; right: 0;
+                text-align: center;
+                font-size: 8px;
+                color: #aaa;
+                border-top: 1px solid #eee;
+                padding: 3px 0;
+                background: white;
+            }
+        }
+
+        /* Screen — hide print-only elements */
+        @media screen {
+            .print-cover { display: none !important; }
+            .print-sec-header { display: none !important; }
+            .print-page-break { display: none; }
+            .print-footer { display: none !important; }
+            .print-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-logo">Strategic Intelligence</div>
+            <div class="brand-title">Magic</div>
+        </div>
+
+        <div class="nav-item active" onclick="switchSection('upload')" id="nav-upload">
+            <span class="nav-icon">📁</span>
+            <span class="nav-label">Caricamento Dati</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('dashboard')" id="nav-dashboard">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Dashboard</span>
+        </div>
+
+        <div class="nav-section-label">Leve Commerciali</div>
+
+        <div class="nav-item" onclick="switchSection('l1')" id="nav-l1">
+            <span class="nav-icon">🔓</span>
+            <span class="nav-label">Sell-Out Push</span>
+            <span class="nav-badge" id="b-l1">0</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('l2')" id="nav-l2">
+            <span class="nav-icon">⚡</span>
+            <span class="nav-label">Fast-Track Reorder</span>
+            <span class="nav-badge" id="b-l2">0</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('l3')" id="nav-l3">
+            <span class="nav-icon">🚀</span>
+            <span class="nav-label">Pacing Recovery</span>
+            <span class="nav-badge" id="b-l3">0</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('l4')" id="nav-l4">
+            <span class="nav-icon">🏆</span>
+            <span class="nav-label">Category Migration</span>
+            <span class="nav-badge" id="b-l4">0</span>
+        </div>
+        <div class="nav-item" onclick="switchSection('l5')" id="nav-l5">
+            <span class="nav-icon">💤</span>
+            <span class="nav-label">Clienti Silenti</span>
+            <span class="nav-badge" id="b-l5">0</span>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-footer-label">Vista per segmento</div>
+            <div class="cat-filter-buttons">
+                <div class="cat-btn active-all" onclick="setGlobalCat('ALL')" id="catbtn-ALL">Tutti i distributori</div>
+                <div class="cat-btn" onclick="setGlobalCat('LOYAL')" id="catbtn-LOYAL">🟢 Loyal</div>
+                <div class="cat-btn" onclick="setGlobalCat('CUR')" id="catbtn-CUR">🟣 Cur</div>
+                <div class="cat-btn" onclick="setGlobalCat('NEW')" id="catbtn-NEW">🔵 New</div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <!-- PRINT COVER (visible only when printing) -->
+        <div class="print-cover" id="print-cover">
+            <div style="border-left: 6px solid #e30613; padding-left: 20px; margin-bottom: 30px;">
+                <div style="color:#e30613; font-size:10px; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px;">Strategic Intelligence</div>
+                <div style="font-size:36px; font-weight:700; color:white; line-height:1.1;">MAGIC</div>
+                <div style="font-size:13px; font-weight:600; color:#e30613; letter-spacing:0.1em; margin-top:6px;">REPORT COMMERCIALE</div>
+            </div>
+            <div style="color:#888; font-size:11px; margin-bottom:24px;" id="print-date"></div>
+            <div id="print-kpis" style="display:flex; gap:20px; flex-wrap:wrap;"></div>
+            <div style="margin-top:24px; border-top:1px solid #333; padding-top:16px; color:#555; font-size:10px;">
+                Distribuito al team commerciale — Uso interno
+            </div>
+        </div>
+
+        <!-- UPLOAD -->
+        <section id="sec-upload" class="section active">
+            <div class="page-header">
+                <h1>Caricamento Dati</h1>
+                <p>Carica i file Excel per avviare l'analisi strategica</p>
+            </div>
+            <div class="upload-grid">
+                <div class="upload-zone" onclick="triggerUpload('s25')" id="zone-s25">
+                    <input type="file" id="file-s25" accept=".xlsx" style="display:none" onchange="handleSingleFile(this,'s25')">
+                    <div class="uz-icon">📄</div>
+                    <div class="uz-label">Fatture 2025</div>
+                    <div class="uz-hint">File .xlsx fatturato anno precedente</div>
+                </div>
+                <div class="upload-zone" onclick="triggerUpload('s26')" id="zone-s26">
+                    <input type="file" id="file-s26" accept=".xlsx" style="display:none" onchange="handleSingleFile(this,'s26')">
+                    <div class="uz-icon">📄</div>
+                    <div class="uz-label">Fatture 2026</div>
+                    <div class="uz-hint">File .xlsx fatturato anno corrente</div>
+                </div>
+                <div class="upload-zone" onclick="triggerUpload('wh')" id="zone-wh">
+                    <input type="file" id="file-wh" accept=".xlsx" style="display:none" onchange="handleSingleFile(this,'wh')">
+                    <div class="uz-icon">🏭</div>
+                    <div class="uz-label">Magazzino</div>
+                    <div class="uz-hint">File .xlsx stock distributori + capogruppo</div>
+                </div>
+            </div>
+            <button id="btn-process" onclick="processData()">▶ Avvia Analisi Strategica</button>
+        </section>
+
+        <!-- DASHBOARD -->
+        <div class="print-page-break"></div>
+        <section id="sec-dashboard" class="section">
+            <div class="page-header">
+                <h1>Dashboard</h1>
+                <p>Panoramica fatturato e performance YTD per tutti i distributori core</p>
+            </div>
+            <div class="print-buttons" style="margin-bottom:20px;">
+                <button onclick="printReport('LOYAL')" style="background:#1a7a4a;color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;">🖨️ Stampa Report LOYAL</button>
+                <button onclick="printReport('CUR')" style="background:#7c3aed;color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;">🖨️ Stampa Report CUR</button>
+                <button onclick="printReport('NEW')" style="background:#0f5fc4;color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;">🖨️ Stampa Report NEW</button>
+            </div>
+            <div class="kpi-grid" id="dash-kpis"></div>
+            <div class="table-wrap">
+                <div class="table-header-bar">
+                    <span id="dash-count">— distributori</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Distributore / Gruppo</th>
+                            <th>Segmento</th>
+                            <th>Fatt. 2025 (Totale)</th>
+                            <th>Fatt. 2025 (YTD)</th>
+                            <th>Fatt. 2026 (YTD)</th>
+                            <th>Perf. YTD</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dash-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- LEVA 1 -->
+        <div class="print-page-break"></div>
+        <section id="sec-l1" class="section">
+            <div class="page-header">
+                <h1>🔓 Leva 1 — Sell-Out Push</h1>
+                <p>Distributori con magazzino fermo che necessitano di supporto commerciale per smaltire lo stock</p>
+            </div>
+            <div class="strategy-card">
+                <div class="strategy-block">
+                    <h3>🎯 Trigger di attivazione</h3>
+                    <div class="trigger-pill">Conv. &lt; 40% + Stock &gt; 5 pz</div>
+                    <p style="margin-top:10px">Articoli acquistati da <strong>oltre 45 giorni</strong> con basso tasso di attivazione. Lo stock "fresco" (≤45gg) è escluso perché fisiologicamente non ancora smaltito.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>📋 Situazione rilevata</h3>
+                    <p>Il distributore ha acquistato stock significativo ma il prodotto non si sta spostando verso il cliente finale. Il magazzino è fermo e il capitale è immobilizzato.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>✅ Obiettivo commerciale</h3>
+                    <p>Supportare il distributore con materiali di sell-out, formazione, promozioni o azioni marketing per alleggerire il magazzino e sbloccare i riordini successivi.</p>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div class="table-header-bar">
+                    <span id="l1-count">— distributori con magazzino fermo</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:32px"></th>
+                            <th>Distributore</th>
+                            <th>Segmento</th>
+                            <th>SKU problematici</th>
+                            <th>Azione</th>
+                        </tr>
+                    </thead>
+                    <tbody id="l1-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- LEVA 2 -->
+        <div class="print-page-break"></div>
+        <section id="sec-l2" class="section">
+            <div class="page-header">
+                <h1>⚡ Leva 2 — Fast-Track Reorder</h1>
+                <p>Distributori in procinto di andare out-of-stock: agire subito per prevenire il vuoto di prodotto</p>
+            </div>
+            <div class="strategy-card">
+                <div class="strategy-block">
+                    <h3>🎯 Trigger di attivazione</h3>
+                    <div class="trigger-pill">Stock ≤ Reorder Point (3 pz)</div>
+                    <p style="margin-top:10px">Le unità residue in magazzino sono al di sotto della soglia minima operativa. Il rischio di stock-out è imminente.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>📋 Situazione rilevata</h3>
+                    <p>Il distributore sta esaurendo le scorte su uno o più SKU. Se non si interviene, il prodotto andrà fuori stock causando mancate vendite e potenziale perdita del cliente finale.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>✅ Obiettivo commerciale</h3>
+                    <p>Contattare proattivamente il distributore per stimolare un ordine immediato, prima che si accorga del problema. Un riordine proattivo rafforza la relazione e garantisce continuità di vendita.</p>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div class="table-header-bar">
+                    <span id="l2-count">— distributori con stock-out imminente</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:32px"></th>
+                            <th>Distributore</th>
+                            <th>Segmento</th>
+                            <th>SKU a rischio</th>
+                            <th>Azione</th>
+                        </tr>
+                    </thead>
+                    <tbody id="l2-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- LEVA 3 -->
+        <div class="print-page-break"></div>
+        <section id="sec-l3" class="section">
+            <div class="page-header">
+                <h1>🚀 Leva 3 — Pacing Recovery</h1>
+                <p>Distributori con un ritmo di acquisto insufficiente rispetto al target proporzionale del mese corrente</p>
+            </div>
+            <div class="strategy-card">
+                <div class="strategy-block">
+                    <h3>🎯 Trigger di attivazione</h3>
+                    <div class="trigger-pill">YTD 2026 &lt; 75% del YTD 2025</div>
+                    <p style="margin-top:10px">Il fatturato accumulato a oggi nel 2026 è inferiore al 75% di quanto registrato nello stesso periodo del 2025. Il distributore è in ritardo rispetto al passo storico.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>📋 Situazione rilevata</h3>
+                    <p>Il distributore sta andando a un ritmo lento e, se continua così, chiuderà il mese/anno significativamente sotto il livello del 2025. Il gap si sta allargando nel tempo.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>✅ Obiettivo commerciale</h3>
+                    <p>Recuperare il gap con azioni mirate: promozioni, ordini anticipati o focus su categorie in crescita. L'obiettivo minimo è allinearsi al fatturato 2025 nello stesso periodo.</p>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div class="table-header-bar">
+                    <span id="l3-count">— casi rilevati</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Distributore</th>
+                            <th>Segmento</th>
+                            <th>Fatt. 2025 (YTD)</th>
+                            <th>Fatt. 2026 (YTD)</th>
+                            <th>Gap %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="l3-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- LEVA 4 -->
+        <div class="print-page-break"></div>
+        <section id="sec-l4" class="section">
+            <div class="page-header">
+                <h1>🏆 Leva 4 — Category Migration</h1>
+                <p>Distributori vicini alla soglia di categoria superiore: una spinta finale può sbloccare benefici significativi</p>
+            </div>
+            <div class="strategy-card">
+                <div class="strategy-block">
+                    <h3>🎯 Trigger di attivazione</h3>
+                    <div class="trigger-pill">60–95% soglia cat. superiore</div>
+                    <p style="margin-top:10px">Il fatturato 2026 del distributore è compreso tra il 60% e il 95% della soglia necessaria per passare alla categoria successiva (NEW→CUR o CUR→LOYAL).</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>📋 Situazione rilevata</h3>
+                    <p>Il distributore è vicino al salto di categoria ma non ci arriva da solo. È il momento giusto per intervenire: motivazione alta, gap ancora colmabile con un ordine mirato.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>✅ Obiettivo commerciale</h3>
+                    <p>Stimolare l'acquisto di ulteriori prodotti, subscription o software per raggiungere la soglia. Valorizzare i benefici della nuova categoria: sconti, priorità, condizioni commerciali migliori.</p>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div class="table-header-bar">
+                    <span id="l4-count">— casi rilevati</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Distributore</th>
+                            <th>Cat. Attuale</th>
+                            <th>Fatt. 2026</th>
+                            <th>Prossima Cat.</th>
+                            <th>Gap alla soglia</th>
+                            <th>Progresso</th>
+                            <th>Alert</th>
+                        </tr>
+                    </thead>
+                    <tbody id="l4-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- LEVA 5 -->
+        <div class="print-page-break"></div>
+        <section id="sec-l5" class="section">
+            <div class="page-header">
+                <h1>💤 Leva 5 — Clienti Silenti</h1>
+                <p>Distributori che non effettuano ordini da oltre 6 mesi: rischio di abbandono o perdita di relazione</p>
+            </div>
+            <div class="strategy-card">
+                <div class="strategy-block">
+                    <h3>🎯 Trigger di attivazione</h3>
+                    <div class="trigger-pill">Ultimo ordine &gt; 180 giorni fa</div>
+                    <p style="margin-top:10px">Calcolato sul MAX della data di vendita nei file fatture. Se il cliente ha ordini nel 2025 ma zero nel 2026, viene incluso automaticamente.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>📋 Situazione rilevata</h3>
+                    <p>Il distributore era attivo ma è entrato in silenzio prolungato. Potrebbe aver trovato un fornitore alternativo, avere problemi interni, o semplicemente non essere stato seguito adeguatamente.</p>
+                </div>
+                <div class="strategy-divider"></div>
+                <div class="strategy-block">
+                    <h3>✅ Obiettivo commerciale</h3>
+                    <p>Riprendere il contatto con un'azione di win-back mirata: capire il motivo del silenzio, proporre un'offerta dedicata o un incontro per riattivare la relazione commerciale.</p>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div class="table-header-bar">
+                    <span id="l5-count">— distributori silenti</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Distributore</th>
+                            <th>Segmento</th>
+                            <th>Ultimo Ordine</th>
+                            <th>Giorni di Silenzio</th>
+                            <th>Fatt. 2025 (storico)</th>
+                            <th>Fatt. 2026</th>
+                            <th>Azione</th>
+                        </tr>
+                    </thead>
+                    <tbody id="l5-table-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="print-footer" id="print-footer">Magic Strategic Intelligence · Uso interno · <span id="print-footer-cat"></span></div>
+    </main>
+</div>
+
+<div class="loader" id="loader">
+    <div class="loader-spinner"></div>
+    <p>Analisi in corso...</p>
+</div>
+
+<script>
+const THRESHOLDS = { CUR: 15000, LOYAL: 50000 };
+const REORDER_POINT = 3;
+const AGING_DAYS = 45;
+const VALID_CATS = ['LOYAL', 'CUR', 'NEW'];
+
+let GLOBAL_CAT = 'ALL';
+let STATE = { raw: {}, groups: {}, clientToGroup: {}, leve: { l1:[], l2:[], l3:[], l4:[] } };
+
+function fmt(n) { return new Intl.NumberFormat('it-IT').format(Math.round(n)) + '€'; }
+function fmtN(n) { return new Intl.NumberFormat('it-IT').format(Math.round(n)); }
+
+function cleanAmount(v) {
+    if (v === undefined || v === null || v === '') return 0;
+    if (typeof v === 'number') return v;
+    let s = String(v).replace('€', '').replace(/\s/g, '').trim();
+    if (s.includes(',') && s.includes('.')) s = s.replace(/\./g, '').replace(',', '.');
+    else if (s.includes(',')) s = s.replace(',', '.');
+    else if (s.includes('.')) {
+        const parts = s.split('.');
+        if (parts[parts.length - 1].length === 3) s = s.replace(/\./g, '');
+    }
+    return parseFloat(s) || 0;
+}
+
+function parseExcelDate(val) {
+    if (!val) return null;
+    if (val instanceof Date) return val;
+    if (typeof val === 'number') return new Date((val - 25569) * 86400 * 1000);
+    const parts = String(val).split('/');
+    return parts.length === 3 ? new Date(parts[2], parts[1] - 1, parts[0]) : null;
+}
+
+function isBeforeToday(date) {
+    if (!date) return false;
+    const today = new Date();
+    const d = new Date(date);
+    return (d.getMonth() < today.getMonth()) || (d.getMonth() === today.getMonth() && d.getDate() <= today.getDate());
+}
+
+function switchSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('sec-' + id).classList.add('active');
+    document.getElementById('nav-' + id).classList.add('active');
+}
+
+function setGlobalCat(cat) {
+    GLOBAL_CAT = cat;
+    document.querySelectorAll('.cat-btn').forEach(b => b.className = 'cat-btn');
+    const btn = document.getElementById('catbtn-' + cat);
+    if (cat === 'ALL') btn.classList.add('active-all');
+    else if (cat === 'LOYAL') btn.classList.add('active-loyal');
+    else if (cat === 'CUR') btn.classList.add('active-cur');
+    else if (cat === 'NEW') btn.classList.add('active-new');
+    renderUI();
+}
+
+function triggerUpload(type) { document.getElementById('file-' + type).click(); }
+
+function handleSingleFile(input, type) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+        const rows = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1 });
+        STATE.raw[type] = rows;
+        const zone = document.getElementById('zone-' + type);
+        zone.classList.add('loaded');
+        const label = zone.querySelector('.uz-label');
+        const hint = zone.querySelector('.uz-hint');
+        label.textContent = '✓ ' + file.name;
+        hint.textContent = rows.length - 1 + ' righe caricate';
+        checkAllLoaded();
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function checkAllLoaded() {
+    const loaded = Object.keys(STATE.raw).length;
+    if (loaded >= 2) document.getElementById('btn-process').style.display = 'block';
+}
+
+async function processData() {
+    document.getElementById('loader').style.display = 'flex';
+    await new Promise(r => setTimeout(r, 600));
+
+    STATE.groups = {};
+    STATE.clientToGroup = {};
+    const today = new Date();
+
+    if (STATE.raw.wh) {
+        STATE.raw.wh.forEach((row, idx) => {
+            if (idx === 0 || !row[3]) return;
+            const cliente = String(row[3]).trim();
+            const capoRaw = row[2] ? String(row[2]).trim() : "";
+            STATE.clientToGroup[cliente] = (capoRaw === "" || capoRaw.toUpperCase() === "CLIENTI NON RAGGRUPPATI") ? cliente : capoRaw;
+        });
+    }
+
+    // lastSkuOrder[groupName][sku] = max date of purchase for that SKU
+    const lastSkuOrder = {};
+
+    ['s25', 's26'].forEach(key => {
+        if (!STATE.raw[key]) return;
+        STATE.raw[key].forEach((row, idx) => {
+            if (idx === 0 || !row[4]) return;
+            const cliente = String(row[4]).trim();
+            const groupName = STATE.clientToGroup[cliente] || cliente;
+            const amount = cleanAmount(row[12]);
+            const date = parseExcelDate(row[0]);
+            const cat = row[5] ? String(row[5]).toUpperCase().trim() : 'ALTRO';
+            // row[6] or row[7] likely contains SKU/product code in invoices — 
+            // we use row[6] as article code (adjust index if needed based on your file)
+            const invoiceSku = row[6] ? String(row[6]).trim() : null;
+
+            if (!STATE.groups[groupName]) {
+                STATE.groups[groupName] = { name: groupName, cat: 'ALTRO', f25: 0, f26: 0, ttd25: 0, ttd26: 0, wh: {}, subClients: new Set(), lastOrder: null };
+            }
+            STATE.groups[groupName].subClients.add(cliente);
+            if (key === 's25') {
+                STATE.groups[groupName].f25 += amount;
+                if (isBeforeToday(date)) STATE.groups[groupName].ttd25 += amount;
+            } else {
+                STATE.groups[groupName].f26 += amount;
+                if (isBeforeToday(date)) STATE.groups[groupName].ttd26 += amount;
+            }
+            // Traccia ultima data ordine su entrambi gli anni
+            if (date && (!STATE.groups[groupName].lastOrder || date > STATE.groups[groupName].lastOrder)) {
+                STATE.groups[groupName].lastOrder = date;
+            }
+            // Traccia ultima data ordine per SKU (per aging check)
+            if (date && invoiceSku) {
+                if (!lastSkuOrder[groupName]) lastSkuOrder[groupName] = {};
+                if (!lastSkuOrder[groupName][invoiceSku] || date > lastSkuOrder[groupName][invoiceSku]) {
+                    lastSkuOrder[groupName][invoiceSku] = date;
+                }
+            }
+            if (VALID_CATS.includes(cat)) STATE.groups[groupName].cat = cat;
+        });
+    });
+
+    const filtered = {};
+    Object.entries(STATE.groups).forEach(([name, data]) => { if (VALID_CATS.includes(data.cat)) filtered[name] = data; });
+    STATE.groups = filtered;
+
+    if (STATE.raw.wh) {
+        STATE.raw.wh.forEach((row, idx) => {
+            if (idx === 0 || !row[3]) return;
+            const cliente = String(row[3]).trim();
+            const groupName = STATE.clientToGroup[cliente] || cliente;
+            if (STATE.groups[groupName]) {
+                const sku = row[4] ? String(row[4]).trim() : "Unknown";
+                const status = String(row[10]).toLowerCase().trim();
+                // Solo for_sale e sold — gli NA e qualsiasi altro stato vengono ignorati
+                const isSold = status.includes('sold');
+                const isForSale = status.includes('for_sale') || status.includes('for sale');
+                if (!isSold && !isForSale) return; // skip NA e altri stati
+
+                // AGING CHECK: usa l'ultima data di acquisto dell'SKU dal file fatture,
+                // NON la data del record magazzino (che può essere la data di creazione/carico).
+                // Se il distributore ha ordinato questo SKU negli ultimi 45 giorni → è fresco, skip.
+                const lastPurchase = lastSkuOrder[groupName] && lastSkuOrder[groupName][sku]
+                    ? lastSkuOrder[groupName][sku]
+                    : null;
+
+                // Se c'è un acquisto recente (<=45gg), l'SKU è fresco: non contarlo come fermo
+                if (lastPurchase && (today - lastPurchase) / 86400000 <= AGING_DAYS) return;
+
+                // Se non abbiamo dati fattura per questo SKU, fallback alla data riga magazzino
+                const dataRiga = parseExcelDate(row[0]);
+                if (!lastPurchase && dataRiga && (today - dataRiga) / 86400000 <= AGING_DAYS) return;
+
+                if (!STATE.groups[groupName].wh[sku]) STATE.groups[groupName].wh[sku] = { total: 0, sold: 0, stale: 0 };
+                STATE.groups[groupName].wh[sku].total++;
+                if (isSold) STATE.groups[groupName].wh[sku].sold++;
+                else STATE.groups[groupName].wh[sku].stale++;
+            }
+        });
+    }
+
+    calculateIntelligence();
+    renderUI();
+    document.getElementById('loader').style.display = 'none';
+    switchSection('dashboard');
+}
+
+function calculateIntelligence() {
+    STATE.leve = { l1:[], l2:[], l3:[], l4:[], l5:[] };
+    const today = new Date();
+    const ALERT_40K = 40000;
+    const l1map = {};
+    const l2map = {};
+
+    Object.values(STATE.groups).forEach(g => {
+        Object.entries(g.wh).forEach(([sku, data]) => {
+            const conv = data.total > 0 ? data.sold / data.total : 0;
+
+            // L1 — magazzino fermo, raggruppato per cliente
+            if (data.stale > 5 && conv < 0.4) {
+                if (!l1map[g.name]) l1map[g.name] = { name: g.name, cat: g.cat, skus: [] };
+                l1map[g.name].skus.push({ sku, stockTotale: data.total, sold: data.sold, stale: data.stale, conv: (conv*100).toFixed(0) });
+            }
+
+            // L2 — stock-out imminente, raggruppato per cliente (usa stale = for_sale residue)
+            if (data.stale > 0 && data.stale <= REORDER_POINT) {
+                if (!l2map[g.name]) l2map[g.name] = { name: g.name, cat: g.cat, skus: [] };
+                l2map[g.name].skus.push({ sku, stock: data.stale });
+            }
+        });
+
+        // L3 — pacing recovery
+        if (g.ttd25 > 1) {
+            const pace = g.ttd26 / g.ttd25;
+            if (pace < 0.75) STATE.leve.l3.push({ name: g.name, cat: g.cat, ytd25: g.ttd25, ytd26: g.ttd26, gap: ((1-pace)*100).toFixed(1) });
+        }
+
+        // L4 — category migration + alert 40K
+        let nextThreshold = g.cat === 'NEW' ? THRESHOLDS.CUR : (g.cat === 'CUR' ? THRESHOLDS.LOYAL : 0);
+        if (nextThreshold > 0) {
+            const progress = g.f26 / nextThreshold;
+            const alert40k = (g.cat === 'NEW' || g.cat === 'CUR') && g.f26 >= ALERT_40K && g.f26 < nextThreshold;
+            if (progress >= 0.6 && progress <= 0.95) {
+                STATE.leve.l4.push({ name: g.name, cat: g.cat, f26: g.f26, nextCat: g.cat === 'NEW' ? 'CUR' : 'LOYAL', missing: nextThreshold - g.f26, progress: Math.round(progress * 100), threshold: nextThreshold, alert40k });
+            }
+        }
+
+        // L5 — clienti silenti da >6 mesi (180 giorni dall'ultimo ordine)
+        if (g.lastOrder) {
+            const silenceDays = Math.floor((today - g.lastOrder) / 86400000);
+            if (silenceDays > 180) {
+                const lastOrderStr = g.lastOrder.toLocaleDateString('it-IT');
+                STATE.leve.l5.push({ name: g.name, cat: g.cat, lastOrderStr, silenceDays, f25: g.f25, f26: g.f26 });
+            }
+        } else if (g.f25 > 0 && g.f26 === 0) {
+            // Attivo nel 2025, zero ordini nel 2026
+            STATE.leve.l5.push({ name: g.name, cat: g.cat, lastOrderStr: 'Nessun ordine 2026', silenceDays: null, f25: g.f25, f26: 0 });
+        }
+    });
+
+    STATE.leve.l1 = Object.values(l1map);
+    STATE.leve.l2 = Object.values(l2map);
+
+    ['l1','l2','l3','l4','l5'].forEach(l => {
+        const el = document.getElementById('b-'+l);
+        if (el) el.textContent = STATE.leve[l].length;
+    });
+}
+
+function renderUI() {
+    const groups = Object.values(STATE.groups).filter(g => GLOBAL_CAT === 'ALL' || g.cat === GLOBAL_CAT).sort((a,b) => b.ttd26 - a.ttd26); // migliore → peggiore per YTD 2026
+    const t25TTD = groups.reduce((s,g) => s + g.ttd25, 0);
+    const t26TTD = groups.reduce((s,g) => s + g.ttd26, 0);
+    const perfTTD = t25TTD > 1 ? ((t26TTD - t25TTD) / t25TTD * 100).toFixed(1) : 0;
+    const perfPos = parseFloat(perfTTD) >= 0;
+
+    document.getElementById('dash-kpis').innerHTML = `
+        <div class="kpi-card">
+            <div class="kpi-label">Fatturato 2025 YTD</div>
+            <div class="kpi-val">${fmtN(t25TTD)}€</div>
+            <div class="kpi-delta" style="color:var(--muted)">Stesso periodo 2025</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Fatturato 2026 YTD</div>
+            <div class="kpi-val">${fmtN(t26TTD)}€</div>
+            <div class="kpi-delta" style="color:var(--muted)">Anno corrente</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Performance YTD</div>
+            <div class="kpi-val" style="color:${perfPos ? 'var(--loyal)' : 'var(--red)'}">${perfPos ? '+' : ''}${perfTTD}%</div>
+            <div class="kpi-delta" style="color:${perfPos ? 'var(--loyal)' : 'var(--red)'}">vs 2025</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-label">Distributori Core</div>
+            <div class="kpi-val">${groups.length}</div>
+            <div class="kpi-delta" style="color:var(--muted)">Segmento: ${GLOBAL_CAT}</div>
+        </div>
+    `;
+
+    document.getElementById('dash-count').textContent = groups.length + ' distributori';
+
+    const dBody = document.getElementById('dash-table-body');
+    dBody.innerHTML = '';
+    if (groups.length === 0) {
+        dBody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div><p>Nessun distributore per il segmento selezionato</p></div></td></tr>`;
+    } else {
+        groups.forEach(g => {
+            const paceVal = g.ttd25 > 1 ? ((g.ttd26 - g.ttd25)/g.ttd25*100).toFixed(1) : null;
+            const paceStr = paceVal !== null ? (paceVal >= 0 ? `+${paceVal}%` : `${paceVal}%`) : (g.ttd26 > 1 ? 'NEW' : '—');
+            const paceClass = paceVal !== null ? (parseFloat(paceVal) >= 0 ? 'perf-pos' : 'perf-neg') : '';
+            const subs = Array.from(g.subClients).filter(s => s !== g.name);
+            dBody.innerHTML += `<tr>
+                <td>
+                    <div class="dist-name">${g.name}</div>
+                    ${subs.length > 0 ? `<div class="dist-sub">↳ ${subs.join(', ')}</div>` : ''}
+                </td>
+                <td><span class="tag tag-${g.cat.toLowerCase()}">${g.cat}</span></td>
+                <td class="mono">${fmtN(g.f25)}€</td>
+                <td class="mono" style="color:var(--muted)">${fmtN(g.ttd25)}€</td>
+                <td class="mono" style="font-weight:600">${fmtN(g.ttd26)}€</td>
+                <td class="${paceClass}">${paceStr}</td>
+            </tr>`;
+        });
+    }
+
+    // L1 — raggruppato per cliente
+    const l1data = STATE.leve.l1.filter(x => GLOBAL_CAT === 'ALL' || x.cat === GLOBAL_CAT).sort((a,b) => b.skus.reduce((s,sk)=>s+sk.stale,0) - a.skus.reduce((s,sk)=>s+sk.stale,0));
+    document.getElementById('l1-count').textContent = l1data.length + ' distributori con magazzino fermo';
+    const l1body = document.getElementById('l1-table-body');
+    l1body.innerHTML = '';
+    if (l1data.length === 0) {
+        l1body.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">✅</div><p>Nessun magazzino fermo rilevato per il segmento selezionato</p></div></td></tr>`;
+    } else {
+        l1data.forEach((x, i) => {
+            const rowId = 'l1-detail-' + i;
+            const totalStale = x.skus.reduce((s,sk) => s + sk.stale, 0);
+            const skuChips = x.skus.map(sk => {
+                const c = parseInt(sk.conv);
+                return `<div class="sku-chip">
+                    <span class="sku-chip-name">${sk.sku}</span>
+                    <div class="sku-chip-stats">
+                        <span style="color:var(--muted);font-size:10px">Ferme: <b style="color:var(--red)">${sk.stale}</b> / ${sk.stockTotale}</span>
+                        <div class="conv-bar-wrap">
+                            <div class="conv-bar"><div class="conv-bar-fill" style="width:${c}%; background:var(--red)"></div></div>
+                            <span class="conv-val" style="color:var(--red)">${sk.conv}%</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            l1body.innerHTML += `
+            <tr onclick="toggleDetail('${rowId}')" style="cursor:pointer">
+                <td><button class="expand-btn" id="btn-${rowId}">−</button></td>
+                <td><div class="dist-name">${x.name}</div></td>
+                <td><span class="tag tag-${x.cat.toLowerCase()}">${x.cat}</span></td>
+                <td><span style="font-family:'DM Mono',monospace; color:var(--red); font-weight:700">${x.skus.length}</span> <span style="color:var(--muted); font-size:11px">SKU / ${totalStale} pz ferme tot.</span></td>
+                <td><span class="action-badge">🎯 Supporto Sell-Out</span></td>
+            </tr>
+            <tr class="sku-detail-row">
+                <td colspan="5"><div class="sku-detail-inner open" id="${rowId}">
+                    <div class="sku-chips">${skuChips}</div>
+                </div></td>
+            </tr>`;
+        });
+    }
+
+    // L2 — raggruppato per cliente
+    const l2data = STATE.leve.l2.filter(x => GLOBAL_CAT === 'ALL' || x.cat === GLOBAL_CAT).sort((a,b) => Math.min(...a.skus.map(s=>s.stock)) - Math.min(...b.skus.map(s=>s.stock)));
+    document.getElementById('l2-count').textContent = l2data.length + ' distributori con stock-out imminente';
+    const l2body = document.getElementById('l2-table-body');
+    l2body.innerHTML = '';
+    if (l2data.length === 0) {
+        l2body.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">✅</div><p>Nessun stock-out imminente rilevato per il segmento selezionato</p></div></td></tr>`;
+    } else {
+        l2data.forEach((x, i) => {
+            const rowId = 'l2-detail-' + i;
+            const skuChips = x.skus.map(sk => `
+                <div class="sku-chip">
+                    <span class="sku-chip-name">${sk.sku}</span>
+                    <span style="font-weight:700; color:var(--red); font-size:14px; font-family:'DM Mono',monospace">${sk.stock} pz</span>
+                </div>`).join('');
+            l2body.innerHTML += `
+            <tr onclick="toggleDetail('${rowId}')" style="cursor:pointer">
+                <td><button class="expand-btn" id="btn-${rowId}">−</button></td>
+                <td><div class="dist-name">${x.name}</div></td>
+                <td><span class="tag tag-${x.cat.toLowerCase()}">${x.cat}</span></td>
+                <td><span style="font-family:'DM Mono',monospace; color:var(--red); font-weight:700">${x.skus.length}</span> <span style="color:var(--muted); font-size:11px">SKU quasi esauriti</span></td>
+                <td><span class="action-badge">⚡ Ordine Proattivo</span></td>
+            </tr>
+            <tr class="sku-detail-row">
+                <td colspan="5"><div class="sku-detail-inner open" id="${rowId}">
+                    <div class="sku-chips">${skuChips}</div>
+                </div></td>
+            </tr>`;
+        });
+    }
+
+    // L3
+    const l3data = STATE.leve.l3.filter(x => GLOBAL_CAT === 'ALL' || x.cat === GLOBAL_CAT).sort((a,b) => b.gap - a.gap);
+    document.getElementById('l3-count').textContent = l3data.length + ' casi rilevati';
+    const l3body = document.getElementById('l3-table-body');
+    l3body.innerHTML = '';
+    if (l3data.length === 0) {
+        l3body.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">✅</div><p>Nessun distributore in ritardo per il segmento selezionato</p></div></td></tr>`;
+    } else {
+        l3data.forEach(x => {
+            l3body.innerHTML += `<tr>
+                <td><div class="dist-name">${x.name}</div></td>
+                <td><span class="tag tag-${x.cat.toLowerCase()}">${x.cat}</span></td>
+                <td class="mono" style="color:var(--muted)">${fmtN(x.ytd25)}€</td>
+                <td class="mono" style="font-weight:600">${fmtN(x.ytd26)}€</td>
+                <td class="perf-neg">−${x.gap}%</td>
+            </tr>`;
+        });
+    }
+
+    // L4 — con alert 40K
+    const l4data = STATE.leve.l4.filter(x => GLOBAL_CAT === 'ALL' || x.cat === GLOBAL_CAT).sort((a,b) => b.progress - a.progress);
+    document.getElementById('l4-count').textContent = l4data.length + ' casi rilevati';
+    const l4body = document.getElementById('l4-table-body');
+    l4body.innerHTML = '';
+    if (l4data.length === 0) {
+        l4body.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">✅</div><p>Nessun distributore vicino al salto di categoria per il segmento selezionato</p></div></td></tr>`;
+    } else {
+        l4data.forEach(x => {
+            l4body.innerHTML += `<tr>
+                <td><div class="dist-name">${x.name}</div></td>
+                <td><span class="tag tag-${x.cat.toLowerCase()}">${x.cat}</span></td>
+                <td class="mono" style="font-weight:600">${fmtN(x.f26)}€</td>
+                <td><span class="tag tag-${x.nextCat.toLowerCase()}">${x.nextCat}</span></td>
+                <td class="mono" style="color:var(--red); font-weight:600">−${fmtN(x.missing)}€</td>
+                <td>
+                    <div class="progress-wrap">
+                        <div class="progress-bar"><div class="progress-fill" style="width:${x.progress}%"></div></div>
+                        <span style="font-family:'DM Mono',monospace; font-size:11px; color:var(--cur); font-weight:500">${x.progress}%</span>
+                    </div>
+                </td>
+                <td>${x.alert40k ? '<span class="alert-40k">⚠️ Vicino 40K</span>' : '<span style="color:var(--muted);font-size:11px">—</span>'}</td>
+            </tr>`;
+        });
+    }
+
+    // L5 — clienti silenti
+    const l5data = STATE.leve.l5.filter(x => GLOBAL_CAT === 'ALL' || x.cat === GLOBAL_CAT).sort((a,b) => (b.silenceDays||999) - (a.silenceDays||999));
+    const l5countEl = document.getElementById('l5-count');
+    if (l5countEl) l5countEl.textContent = l5data.length + ' distributori silenti';
+    const l5body = document.getElementById('l5-table-body');
+    if (l5body) {
+        l5body.innerHTML = '';
+        if (l5data.length === 0) {
+            l5body.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">✅</div><p>Nessun distributore silente per il segmento selezionato</p></div></td></tr>`;
+        } else {
+            l5data.forEach(x => {
+                const silenceLabel = x.silenceDays ? `<span class="silence-badge">${x.silenceDays} giorni</span>` : `<span class="silence-badge">∞ nessun ordine 2026</span>`;
+                l5body.innerHTML += `<tr>
+                    <td><div class="dist-name">${x.name}</div></td>
+                    <td><span class="tag tag-${x.cat.toLowerCase()}">${x.cat}</span></td>
+                    <td class="mono" style="color:var(--muted)">${x.lastOrderStr || '—'}</td>
+                    <td>${silenceLabel}</td>
+                    <td class="mono">${fmtN(x.f25)}€</td>
+                    <td class="mono" style="color:${x.f26 > 0 ? 'var(--text)' : 'var(--red)'}; font-weight:600">${fmtN(x.f26)}€</td>
+                    <td><span class="action-badge">📞 Win-Back</span></td>
+                </tr>`;
+            });
+        }
+    }
+}
+
+function toggleDetail(id) {
+    const el = document.getElementById(id);
+    const btn = document.getElementById('btn-' + id);
+    if (!el) return;
+    const isOpen = el.classList.toggle('open');
+    if (btn) btn.textContent = isOpen ? '−' : '+';
+}
+// ─────────────────────────────────────────
+// PRINT / PDF — per segmento
+// ─────────────────────────────────────────
+function printReport(cat) {
+    const CAT_LABEL = { LOYAL:'🟢 LOYAL', CUR:'🟣 CUR', NEW:'🔵 NEW' };
+    const CAT_COLOR = { LOYAL:'#1a7a4a', CUR:'#7c3aed', NEW:'#0f5fc4' };
+    const catLabel  = CAT_LABEL[cat] || cat;
+    const catColor  = CAT_COLOR[cat] || '#111';
+
+    // ── Filter data for this segment ──
+    const groups = Object.values(STATE.groups)
+        .filter(g => g.cat === cat)
+        .sort((a,b) => b.ttd26 - a.ttd26);
+    const t25 = groups.reduce((s,g)=>s+g.ttd25,0);
+    const t26 = groups.reduce((s,g)=>s+g.ttd26,0);
+    const perf = t25>0 ? ((t26-t25)/t25*100).toFixed(1) : '0';
+    const perfPos = parseFloat(perf) >= 0;
+
+    const leve = {
+        l1: STATE.leve.l1.filter(x=>x.cat===cat),
+        l2: STATE.leve.l2.filter(x=>x.cat===cat),
+        l3: STATE.leve.l3.filter(x=>x.cat===cat).sort((a,b)=>b.gap-a.gap),
+        l4: STATE.leve.l4.filter(x=>x.cat===cat).sort((a,b)=>b.progress-a.progress),
+        l5: STATE.leve.l5.filter(x=>x.cat===cat).sort((a,b)=>(b.silenceDays||999)-(a.silenceDays||999)),
+    };
+
+    const dateStr = new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
+
+    // ── Build print-only DOM ──────────────────────────────────────────────
+    const printEl = document.getElementById('print-area');
+    if (printEl) printEl.remove();
+
+    const area = document.createElement('div');
+    area.id = 'print-area';
+
+    // Helper to make a section block
+    const sec = (icon, title, trigger, situation, goal, tableHTML, countTxt) => `
+      <div class="print-page" style="margin-top:20px;">
+        <div class="print-sec-header" style="background:${catColor}!important">
+          ${icon} ${title} <span style="font-size:9px;opacity:.7;margin-left:auto">${countTxt}</span>
+        </div>
+        <div class="strategy-card">
+          <div class="strategy-block">
+            <h3>🎯 Trigger</h3>
+            <div class="trigger-pill">${trigger}</div>
+            <p style="margin-top:6px">${situation}</p>
+          </div>
+          <div class="strategy-divider"></div>
+          <div class="strategy-block">
+            <h3>📋 Situazione</h3>
+            <p>${situation}</p>
+          </div>
+          <div class="strategy-divider"></div>
+          <div class="strategy-block">
+            <h3>✅ Obiettivo</h3>
+            <p>${goal}</p>
+          </div>
+        </div>
+        <div class="table-wrap">${tableHTML}</div>
+      </div>`;
+
+    const th  = (...cols) => '<thead><tr>' + cols.map(c=>`<th>${c}</th>`).join('') + '</tr></thead>';
+    const tr  = (...cells) => '<tr>' + cells.map(c=>`<td>${c}</td>`).join('') + '</tr>';
+    const tbody = rows => '<tbody>' + rows + '</tbody>';
+    const empty = '<tbody><tr><td colspan="10" style="text-align:center;color:#aaa;padding:16px">Nessun caso rilevato per questo segmento</td></tr></tbody>';
+
+    // ── COVER ──────────────────────────────────────────────────────────────
+    area.innerHTML = `
+    <div class="print-cover">
+      <div style="border-left:6px solid ${catColor};padding-left:20px;margin-bottom:24px">
+        <div style="color:${catColor};font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px">Strategic Intelligence · Segmento</div>
+        <div style="font-size:40px;font-weight:700;color:white;line-height:1.1">MAGIC</div>
+        <div style="font-size:22px;font-weight:700;color:${catColor};margin-top:4px">${catLabel}</div>
+      </div>
+      <div style="color:#666;font-size:11px;margin-bottom:20px">Report Commerciale · ${dateStr}</div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+        ${[
+          {l:'Distributori', v:groups.length, c:'white'},
+          {l:'Fatturato 2026 YTD', v:fmtN(t26)+'€', c:'white'},
+          {l:'Performance vs 2025', v:(perfPos?'+':'')+perf+'%', c: perfPos?'#1a7a4a':'#e30613'},
+          {l:'Leva 1 – Sell-Out Push', v:leve.l1.length+' clienti', c:catColor},
+          {l:'Leva 2 – Fast Reorder', v:leve.l2.length+' clienti', c:catColor},
+          {l:'Leva 5 – Silenti', v:leve.l5.length+' clienti', c:'#888'},
+        ].map(k=>`
+          <div style="background:#1a1a1a;padding:12px 16px;border-left:3px solid ${k.c}">
+            <div style="font-size:18px;font-weight:700;color:${k.c}">${k.v}</div>
+            <div style="font-size:9px;color:#666;margin-top:3px">${k.l}</div>
+          </div>`).join('')}
+      </div>
+      <div style="border-top:1px solid #333;padding-top:12px;color:#444;font-size:9px">
+        Documento riservato · Uso interno · Magic Strategic Intelligence
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="print-page" style="page-break-before:always">
+      <div class="print-sec-header" style="background:#111111!important">
+        📊 Dashboard · ${catLabel}
+        <span style="font-size:9px;opacity:.7;margin-left:auto">${groups.length} distributori</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+        ${[
+          {l:'Fatt. 2025 YTD', v:fmtN(t25)+'€'},
+          {l:'Fatt. 2026 YTD', v:fmtN(t26)+'€'},
+          {l:'Performance YTD', v:(perfPos?'+':'')+perf+'%', color: perfPos?'#1a7a4a':'#e30613'},
+          {l:'Distributori', v:groups.length},
+        ].map(k=>`
+          <div class="kpi-card">
+            <div class="kpi-label">${k.l}</div>
+            <div class="kpi-val" style="${k.color?'color:'+k.color:''}">${k.v}</div>
+          </div>`).join('')}
+      </div>
+      <div class="table-wrap">
+        <table>
+          ${th('Distributore','Fatt. 2025 (Tot.)','Fatt. 2025 (YTD)','Fatt. 2026 (YTD)','Perf. %')}
+          ${tbody(groups.map(g => {
+            const p = g.ttd25>0?((g.ttd26-g.ttd25)/g.ttd25*100).toFixed(1):null;
+            const pStr = p!==null?(parseFloat(p)>=0?'+':'')+p+'%':'NEW';
+            const pCol = p!==null?(parseFloat(p)>=0?'#1a7a4a':'#e30613'):'#888';
+            const subs = Array.from(g.subClients).filter(s=>s!==g.name);
+            return tr(
+              `<b>${g.name}</b>${subs.length?`<br><span style="font-size:8px;color:#aaa">↳ ${subs.join(', ')}</span>`:''}`,
+              fmtN(g.f25)+'€',
+              `<span style="color:#888">${fmtN(g.ttd25)}€</span>`,
+              `<b>${fmtN(g.ttd26)}€</b>`,
+              `<b style="color:${pCol}">${pStr}</b>`
+            );
+          }).join(''))}
+        </table>
+      </div>
+    </div>
+
+    ${sec('🔓','Leva 1 — Sell-Out Push',
+      'Conv. &lt; 40% + Stock &gt; 5 pz (aging &gt;45gg)',
+      'Il distributore ha acquistato stock significativo ma il prodotto non si sta spostando verso il cliente finale. Il magazzino è fermo e il capitale è immobilizzato.',
+      'Supportare il distributore con materiali di sell-out, formazione, promozioni o azioni marketing per alleggerire il magazzino e sbloccare i riordini successivi.',
+      `<table>
+        ${th('Distributore','SKU problematici','Pz ferme tot.','Dettaglio SKU')}
+        ${leve.l1.length ? tbody(leve.l1.map(x => {
+          const chips = x.skus.map(sk=>`<span style="background:#fff5f5;color:#c00;border:1px solid #f8c;padding:1px 5px;border-radius:3px;font-size:8px;margin:1px;display:inline-block">${sk.sku}: ${sk.stale}pz ferme / ${sk.conv}% conv.</span>`).join(' ');
+          return tr(`<b>${x.name}</b>`, x.skus.length+' SKU', x.skus.reduce((s,sk)=>s+sk.stale,0)+' pz', chips);
+        }).join('')) : empty}
+      </table>`,
+      leve.l1.length+' clienti rilevati'
+    )}
+
+    ${sec('⚡','Leva 2 — Fast-Track Reorder',
+      'Stock residuo ≤ 3 pz (Reorder Point)',
+      'Il distributore sta esaurendo le scorte su uno o più SKU. Se non si interviene, il prodotto andrà fuori stock causando mancate vendite.',
+      'Contattare proattivamente il distributore per stimolare un ordine immediato, prima che si accorga del problema.',
+      `<table>
+        ${th('Distributore','SKU a rischio','Min stock','Dettaglio')}
+        ${leve.l2.length ? tbody(leve.l2.map(x => {
+          const chips = x.skus.map(sk=>`<span style="background:#fff8e8;color:#b45;border:1px solid #fde;padding:1px 5px;border-radius:3px;font-size:8px;margin:1px;display:inline-block">${sk.sku}: <b>${sk.stock} pz</b></span>`).join(' ');
+          return tr(`<b>${x.name}</b>`, x.skus.length+' SKU', Math.min(...x.skus.map(s=>s.stock))+' pz', chips);
+        }).join('')) : empty}
+      </table>`,
+      leve.l2.length+' clienti rilevati'
+    )}
+
+    ${sec('🚀','Leva 3 — Pacing Recovery',
+      'YTD 2026 &lt; 75% del YTD 2025',
+      'Il distributore sta andando a un ritmo lento e, se continua così, chiuderà il periodo significativamente sotto il livello del 2025.',
+      'Recuperare il gap con azioni mirate: promozioni, ordini anticipati o focus su categorie in crescita. Obiettivo: allinearsi al fatturato 2025.',
+      `<table>
+        ${th('Distributore','YTD 2025','YTD 2026','Gap %')}
+        ${leve.l3.length ? tbody(leve.l3.map(x =>
+          tr(`<b>${x.name}</b>`, `<span style="color:#888">${fmtN(x.ytd25)}€</span>`, `<b>${fmtN(x.ytd26)}€</b>`, `<b style="color:#e30613">−${x.gap}%</b>`)
+        ).join('')) : empty}
+      </table>`,
+      leve.l3.length+' clienti rilevati'
+    )}
+
+    ${sec('🏆','Leva 4 — Category Migration',
+      '60–95% soglia categoria superiore',
+      'Il distributore è vicino al salto di categoria ma non ci arriva da solo. Motivazione alta, gap ancora colmabile con un ordine mirato.',
+      'Stimolare acquisto di prodotti, subscription o software per raggiungere la soglia. Valorizzare i benefici della nuova categoria.',
+      `<table>
+        ${th('Distributore','Fatt. 2026','Prossima Cat.','Gap alla soglia','Progresso')}
+        ${leve.l4.length ? tbody(leve.l4.map(x =>
+          tr(
+            `<b>${x.name}</b>${x.alert40k?` <span style="background:#fff3e0;color:#e65100;font-size:8px;padding:1px 5px;border-radius:3px;border:1px solid #ffe0b2">⚠️ Vicino 40K</span>`:''}`,
+            `<b>${fmtN(x.f26)}€</b>`,
+            `<span style="font-weight:700;color:${catColor}">${x.nextCat}</span>`,
+            `<span style="color:#e30613">−${fmtN(x.missing)}€</span>`,
+            `<div style="display:flex;align-items:center;gap:4px"><div style="width:50px;height:5px;background:#eee;border-radius:3px;overflow:hidden"><div style="width:${x.progress}%;height:100%;background:#7c3aed"></div></div><span>${x.progress}%</span></div>`
+          )
+        ).join('')) : empty}
+      </table>`,
+      leve.l4.length+' clienti rilevati'
+    )}
+
+    ${sec('💤','Leva 5 — Clienti Silenti',
+      'Ultimo ordine &gt; 180 giorni fa',
+      'Il distributore era attivo ma è entrato in silenzio prolungato. Potrebbe aver trovato un fornitore alternativo o non essere stato seguito adeguatamente.',
+      'Riprendere il contatto con un\'azione di win-back mirata: capire il motivo del silenzio, proporre un\'offerta dedicata o un incontro per riattivare la relazione.',
+      `<table>
+        ${th('Distributore','Ultimo ordine','Giorni silenzio','Fatt. 2025 (storico)','Fatt. 2026')}
+        ${leve.l5.length ? tbody(leve.l5.map(x =>
+          tr(
+            `<b>${x.name}</b>`,
+            x.lastOrderStr||'—',
+            x.silenceDays ? `<b style="color:#e30613">${x.silenceDays} gg</b>` : '<b style="color:#e30613">∞</b>',
+            fmtN(x.f25)+'€',
+            x.f26>0 ? fmtN(x.f26)+'€' : '<span style="color:#e30613">0€</span>'
+          )
+        ).join('')) : empty}
+      </table>`,
+      leve.l5.length+' clienti rilevati'
+    )}
+    `;
+
+    document.body.appendChild(area);
+    document.getElementById('print-footer-cat').textContent = catLabel;
+
+    // Hide the app, print, restore
+    document.getElementById('app').style.display = 'none';
+    window.print();
+    document.getElementById('app').style.display = '';
+    area.remove();
+}
+
+</script>
+</body>
+</html>
