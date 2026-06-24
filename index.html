@@ -1377,7 +1377,7 @@ exports.init = init;
             transition: all 0.2s ease;
         }
 
-        /* Riduce lo spazio tra sotto-nodi consecutivi */
+        /* Riduce lo spazio tra sotto-nodi consecutivi dello stesso mese */
         .tree-sub-item + .tree-sub-item {
             margin-top: -6px; 
         }
@@ -1892,23 +1892,23 @@ exports.init = init;
             { abbr: "dic", name: "Dicembre" },
         ];
 
-        // CONFIGURAZIONE LINK SPECIALI (GESTIONE MULTI-RIGA)
-        // 👉 Aggiungi qui gli oggetti dentro l'array di ciascun mese per creare nuove righe
+        // CONFIGURAZIONE LINK SPECIALI (CON AUTO-NORMALIZZAZIONE DEI FORMATTI)
+        // 👉 Qui puoi inserire indifferentemente un oggetto singolo, un array di oggetti, o semplici stringhe.
         const SPECIAL_LINKS = {
             "2026-mar": [
                 {
-                    label: "└── Analisi Iberica Q1",
-                    url: "https://canva.link/oopmxon45hmzxrt" 
+                    label: "└── 🇪🇸 Analisi Iberica Q1",
+                    url: "link-iberica-q1.html" 
                 },
                 {
-                    label: "└── Analisi Prodotti Q1", // <-- SECONDA RIGA AGGIUNTA SOTTO MARZO
-                    url: "https://canva.link/u8bov4mkestg6s9"
+                    label: "└── 📦 Analisi Prodotti Q1",
+                    url: "link-prodotti-q1.html"
                 }
             ],
             "2026-apr": [
                 {
-                    label: "└── Analisi USA T1",
-                    url: "https://canva.link/ux57rgrl8k6p6pt"
+                    label: "└── 🇺🇸 Analisi USA T1",
+                    url: "link-usa-t1.html"
                 }
             ]
         };
@@ -2071,7 +2071,25 @@ exports.init = init;
                 MONTHS.forEach((month) => {
                     const key = year + "-" + month.abbr;
                     const isAvailable = Boolean(archiveManifest[key]);
-                    const hasSubItems = Boolean(SPECIAL_LINKS[key] && SPECIAL_LINKS[key].length > 0);
+
+                    // LOGICA DI NORMALIZZAZIONE SICURA: rileva se il dato è un array, un oggetto singolo o nullo
+                    const rawSpecial = SPECIAL_LINKS[key];
+                    let items = [];
+                    if (rawSpecial) {
+                        const rawArray = Array.isArray(rawSpecial) ? rawSpecial : [rawSpecial];
+                        rawArray.forEach(item => {
+                            if (typeof item === "string") {
+                                items.push({ label: item, url: "#" });
+                            } else if (item && typeof item === "object") {
+                                items.push({
+                                    label: item.label || "Report Speciale",
+                                    url: item.url || "#"
+                                });
+                            }
+                        });
+                    }
+
+                    const hasSubItems = items.length > 0;
 
                     const monthEl = document.createElement("div");
                     monthEl.className = "tree-month" + (isAvailable ? "" : " locked") + (hasSubItems ? " has-sub-item" : "");
@@ -2085,17 +2103,17 @@ exports.init = init;
 
                     monthsWrapper.appendChild(monthEl);
 
-                    // Iterazione e rendering di tutti i sotto-nodi configurati per il mese corrente
+                    // Rendering sicuro dei sotto-nodi normalizzati
                     if (hasSubItems) {
-                        SPECIAL_LINKS[key].forEach((item, itemIdx) => {
+                        items.forEach((item, itemIdx) => {
                             const subItem = document.createElement("a");
                             subItem.className = "tree-sub-item";
                             subItem.href = item.url;
                             subItem.target = "_blank";
                             subItem.innerHTML = "<span>" + item.label + "</span><span class='sub-arrow'>↗</span>";
                             
-                            // Applica l'arrotondamento inferiore solo all'ultimo elemento della serie di quel mese
-                            if (itemIdx === SPECIAL_LINKS[key].length - 1) {
+                            // Applica l'arrotondamento dei bordi solo all'ultimo elemento di questo mese
+                            if (itemIdx === items.length - 1) {
                                 subItem.classList.add("last-sub-item");
                             }
 
