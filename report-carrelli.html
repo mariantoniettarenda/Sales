@@ -4,22 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dashboard Carrelli Abbandonati - Magicmotorsport</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-color: #f3f4f6;
+      --bg-color: #FFFCEB;
       --card-bg: #ffffff;
-      --primary: #111827;
-      --accent-red: #e02424;
-      --accent-purple: #4f46e5;
-      --success: #027a48;
-      --border-color: #e5e7eb;
-      --text-muted: #6b7280;
+      --primary: #19191D;
+      --pink: #FF678B;
+      --yellow: #FFF48D;
+      --lime: #8FF977;
+      --cyan: #70FAFD;
+      --border-color: #19191D;
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --shadow-card: 6px 6px 0px var(--primary);
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-syne: "Syne", sans-serif;
     }
     body {
       margin: 0;
       padding: 24px;
       background-color: var(--bg-color);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: var(--font-sans);
       color: var(--primary);
       -webkit-font-smoothing: antialiased;
     }
@@ -29,53 +40,65 @@
     }
     /* HEADER */
     .header {
-      background: var(--primary);
-      border-radius: 8px;
+      background: #ffffff;
+      border: 3px solid var(--border-color);
+      border-radius: var(--radius-lg);
       padding: 28px 36px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow-card);
     }
     .header-logo p {
-      margin: 0 0 4px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2px;
+      margin: 0 0 6px;
+      font-family: var(--font-syne);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: #9ca3af;
+      color: var(--pink);
     }
     .header-logo h1 {
       margin: 0;
-      font-size: 28px;
+      font-family: var(--font-syne);
+      font-size: 32px;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--primary);
       letter-spacing: -1px;
     }
     .header-logo h1 span {
-      color: var(--accent-red);
+      background: var(--yellow);
+      padding: 0 8px;
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      display: inline-block;
+      transform: rotate(-1.5deg);
     }
     .header-meta {
       text-align: right;
     }
     .badge-report {
       display: inline-block;
-      background: var(--accent-red);
-      color: #ffffff;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
+      background: var(--lime);
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      font-family: var(--font-syne);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
-      padding: 4px 8px;
-      border-radius: 2px;
-      margin-bottom: 6px;
+      padding: 6px 12px;
+      border-radius: 99px;
+      margin-bottom: 8px;
+      box-shadow: 2px 2px 0px var(--primary);
     }
     .header-date {
       margin: 0;
+      font-family: var(--font-syne);
       font-size: 12px;
-      color: #9ca3af;
-      font-weight: 500;
+      color: var(--primary);
+      font-weight: 700;
     }
 
     /* KPI CONTAINER */
@@ -87,35 +110,39 @@
     }
     .kpi-card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
+      border: 3px solid var(--border-color);
+      border-radius: var(--radius-md);
       padding: 20px 24px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      box-shadow: var(--shadow-card);
     }
     .kpi-title {
-      margin: 0 0 8px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
+      margin: 0 0 10px;
+      font-family: var(--font-syne);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: rgba(25,25,29,0.6);
     }
     .kpi-val {
       margin: 0;
-      font-size: 26px;
+      font-family: var(--font-syne);
+      font-size: 28px;
       font-weight: 800;
       line-height: 1.1;
     }
     .kpi-sub {
-      margin: 6px 0 0;
-      font-size: 11px;
-      color: var(--text-muted);
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: var(--primary);
+      opacity: 0.8;
+      font-weight: 500;
     }
 
     /* TWO COLUMN LAYOUT */
     .dashboard-grid-2 {
       display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-columns: 1.25fr 0.75fr;
       gap: 24px;
       margin-bottom: 24px;
     }
@@ -129,39 +156,44 @@
     /* CARD STRUCTURE */
     .card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
+      border: 3px solid var(--border-color);
+      border-radius: var(--radius-lg);
       padding: 24px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      box-shadow: var(--shadow-card);
     }
     .card-header {
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 12px;
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 14px;
       margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     .card-title {
-      font-size: 13px;
+      font-family: var(--font-syne);
+      font-size: 14px;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
       margin: 0;
     }
     .card-title-subtitle {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: normal;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: rgba(25,25,29,0.7);
+      font-weight: 500;
       text-transform: none;
       letter-spacing: normal;
       margin-left: 6px;
     }
     .card-section-num {
-      font-family: 'Courier New', monospace;
+      font-family: var(--font-syne);
       font-size: 11px;
-      font-weight: 700;
-      color: var(--text-muted);
+      font-weight: 800;
+      background: var(--yellow);
+      border: 2px solid var(--primary);
+      padding: 4px 8px;
+      border-radius: 6px;
     }
 
     /* TABLES STYLE */
@@ -170,52 +202,58 @@
       border-collapse: collapse;
     }
     .data-table th {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
+      font-family: var(--font-syne);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
-      color: var(--text-muted);
-      padding: 8px 8px 8px 0;
+      color: var(--primary);
+      padding: 10px 8px 10px 0;
       text-align: left;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 3px solid var(--border-color);
     }
     .data-table td {
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 2px solid var(--border-color);
     }
 
     /* SPECIFIC COMPONENT STYLES */
     .chart-container {
-      background: #fcfdfd;
-      border: 1px solid #f3f4f6;
-      border-radius: 4px;
-      padding: 16px;
+      background: #ffffff;
+      border: 3px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
       height: 250px;
       position: relative;
     }
     .trend-summary-row {
       display: flex;
       justify-content: space-between;
-      border-top: 1px solid #f3f4f6;
-      padding-top: 12px;
+      border-top: 3px solid var(--primary);
+      padding-top: 16px;
       margin-top: 16px;
+      gap: 12px;
     }
     .trend-summary-item {
       text-align: center;
       flex: 1;
+      background: var(--bg-color);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 8px 4px;
     }
     .trend-summary-item p {
-      margin: 2px 0;
+      margin: 3px 0;
     }
 
     /* DONUT & MULTI-COLUMN GEOGRAPHY */
     .geo-channels-container {
       display: grid;
-      grid-template-columns: 1.1fr 1.1fr 0.8fr;
+      grid-template-columns: 1fr 1fr 0.9fr;
       gap: 20px;
     }
 
     /* RESPONSIVE DESIGN */
-    @media (max-width: 1024px) {
+    @media (max-width: 1150px) {
       .kpi-row {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -259,25 +297,25 @@
 
   <!-- KPI STRIP -->
   <section class="kpi-row">
-    <div class="kpi-card">
+    <div class="kpi-card" style="background: var(--card-bg);">
       <p class="kpi-title">Totale Abbandoni</p>
-      <p class="kpi-val" style="color: var(--accent-red);">1704</p>
+      <p class="kpi-val" style="color: var(--pink);">1704</p>
       <p class="kpi-sub">Carrelli rilevati complessivamente</p>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" style="background: var(--card-bg);">
       <p class="kpi-title">Recuperati YTD</p>
-      <p class="kpi-val" style="color: var(--success);">256</p>
-      <p class="kpi-sub"><strong>24</strong> nel mese di Giugno</p>
+      <p class="kpi-val" style="color: var(--primary);">256</p>
+      <p class="kpi-sub"><span style="background: var(--lime); padding: 1px 4px; border: 1.5px solid var(--primary); border-radius: 4px; font-weight:700;">24</span> nel mese di Giugno</p>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" style="background: var(--card-bg);">
       <p class="kpi-title">Tasso Recupero</p>
-      <p class="kpi-val">15.0%</p>
+      <p class="kpi-val" style="background: var(--yellow); border: 2px solid var(--primary); border-radius: 8px; display: inline-block; padding: 0 10px; transform: rotate(-2deg);">15.0%</p>
       <p class="kpi-sub">Media globale di conversione</p>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" style="background: var(--card-bg);">
       <p class="kpi-title">Valore Recuperato</p>
-      <p class="kpi-val" style="color: var(--accent-purple); font-size: 22px; padding-top: 3px;">€ 312.355</p>
-      <p class="kpi-sub"><strong>€ 15.933</strong> a Giugno</p>
+      <p class="kpi-val" style="color: var(--primary); font-size: 22px; padding-top: 3px;">€ 312.355</p>
+      <p class="kpi-sub"><span style="background: var(--cyan); padding: 1px 4px; border: 1.5px solid var(--primary); border-radius: 4px; font-weight:700;">€ 15.933</span> a Giugno</p>
     </div>
   </section>
 
@@ -294,41 +332,41 @@
       </div>
       <div class="trend-summary-row">
         <div class="trend-summary-item">
-            <p style="font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted)">Gen</p>
-            <p style="font-size:13px;font-weight:700;color:var(--accent-red)">319 abb.</p>
-            <p style="font-size:11px;color:var(--success);font-weight:700">67 rec.</p>
-            <p style="font-size:11px;color:var(--accent-purple);font-weight:700">€ 82.178</p>
-            <p style="font-size:10px;color:var(--text-muted);font-family:'Courier New',monospace">21% tasso</p>
+            <p style="font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary)">Gen</p>
+            <p style="font-size:13px;font-weight:800;color:var(--pink)">319 abb.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">67 rec.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">€ 82.178</p>
+            <p style="font-size:10px;color:rgba(25,25,29,0.6);font-weight:700">21% tasso</p>
           </div><div class="trend-summary-item">
-            <p style="font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted)">Feb</p>
-            <p style="font-size:13px;font-weight:700;color:var(--accent-red)">296 abb.</p>
-            <p style="font-size:11px;color:var(--success);font-weight:700">69 rec.</p>
-            <p style="font-size:11px;color:var(--accent-purple);font-weight:700">€ 92.319</p>
-            <p style="font-size:10px;color:var(--text-muted);font-family:'Courier New',monospace">23% tasso</p>
+            <p style="font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary)">Feb</p>
+            <p style="font-size:13px;font-weight:800;color:var(--pink)">296 abb.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">69 rec.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">€ 92.319</p>
+            <p style="font-size:10px;color:rgba(25,25,29,0.6);font-weight:700">23% tasso</p>
           </div><div class="trend-summary-item">
-            <p style="font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted)">Mar</p>
-            <p style="font-size:13px;font-weight:700;color:var(--accent-red)">279 abb.</p>
-            <p style="font-size:11px;color:var(--success);font-weight:700">37 rec.</p>
-            <p style="font-size:11px;color:var(--accent-purple);font-weight:700">€ 47.882</p>
-            <p style="font-size:10px;color:var(--text-muted);font-family:'Courier New',monospace">13% tasso</p>
+            <p style="font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary)">Mar</p>
+            <p style="font-size:13px;font-weight:800;color:var(--pink)">279 abb.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">37 rec.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">€ 47.882</p>
+            <p style="font-size:10px;color:rgba(25,25,29,0.6);font-weight:700">13% tasso</p>
           </div><div class="trend-summary-item">
-            <p style="font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted)">Apr</p>
-            <p style="font-size:13px;font-weight:700;color:var(--accent-red)">374 abb.</p>
-            <p style="font-size:11px;color:var(--success);font-weight:700">39 rec.</p>
-            <p style="font-size:11px;color:var(--accent-purple);font-weight:700">€ 54.513</p>
-            <p style="font-size:10px;color:var(--text-muted);font-family:'Courier New',monospace">10% tasso</p>
+            <p style="font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary)">Apr</p>
+            <p style="font-size:13px;font-weight:800;color:var(--pink)">374 abb.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">39 rec.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">€ 54.513</p>
+            <p style="font-size:10px;color:rgba(25,25,29,0.6);font-weight:700">10% tasso</p>
           </div><div class="trend-summary-item">
-            <p style="font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted)">Mag</p>
-            <p style="font-size:13px;font-weight:700;color:var(--accent-red)">211 abb.</p>
-            <p style="font-size:11px;color:var(--success);font-weight:700">15 rec.</p>
-            <p style="font-size:11px;color:var(--accent-purple);font-weight:700">€ 12.002</p>
-            <p style="font-size:10px;color:var(--text-muted);font-family:'Courier New',monospace">7% tasso</p>
+            <p style="font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary)">Mag</p>
+            <p style="font-size:13px;font-weight:800;color:var(--pink)">211 abb.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">15 rec.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">€ 12.002</p>
+            <p style="font-size:10px;color:rgba(25,25,29,0.6);font-weight:700">7% tasso</p>
           </div><div class="trend-summary-item">
-            <p style="font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--text-muted)">Giu</p>
-            <p style="font-size:13px;font-weight:700;color:var(--accent-red)">136 abb.</p>
-            <p style="font-size:11px;color:var(--success);font-weight:700">10 rec.</p>
-            <p style="font-size:11px;color:var(--accent-purple);font-weight:700">€ 8706</p>
-            <p style="font-size:10px;color:var(--text-muted);font-family:'Courier New',monospace">7% tasso</p>
+            <p style="font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;color:var(--primary)">Giu</p>
+            <p style="font-size:13px;font-weight:800;color:var(--pink)">136 abb.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">10 rec.</p>
+            <p style="font-size:11px;color:var(--primary);font-weight:800">€ 8706</p>
+            <p style="font-size:10px;color:rgba(25,25,29,0.6);font-weight:700">7% tasso</p>
           </div>
       </div>
     </div>
@@ -351,61 +389,71 @@
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid #f3f4f6">
-      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#4f46e5;white-space:nowrap">Inviato a Sales</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:center">1205</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#027a48;text-align:center">168</td>
+          <tr style="border-bottom:2px solid #19191D">
+      <td style="padding:12px 8px 12px 0;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;white-space:nowrap">Inviato a Sales</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">1205</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">168</td>
       <td style="padding:12px 8px;width:110px">
-        <div style="background:#f3f4f6;height:5px;border-radius:2px"><div style="background:#027a48;height:5px;width:14%;max-width:100%;border-radius:2px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#8FF977;height:100%;width:14%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
       <td style="padding:12px 0;text-align:right;white-space:nowrap">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#fffbeb;color:#b45309">13.9%</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D">13.9%</span>
       </td>
-      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:right;white-space:nowrap">€ 227.259</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#e02424;white-space:nowrap">Inviato a Rob</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:center">207</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#027a48;text-align:center">36</td>
+      <td style="padding:12px 0 12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;text-align:right;white-space:nowrap">€ 227.259</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="padding:12px 8px 12px 0;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;white-space:nowrap">Inviato a Rob</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">207</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">36</td>
       <td style="padding:12px 8px;width:110px">
-        <div style="background:#f3f4f6;height:5px;border-radius:2px"><div style="background:#027a48;height:5px;width:17%;max-width:100%;border-radius:2px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#8FF977;height:100%;width:17%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
       <td style="padding:12px 0;text-align:right;white-space:nowrap">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#fffbeb;color:#b45309">17.4%</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D">17.4%</span>
       </td>
-      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:right;white-space:nowrap">€ 27.273</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#027a48;white-space:nowrap">Inviato a Iberica</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:center">165</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#027a48;text-align:center">21</td>
+      <td style="padding:12px 0 12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;text-align:right;white-space:nowrap">€ 27.273</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="padding:12px 8px 12px 0;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;white-space:nowrap">Inviato a Iberica</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">165</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">21</td>
       <td style="padding:12px 8px;width:110px">
-        <div style="background:#f3f4f6;height:5px;border-radius:2px"><div style="background:#027a48;height:5px;width:13%;max-width:100%;border-radius:2px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#8FF977;height:100%;width:13%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
       <td style="padding:12px 0;text-align:right;white-space:nowrap">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#fffbeb;color:#b45309">12.7%</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D">12.7%</span>
       </td>
-      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:right;white-space:nowrap">€ 31.863</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#d97706;white-space:nowrap">Inviato a Nik</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:center">31</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#027a48;text-align:center">6</td>
+      <td style="padding:12px 0 12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;text-align:right;white-space:nowrap">€ 31.863</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="padding:12px 8px 12px 0;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;white-space:nowrap">Inviato a Nik</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">31</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">6</td>
       <td style="padding:12px 8px;width:110px">
-        <div style="background:#f3f4f6;height:5px;border-radius:2px"><div style="background:#027a48;height:5px;width:19%;max-width:100%;border-radius:2px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#8FF977;height:100%;width:19%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
       <td style="padding:12px 0;text-align:right;white-space:nowrap">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#fffbeb;color:#b45309">19.4%</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D">19.4%</span>
       </td>
-      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:right;white-space:nowrap">€ 1819</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="padding:12px 8px 12px 0;font-size:12px;font-weight:700;color:#111827;white-space:nowrap">Contattato Mary</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:center">91</td>
-      <td style="padding:12px 8px;font-size:12px;font-weight:700;color:#027a48;text-align:center">25</td>
+      <td style="padding:12px 0 12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;text-align:right;white-space:nowrap">€ 1819</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="padding:12px 8px 12px 0;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;white-space:nowrap">Contattato Mary</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">91</td>
+      <td style="padding:12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;text-align:center">25</td>
       <td style="padding:12px 8px;width:110px">
-        <div style="background:#f3f4f6;height:5px;border-radius:2px"><div style="background:#027a48;height:5px;width:28%;max-width:100%;border-radius:2px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#8FF977;height:100%;width:28%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
       <td style="padding:12px 0;text-align:right;white-space:nowrap">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;background:#ecfdf5;color:#027a48">27.5%</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#8FF977;color:#19191D;border:2px solid #19191D">27.5%</span>
       </td>
-      <td style="padding:12px 0 12px 8px;font-size:12px;font-weight:700;color:#111827;text-align:right;white-space:nowrap">€ 24.143</td>
+      <td style="padding:12px 0 12px 8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;text-align:right;white-space:nowrap">€ 24.143</td>
     </tr>
         </tbody>
       </table>
@@ -417,7 +465,7 @@
     <!-- TOP 10 SKU -->
     <div class="card">
       <div class="card-header">
-        <h2 class="card-title">Top 10 SKU Abbandonati <span class="badge-report" style="margin-left:8px; background: #fffbeb; color: #b45309; border: 1px solid #fde68a;">Ultimi 7 Giorni</span></h2>
+        <h2 class="card-title">Top 10 SKU Abbandonati <span class="badge-report" style="margin-left:8px; background: var(--yellow); color: var(--primary);">Ultimi 7 Giorni</span></h2>
         <span class="card-section-num">03/05</span>
       </div>
       
@@ -430,96 +478,96 @@
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">01</td>
+          <tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">01</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">FLK02.V02</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:100%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">FLK02.V02</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:100%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">8</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">02</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">8</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">02</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">FLS0.1S</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:50%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">FLS0.1S</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:50%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">4</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">03</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">4</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">03</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">FLS0.5S</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:38%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">FLS0.5S</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:38%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">3</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">04</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">3</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">04</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">FLS1.1S</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:25%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">FLS1.1S</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:25%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">2</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">05</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">2</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">05</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">XCMN08EN</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:25%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">XCMN08EN</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:25%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">2</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">06</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">2</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">06</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">FLS1.1M</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:25%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">FLS1.1M</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:25%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">2</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">07</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">2</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">07</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">IXI01.001</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:25%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">IXI01.001</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:25%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">2</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">08</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">2</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">08</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">XDMPG0GL</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:25%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">XDMPG0GL</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:25%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">2</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">09</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">2</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">09</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">FLX4.92</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:13%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">FLX4.92</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:13%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">1</td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:10px 8px 10px 0;width:20px">10</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">1</td>
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:10px 8px 10px 0;width:20px">10</td>
       <td style="padding:10px 8px 10px 0">
-        <span style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827">FLK11A</span>
-        <div style="background:#f3f4f6;height:4px;border-radius:2px;margin-top:4px;width:150px">
-          <div style="background:#e02424;height:4px;width:13%;border-radius:2px;opacity:0.7"></div>
+        <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D">FLK11A</span>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;margin-top:4px;width:150px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:13%;border-right:2px solid #19191D"></div>
         </div>
       </td>
-      <td style="font-size:13px;font-weight:700;color:#e02424;padding:10px 0;text-align:right;vertical-align:middle">1</td>
+      <td style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#19191D;padding:10px 0;text-align:right;vertical-align:middle">1</td>
     </tr>
         </tbody>
       </table>
@@ -534,160 +582,200 @@
       <div class="geo-channels-container">
         <!-- GEOGRAFIA ASSOLUTA -->
         <div>
-          <p style="margin:0 0 14px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)">Top 10 Paesi (YTD)</p>
+          <p style="margin:0 0 14px;font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--primary)">Top 10 Paesi (YTD)</p>
           <table class="data-table">
             <tbody>
               <tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">IT</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:100%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">IT</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:100%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">217</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">217</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">FR</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:88%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">FR</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:88%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">190</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">190</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">DE</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:71%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">DE</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:71%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">154</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">154</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">GB</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:55%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">GB</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:55%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">120</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">120</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">ES</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:37%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">ES</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:37%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">80</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">80</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">RO</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:33%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">RO</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:33%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">72</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">72</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">PL</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:28%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">PL</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:28%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">60</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">60</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">PT</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:22%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">PT</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:22%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">47</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">47</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">BG</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:15%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">BG</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:15%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">32</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">32</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">NL</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:15%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">NL</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:15%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">32</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">32</td>
     </tr>
             </tbody>
           </table>
         </div>
         <!-- GEOGRAFIA RECENTE -->
         <div>
-          <p style="margin:0 0 14px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)">Top 10 Paesi (7 gg)</p>
+          <p style="margin:0 0 14px;font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--primary)">Top 10 Paesi (7 gg)</p>
           <table class="data-table">
             <tbody>
               <tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">DE</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:100%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">DE</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:100%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">5</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">5</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">FR</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:60%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">FR</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:60%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">3</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">3</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">BR</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:60%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">BR</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:60%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">3</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">3</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">IT</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:60%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">IT</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:60%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">3</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">3</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">ES</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:40%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">ES</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:40%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">2</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">2</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">UA</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:40%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">UA</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:40%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">2</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">2</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">NZ</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:20%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">NZ</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:20%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">1</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">1</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">PT</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:20%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">PT</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:20%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">1</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">1</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">RS</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:20%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">RS</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:20%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">1</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">1</td>
     </tr><tr>
-      <td style="font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:#111827;padding:5px 12px 5px 0;white-space:nowrap;width:50px">RE</td>
-      <td style="padding:5px 12px 5px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#e02424;height:6px;width:20%;border-radius:3px"></div></div>
+      <td style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 12px 6px 0;white-space:nowrap;width:50px">RE</td>
+      <td style="padding:6px 12px 6px 0;width:100%">
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#FF678B;height:100%;width:20%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:5px 0;white-space:nowrap;text-align:right">1</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:6px 0;white-space:nowrap;text-align:right">1</td>
     </tr>
             </tbody>
           </table>
         </div>
         <!-- CANALI -->
         <div>
-          <p style="margin:0 0 14px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)">Canali di Recupero</p>
-          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;margin-top:10px;">
-            <svg width="90" height="90" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="38" fill="none" stroke="#f3f4f6" stroke-width="11"/>
-              <circle cx="50" cy="50" r="38" fill="none" stroke="#e02424" stroke-width="11" stroke-dasharray="11.9 227.5" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
-              <circle cx="50" cy="50" r="38" fill="none" stroke="#027a48" stroke-width="11" stroke-dasharray="13.2 226.2" stroke-dashoffset="-11.9" transform="rotate(-90 50 50)"/>
-              <circle cx="50" cy="50" r="38" fill="none" stroke="#d97706" stroke-width="11" stroke-dasharray="7.6 231.8" stroke-dashoffset="-25.1" transform="rotate(-90 50 50)"/>
-              <circle cx="50" cy="50" r="38" fill="none" stroke="#4f46e5" stroke-width="11" stroke-dasharray="4.8 234.6" stroke-dashoffset="-32.7" transform="rotate(-90 50 50)"/>
-              <text x="50" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="800" fill="#111827">15.0%</text>
-              <text x="50" y="60" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" font-weight="700" fill="#6b7280" style="letter-spacing:0.5px;text-transform:uppercase">rec.</text>
+          <p style="margin:0 0 14px;font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--primary)">Canali di Recupero</p>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;margin-top:10px;">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#ffffff" stroke-width="11" style="stroke: var(--primary); stroke-opacity: 0.1;"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#FF678B" stroke-width="11" stroke-dasharray="11.9 227.5" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#8FF977" stroke-width="11" stroke-dasharray="13.2 226.2" stroke-dashoffset="-11.9" transform="rotate(-90 50 50)"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#FFF48D" stroke-width="11" stroke-dasharray="7.6 231.8" stroke-dashoffset="-25.1" transform="rotate(-90 50 50)"/>
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#70FAFD" stroke-width="11" stroke-dasharray="4.8 234.6" stroke-dashoffset="-32.7" transform="rotate(-90 50 50)"/>
+              <text x="50" y="48" text-anchor="middle" font-family="var(--font-syne)" font-size="13" font-weight="800" fill="#19191D">15.0%</text>
+              <text x="50" y="60" text-anchor="middle" font-family="var(--font-syne)" font-size="8" font-weight="800" fill="#19191D" style="letter-spacing:0.5px;text-transform:uppercase">rec.</text>
             </svg>
-            <div style="font-size:11px;line-height:1.6;">
-              <div><span style="display:inline-block;width:8px;height:8px;background:#e02424;border-radius:50%;margin-right:6px"></span>Shop: <strong>85</strong></div>
-              <div><span style="display:inline-block;width:8px;height:8px;background:#027a48;border-radius:50%;margin-right:6px"></span>Operatore: <strong>94</strong></div>
-              <div><span style="display:inline-block;width:8px;height:8px;background:#d97706;border-radius:50%;margin-right:6px"></span>Distr.: <strong>54</strong></div>
-              <div><span style="display:inline-block;width:8px;height:8px;background:#4f46e5;border-radius:50%;margin-right:6px"></span>Hd: <strong>34</strong></div>
+            <div style="font-size:11px;line-height:1.6;font-family:var(--font-sans);font-weight:700;">
+              <div><span style="display:inline-block;width:10px;height:10px;background:#FF678B;border:1.5px solid var(--primary);border-radius:50%;margin-right:6px"></span>Shop: <strong>85</strong></div>
+              <div><span style="display:inline-block;width:10px;height:10px;background:#8FF977;border:1.5px solid var(--primary);border-radius:50%;margin-right:6px"></span>Operatore: <strong>94</strong></div>
+              <div><span style="display:inline-block;width:10px;height:10px;background:#FFF48D;border:1.5px solid var(--primary);border-radius:50%;margin-right:6px"></span>Distr.: <strong>54</strong></div>
+              <div><span style="display:inline-block;width:10px;height:10px;background:#70FAFD;border:1.5px solid var(--primary);border-radius:50%;margin-right:6px"></span>Hd: <strong>34</strong></div>
             </div>
           </div>
         </div>
@@ -704,49 +792,59 @@
     <div class="dashboard-grid-equal" style="margin-bottom: 0; gap: 40px;">
       <!-- ANNO -->
       <div>
-        <p style="margin:0 0 12px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)">Top 5 dell'Anno (YTD)</p>
+        <p style="margin:0 0 12px;font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--primary)">Top 5 dell'Anno (YTD)</p>
         <table class="data-table">
           <tbody>
             <tr>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="MAGIC IBERICA S.L.">MAGIC IBERICA S.L.</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="MAGIC IBERICA S.L.">MAGIC IBERICA S.L.</td>
       <td style="padding:8px 12px 8px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#4f46e5;height:6px;width:100%;border-radius:3px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#70FAFD;height:100%;width:100%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 0;white-space:nowrap;text-align:right">13</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:8px 0;white-space:nowrap;text-align:right">13</td>
     </tr><tr>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="VIEZU TECHNOLOGIES LTD">VIEZU TECHNOLOGIES LTD</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="VIEZU TECHNOLOGIES LTD">VIEZU TECHNOLOGIES LTD</td>
       <td style="padding:8px 12px 8px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#4f46e5;height:6px;width:31%;border-radius:3px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#70FAFD;height:100%;width:31%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 0;white-space:nowrap;text-align:right">4</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:8px 0;white-space:nowrap;text-align:right">4</td>
     </tr><tr>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="EMIRATES KEYS CO.">EMIRATES KEYS CO.</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="EMIRATES KEYS CO.">EMIRATES KEYS CO.</td>
       <td style="padding:8px 12px 8px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#4f46e5;height:6px;width:23%;border-radius:3px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#70FAFD;height:100%;width:23%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 0;white-space:nowrap;text-align:right">3</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:8px 0;white-space:nowrap;text-align:right">3</td>
     </tr><tr>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="M.S. GROUP SPLKA Z OGRANICZON">M.S. GROUP SPLKA Z OGRANICZON</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="M.S. GROUP SPLKA Z OGRANICZON">M.S. GROUP SPLKA Z OGRANICZON</td>
       <td style="padding:8px 12px 8px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#4f46e5;height:6px;width:15%;border-radius:3px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#70FAFD;height:100%;width:15%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 0;white-space:nowrap;text-align:right">2</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:8px 0;white-space:nowrap;text-align:right">2</td>
     </tr><tr>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="Shenzhen Sinoy Technology">Shenzhen Sinoy Technology</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#19191D;padding:8px 12px 8px 0;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis" title="Shenzhen Sinoy Technology">Shenzhen Sinoy Technology</td>
       <td style="padding:8px 12px 8px 0;width:100%">
-        <div style="background:#f3f4f6;height:6px;border-radius:3px"><div style="background:#4f46e5;height:6px;width:15%;border-radius:3px"></div></div>
+        <div style="background:#ffffff;height:12px;border:2px solid #19191D;border-radius:4px;overflow:hidden">
+          <div style="background:#70FAFD;height:100%;width:15%;border-right:2px solid #19191D"></div>
+        </div>
       </td>
-      <td style="font-family:Arial,sans-serif;font-size:12px;font-weight:700;color:#111827;padding:8px 0;white-space:nowrap;text-align:right">2</td>
+      <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:800;color:#19191D;padding:8px 0;white-space:nowrap;text-align:right">2</td>
     </tr>
           </tbody>
         </table>
       </div>
       <!-- MESE -->
       <div>
-        <p style="margin:0 0 12px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)">Top del Mese (Giugno)</p>
+        <p style="margin:0 0 12px;font-family:var(--font-syne);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--primary)">Top del Mese (Giugno)</p>
         <table class="data-table">
           <tbody>
-            <tr><td style="font-size:11px;color:#6b7280;padding:8px 0">Nessun dato disponibile</td></tr>
+            <tr><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#19191D;opacity:0.5;padding:8px 0">Nessun dato disponibile</td></tr>
           </tbody>
         </table>
       </div>
@@ -756,9 +854,9 @@
   <!-- ROW 4: FEEDBACK AI -->
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">Motivazioni di Abbandono (Rilevate da AI) <span class="badge-report" style="margin-left:8px; background: #f3f4f6; color: #374151;">Giugno</span></h2>
+      <h2 class="card-title">Motivazioni di Abbandono (Rilevate da AI) <span class="badge-report" style="margin-left:8px; background: var(--pink); color: var(--primary);">Giugno</span></h2>
     </div>
-    <p style="margin:0 0 16px;font-size:12px;color:var(--text-muted);font-weight:500;">Sono stati analizzati ed elaborati singolarmente <strong>5</strong> feedback.</p>
+    <p style="margin:0 0 16px;font-size:12px;color:var(--primary);font-weight:600;">Sono stati analizzati ed elaborati singolarmente <strong>5</strong> feedback.</p>
       <table class="data-table">
         <thead>
           <tr>
@@ -769,60 +867,60 @@
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:14px 12px 14px 0;width:25px;vertical-align:top">01</td>
-      <td style="padding:14px 12px 14px 0;font-size:12.5px;color:#111827;line-height:1.45;vertical-align:top;font-weight:600">
+          <tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:14px 12px 14px 0;width:25px;vertical-align:top">01</td>
+      <td style="padding:14px 12px 14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top;font-weight:600">
         Do you have any discounts?
       </td>
       <td style="padding:14px 12px;vertical-align:top;width:140px">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Discounts</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D;text-transform:uppercase;letter-spacing:0.5px">Discounts</span>
       </td>
-      <td style="padding:14px 0;font-size:12.5px;color:#4b5563;line-height:1.45;vertical-align:top">
-        <span style="font-weight:700;color:#027a48">→</span> Contattare per le promo
+      <td style="padding:14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top">
+        <span style="font-weight:800;color:#8FF977">★</span> Contattare per le promo
       </td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:14px 12px 14px 0;width:25px;vertical-align:top">02</td>
-      <td style="padding:14px 12px 14px 0;font-size:12.5px;color:#111827;line-height:1.45;vertical-align:top;font-weight:600">
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:14px 12px 14px 0;width:25px;vertical-align:top">02</td>
+      <td style="padding:14px 12px 14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top;font-weight:600">
         sto valutando se acquistare Full master o solo OBD/Bench
       </td>
       <td style="padding:14px 12px;vertical-align:top;width:140px">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Prodotto/Scelta</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D;text-transform:uppercase;letter-spacing:0.5px">Altro</span>
       </td>
-      <td style="padding:14px 0;font-size:12.5px;color:#4b5563;line-height:1.45;vertical-align:top">
-        <span style="font-weight:700;color:#027a48">→</span> Inviare guida comparativa o offrire assistenza alla vendita per aiutare nella scelta
+      <td style="padding:14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top">
+        <span style="font-weight:800;color:#8FF977">★</span> Inviare una guida comparativa sui prodotti o offrire una consulenza tecnica per aiutare nella scelta
       </td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:14px 12px 14px 0;width:25px;vertical-align:top">03</td>
-      <td style="padding:14px 12px 14px 0;font-size:12.5px;color:#111827;line-height:1.45;vertical-align:top;font-weight:600">
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:14px 12px 14px 0;width:25px;vertical-align:top">03</td>
+      <td style="padding:14px 12px 14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top;font-weight:600">
         I need it with boot cables
       </td>
       <td style="padding:14px 12px;vertical-align:top;width:140px">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Product Information</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D;text-transform:uppercase;letter-spacing:0.5px">Product Details</span>
       </td>
-      <td style="padding:14px 0;font-size:12.5px;color:#4b5563;line-height:1.45;vertical-align:top">
-        <span style="font-weight:700;color:#027a48">→</span> Fornire dettagli sulla compatibilità degli accessori o verificare l'aggiunta di varianti di prodotto
+      <td style="padding:14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top">
+        <span style="font-weight:800;color:#8FF977">★</span> Fornire informazioni sulle specifiche del prodotto o verificare la compatibilità con gli accessori richiesti
       </td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:14px 12px 14px 0;width:25px;vertical-align:top">04</td>
-      <td style="padding:14px 12px 14px 0;font-size:12.5px;color:#111827;line-height:1.45;vertical-align:top;font-weight:600">
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:14px 12px 14px 0;width:25px;vertical-align:top">04</td>
+      <td style="padding:14px 12px 14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top;font-weight:600">
         qual è il prezzo del pacchetto Master OBD + Bench?
       </td>
       <td style="padding:14px 12px;vertical-align:top;width:140px">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Altro</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D;text-transform:uppercase;letter-spacing:0.5px">Sales Inquiry</span>
       </td>
-      <td style="padding:14px 0;font-size:12.5px;color:#4b5563;line-height:1.45;vertical-align:top">
-        <span style="font-weight:700;color:#027a48">→</span> Fornire i dettagli sul prezzo e offrire assistenza alla vendita per finalizzare l'ordine
+      <td style="padding:14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top">
+        <span style="font-weight:800;color:#8FF977">★</span> Fornire preventivo dettagliato e informazioni di vendita
       </td>
-    </tr><tr style="border-bottom:1px solid #f3f4f6">
-      <td style="font-family:'Courier New',monospace;font-size:11px;color:#9ca3af;padding:14px 12px 14px 0;width:25px;vertical-align:top">05</td>
-      <td style="padding:14px 12px 14px 0;font-size:12.5px;color:#111827;line-height:1.45;vertical-align:top;font-weight:600">
+    </tr><tr style="border-bottom:2px solid #19191D">
+      <td style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#19191D;opacity:0.5;padding:14px 12px 14px 0;width:25px;vertical-align:top">05</td>
+      <td style="padding:14px 12px 14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top;font-weight:600">
         expensive for me with 25% fee in custom cost on the tool
       </td>
       <td style="padding:14px 12px;vertical-align:top;width:140px">
-        <span style="display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:#f3f4f6;color:#374151;text-transform:uppercase;letter-spacing:0.5px">Discounts</span>
+        <span style="display:inline-block;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;background:#FFF48D;color:#19191D;border:2px solid #19191D;text-transform:uppercase;letter-spacing:0.5px">Discounts</span>
       </td>
-      <td style="padding:14px 0;font-size:12.5px;color:#4b5563;line-height:1.45;vertical-align:top">
-        <span style="font-weight:700;color:#027a48">→</span> Contattare per le promo
+      <td style="padding:14px 0;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:#19191D;line-height:1.45;vertical-align:top">
+        <span style="font-weight:800;color:#8FF977">★</span> Contattare per le promo
       </td>
     </tr>
         </tbody>
@@ -830,12 +928,12 @@
   </div>
 
   <!-- FOOTER -->
-  <footer style="margin-top: 32px; padding: 20px 24px; background: var(--primary); border-radius: 6px; display: flex; justify-content: space-between; align-items: center; color: #9ca3af; font-size: 11px;">
+  <footer style="margin-top: 32px; padding: 24px 28px; background: #ffffff; border: 3px solid var(--primary); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; color: var(--primary); font-size: 11px; box-shadow: var(--shadow-card);">
     <div>
-      <p style="margin:0;font-weight:800;color:#ffffff;letter-spacing:0.5px;text-transform:uppercase;">MAGICMOTORSPORT</p>
-      <p style="margin:2px 0 0;">Report vendite automatico via n8n · Analisi AI in tempo reale</p>
+      <p style="margin:0;font-family:var(--font-syne);font-weight:800;color:var(--primary);letter-spacing:0.5px;text-transform:uppercase;">MAGICMOTORSPORT</p>
+      <p style="margin:4px 0 0;font-weight:500;">Report vendite automatico via n8n · Analisi AI in tempo reale</p>
     </div>
-    <div style="font-family:'Courier New',monospace;font-weight:700;color:#6b7280">
+    <div style="font-family:var(--font-syne);font-weight:800;background:var(--lime);border:2px solid var(--primary);padding:4px 10px;border-radius:6px;">
       SYSTEM_YTD_2026
     </div>
   </footer>
@@ -855,40 +953,44 @@
           {
             label: 'Abbandonati',
             data: [319,296,279,374,211,136],
-            borderColor: '#e02424',
-            backgroundColor: 'rgba(224,36,36,0.03)',
-            fill: true,
-            borderWidth: 2,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#e02424',
-            tension: 0.35,
-            yAxisID: 'y'
+            borderColor: '#FF678B',
+            backgroundColor: 'transparent',
+            fill: false,
+            borderWidth: 3,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: '#FF678B',
+            pointBorderColor: '#19191D',
+            pointBorderWidth: 2,
+            tension: 0.1
           },
           {
             label: 'Recuperati',
             data: [67,69,37,39,15,10],
-            borderColor: '#027a48',
-            backgroundColor: 'rgba(2,122,72,0.03)',
-            fill: true,
-            borderWidth: 2,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#027a48',
-            tension: 0.35,
-            yAxisID: 'y'
+            borderColor: '#8FF977',
+            backgroundColor: 'transparent',
+            fill: false,
+            borderWidth: 3,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: '#8FF977',
+            pointBorderColor: '#19191D',
+            pointBorderWidth: 2,
+            tension: 0.1
           },
           {
             label: 'Fatturato Recuperato (€)',
             data: [82178.2,92319.0471,47882.48999999999,54512.9787,12001.9025,8706.300299999999],
-            borderColor: '#4f46e5',
-            backgroundColor: 'rgba(79,70,229,0.03)',
-            fill: true,
-            borderWidth: 2,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#4f46e5',
-            tension: 0.35,
+            borderColor: '#70FAFD',
+            backgroundColor: 'transparent',
+            fill: false,
+            borderWidth: 3,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            pointBackgroundColor: '#70FAFD',
+            pointBorderColor: '#19191D',
+            pointBorderWidth: 2,
+            tension: 0.1,
             yAxisID: 'y1'
           }
         ]
@@ -901,32 +1003,36 @@
             display: true,
             position: 'bottom',
             labels: {
-              boxWidth: 10,
+              boxWidth: 12,
+              boxHeight: 12,
               font: {
-                size: 10,
-                family: 'Arial, sans-serif'
+                size: 11,
+                family: 'Plus Jakarta Sans',
+                weight: 'bold'
               },
-              color: '#4b5563'
-                }
+              color: '#19191D'
+            }
           },
           tooltip: {
             enabled: true,
             mode: 'index',
             intersect: false,
-            backgroundColor: '#111827',
-            titleColor: '#ffffff',
-            bodyColor: '#ffffff',
-            borderColor: '#e5e7eb',
-            borderWidth: 1,
-            padding: 8,
+            backgroundColor: '#ffffff',
+            titleColor: '#19191D',
+            bodyColor: '#19191D',
+            borderColor: '#19191D',
+            borderWidth: 3,
+            cornerRadius: 8,
+            padding: 10,
             titleFont: {
-              size: 11,
+              size: 12,
               weight: 'bold',
-              family: 'Arial, sans-serif'
+              family: 'Syne'
             },
             bodyFont: {
               size: 11,
-              family: 'Arial, sans-serif'
+              family: 'Plus Jakarta Sans',
+              weight: '600'
             },
             callbacks: {
               label: function(context) {
@@ -949,13 +1055,18 @@
         scales: {
           x: {
             grid: {
-              display: false
+              color: '#19191D',
+              lineWidth: 1,
+              drawBorder: true,
+              drawOnChartArea: true,
+              drawTicks: true
             },
             ticks: {
-              color: '#6b7280',
+              color: '#19191D',
               font: {
-                size: 10,
-                family: 'Arial, sans-serif'
+                size: 11,
+                family: 'Plus Jakarta Sans',
+                weight: 'bold'
               }
             }
           },
@@ -964,13 +1075,15 @@
             display: true,
             position: 'left',
             grid: {
-              color: 'rgba(0,0,0,0.04)'
+              color: 'rgba(25, 25, 29, 0.1)',
+              lineWidth: 1
             },
             ticks: {
-              color: '#6b7280',
+              color: '#19191D',
               font: {
-                size: 10,
-                family: 'Arial, sans-serif'
+                size: 11,
+                family: 'Plus Jakarta Sans',
+                weight: 'bold'
               }
             }
           },
@@ -982,10 +1095,11 @@
               drawOnChartArea: false
             },
             ticks: {
-              color: '#4f46e5',
+              color: '#19191D',
               font: {
-                size: 10,
-                family: 'Arial, sans-serif'
+                size: 11,
+                family: 'Plus Jakarta Sans',
+                weight: 'bold'
               },
               callback: function(value) {
                 return '€' + Math.round(value).toLocaleString('it-IT');
