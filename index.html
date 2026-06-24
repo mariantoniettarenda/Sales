@@ -1340,6 +1340,12 @@ exports.init = init;
             box-shadow: 3px 3px 0px var(--dark);
         }
 
+        /* Se ha un sotto-nodo configurato, fonde visivamente i bordi inferiori */
+        .tree-month.has-sub-item {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
         .tree-month.locked {
             background: var(--locked-bg);
             color: var(--locked-text);
@@ -1350,6 +1356,37 @@ exports.init = init;
             transform: none;
             box-shadow: none;
             background: var(--locked-bg);
+        }
+
+        /* Stile sotto-nodi gerarchici Opzione 2 */
+        .tree-sub-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px 8px 18px;
+            margin-top: -10px; /* Unione visiva con il box del mese sovrastante */
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+            background: #ffffff;
+            border: 2px solid var(--dark);
+            border-top: none;
+            border-radius: 0 0 8px 8px; /* Arrotonda solo gli angoli inferiori */
+            box-shadow: 2px 2px 0px var(--dark);
+            transition: all 0.2s ease;
+        }
+
+        .tree-sub-item:hover {
+            background-color: var(--cyan);
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--dark);
+        }
+
+        .sub-arrow {
+            font-size: 0.95rem;
+            font-weight: 800;
         }
 
         .archive-content {
@@ -1846,6 +1883,19 @@ exports.init = init;
             { abbr: "dic", name: "Dicembre" },
         ];
 
+        // CONFIGURAZIONE LINK SPECIALI (OPZIONE 2)
+        // 👉 Sostituire le proprietà "url" con gli effettivi collegamenti finali
+        const SPECIAL_LINKS = {
+            "2026-mar": {
+                label: "└── 🇪🇸 Analisi Iberica Q1",
+                url: "link-iberica-q1.html" 
+            },
+            "2026-apr": {
+                label: "└── 🇺🇸 Analisi USA T1",
+                url: "link-usa-t1.html"
+            }
+        };
+
         // 👉 n8n: aggiungere qui una riga ad ogni chiusura mensile per l'archivio e per il feedback di Mary.
         const archiveManifest = {
             "2026-gen": { 
@@ -2004,9 +2054,10 @@ exports.init = init;
                 MONTHS.forEach((month) => {
                     const key = year + "-" + month.abbr;
                     const isAvailable = Boolean(archiveManifest[key]);
+                    const hasSubItem = Boolean(SPECIAL_LINKS[key]);
 
                     const monthEl = document.createElement("div");
-                    monthEl.className = "tree-month" + (isAvailable ? "" : " locked");
+                    monthEl.className = "tree-month" + (isAvailable ? "" : " locked") + (hasSubItem ? " has-sub-item" : "");
                     monthEl.dataset.month = month.abbr;
                     monthEl.dataset.year = year;
                     monthEl.dataset.monthName = month.name;
@@ -2016,6 +2067,22 @@ exports.init = init;
                     monthEl.addEventListener("click", () => onMonthClick(monthEl, isAvailable, year, month));
 
                     monthsWrapper.appendChild(monthEl);
+
+                    // Integrazione sotto-nodo se configurato nell'oggetto SPECIAL_LINKS
+                    if (hasSubItem) {
+                        const subItem = document.createElement("a");
+                        subItem.className = "tree-sub-item";
+                        subItem.href = SPECIAL_LINKS[key].url;
+                        subItem.target = "_blank";
+                        subItem.innerHTML = "<span>" + SPECIAL_LINKS[key].label + "</span><span class='sub-arrow'>↗</span>";
+                        
+                        // Evita che cliccando il link speciale si provi a caricare il report mensile standard nell'Iframe
+                        subItem.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                        });
+
+                        monthsWrapper.appendChild(subItem);
+                    }
                 });
 
                 yearToggle.addEventListener("click", () => {
